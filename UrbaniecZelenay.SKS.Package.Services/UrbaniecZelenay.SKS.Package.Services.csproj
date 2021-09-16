@@ -18,4 +18,8 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.DTOs\UrbaniecZelenay.SKS.Package.Services.DTOs.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.Interfaces\UrbaniecZelenay.SKS.Package.Services.Interfaces.csproj" />
+  </ItemGroup>
 </Project>

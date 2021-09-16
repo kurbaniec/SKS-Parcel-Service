@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
-using UrbaniecZelenay.SKS.Package.Services.Models;
+using UrbaniecZelenay.SKS.Package.Services.DTOs;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Controllers
 { 
@@ -39,7 +39,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerOperation("TrackParcel")]
         [SwaggerResponse(statusCode: 200, type: typeof(TrackingInformation), description: "Parcel exists, here&#x27;s the tracking information.")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
-        public virtual IActionResult TrackParcel([FromRoute][Required][RegularExpression("/^[A-Z0-9]{9}$/")]string trackingId)
+        public virtual IActionResult TrackParcel([FromRoute][Required][RegularExpression(@"^[A-Z0-9]{9}$")]string trackingId)
         { 
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(TrackingInformation));

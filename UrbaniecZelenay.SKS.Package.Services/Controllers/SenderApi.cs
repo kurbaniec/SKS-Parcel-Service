@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
-using UrbaniecZelenay.SKS.Package.Services.Models;
+using UrbaniecZelenay.SKS.Package.Services.DTOs;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Controllers
 { 
