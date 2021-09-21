@@ -30,11 +30,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         public float? Weight { get; set; }
 
         /// <summary>
-        /// Gets or Sets Receipient
+        /// Gets or Sets Recipient
         /// </summary>
         [Required]
 
-        [DataMember(Name="receipient")]
+        [DataMember(Name="recipient")]
         public Recipient Recipient { get; set; }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
             var sb = new StringBuilder();
             sb.Append("class Parcel {\n");
             sb.Append("  Weight: ").Append(Weight).Append("\n");
-            sb.Append("  Receipient: ").Append(Recipient).Append("\n");
+            sb.Append("  Recipient: ").Append(Recipient).Append("\n");
             sb.Append("  Sender: ").Append(Sender).Append("\n");
             sb.Append("}\n");
             return sb.ToString();

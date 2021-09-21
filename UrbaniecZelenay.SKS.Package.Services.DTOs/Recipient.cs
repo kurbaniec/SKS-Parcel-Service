@@ -73,7 +73,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Receipient {\n");
+            sb.Append("class Recipient {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Street: ").Append(Street).Append("\n");
             sb.Append("  PostalCode: ").Append(PostalCode).Append("\n");

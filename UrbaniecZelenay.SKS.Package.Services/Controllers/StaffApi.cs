@@ -69,7 +69,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult ReportParcelHop(
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId,
-            [FromRoute] [Required] [RegularExpression(@"^[A-Z]{4}\\d{1,4}$")] string code)
+            [FromRoute] [Required] [RegularExpression(@"^[A-Z]{4}\d{1,4}$")] string code)
         {
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200);
