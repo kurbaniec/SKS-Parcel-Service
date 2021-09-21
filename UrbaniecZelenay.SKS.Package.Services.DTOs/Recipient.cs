@@ -19,7 +19,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
     /// 
     /// </summary>
     [DataContract]
-    public partial class Receipient
+    public partial class Recipient
     { 
         /// <summary>
         /// Name of person or company.
