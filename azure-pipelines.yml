@@ -16,19 +16,16 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
-- task: ArchiveFiles@2
+- task: DotNetCoreCLI@2
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
+    command: 'publish'
+    publishWebProjects: true
 
-# - task: AzureRmWebAppDeployment@4
-#   inputs:
-#     ConnectionType: 'AzureRM'
-#     azureSubscription: 'Azure for Students (e83a81e8-626a-4472-b9c5-ccc1545ef2f1)'
-#     appType: 'webAppLinux'
-#     WebAppName: 'sks-team-x'
-#     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-#     RuntimeStack: 'DOTNETCORE|5.0'
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure for Students (e83a81e8-626a-4472-b9c5-ccc1545ef2f1)'
+    appType: 'webAppLinux'
+    WebAppName: 'sks-team-x'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'DOTNETCORE|5.0'
