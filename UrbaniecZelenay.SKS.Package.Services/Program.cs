@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
 
@@ -6,6 +7,7 @@ namespace UrbaniecZelenay.SKS.Package.Services
     /// <summary>
     /// Program
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         /// <summary>

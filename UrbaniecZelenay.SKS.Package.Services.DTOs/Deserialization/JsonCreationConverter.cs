@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -6,6 +7,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs.Deserialization
 {
     // Customize JsonConverter to implement polymorphic data binding
     // See: https://www.tutorialdocs.com/article/webapi-data-binding.html
+    [ExcludeFromCodeCoverage]
     public abstract class JsonCreationConverter<T> : JsonConverter
     {
         public override bool CanWrite => false;

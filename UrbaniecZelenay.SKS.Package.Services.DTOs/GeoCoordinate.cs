@@ -9,6 +9,7 @@
  */
 
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
@@ -19,6 +20,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
     /// 
     /// </summary>
     [DataContract]
+    [ExcludeFromCodeCoverage]
     public partial class GeoCoordinate
     { 
         /// <summary>
