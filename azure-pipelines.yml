@@ -19,6 +19,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
+    arguments: '/p:IsWebConfigTransformDisabled=true'
     publishWebProjects: true
 
 - task: AzureRmWebAppDeployment@4
