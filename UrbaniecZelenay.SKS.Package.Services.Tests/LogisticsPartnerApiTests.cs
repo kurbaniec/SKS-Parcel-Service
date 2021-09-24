@@ -79,8 +79,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                     Street = "Teststrasse 2"
                 },
             };
-            var controller = new LogisticsPartnerApiController();
             var trackingId = "PYJRB4HZ6";
+            var controller = new LogisticsPartnerApiController();
+            
 
             var result = controller.TransitionParcel(validParcel, trackingId);
             
