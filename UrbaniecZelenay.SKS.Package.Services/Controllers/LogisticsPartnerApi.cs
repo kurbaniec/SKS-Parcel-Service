@@ -44,6 +44,14 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         public virtual IActionResult TransitionParcel([FromBody] Parcel body,
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId)
         {
+            if (body.Weight <= 0)
+            {
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = "Invalid Weight"
+                });
+            }
+            
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(NewParcelInfo));
 
@@ -55,7 +63,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             var example = exampleJson != null
                 ? JsonConvert.DeserializeObject<NewParcelInfo>(exampleJson)
                 : default(NewParcelInfo); //TODO: Change the data returned
-            return new ObjectResult(example);
+            return new OkObjectResult(example);
         }
     }
 }
