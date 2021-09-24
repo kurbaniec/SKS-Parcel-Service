@@ -27,11 +27,3 @@ steps:
     targetPath: '$(Pipeline.Workspace)'
     artifact: 'CD'
     publishLocation: 'pipeline'
-#- task: AzureRmWebAppDeployment@4
-#  inputs:
-#    ConnectionType: 'AzureRM'
-#    azureSubscription: 'Azure for Students (e83a81e8-626a-4472-b9c5-ccc1545ef2f1)'
-#    appType: 'webAppLinux'
-#    WebAppName: 'sks-team-x'
-#    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-#    RuntimeStack: 'DOTNETCORE|5.0'
