@@ -44,6 +44,14 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         public virtual IActionResult TrackParcel(
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId)
         {
+            if (trackingId == null)
+            {
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = "No tracking ID given"
+                });
+            }
+            
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(TrackingInformation));
 

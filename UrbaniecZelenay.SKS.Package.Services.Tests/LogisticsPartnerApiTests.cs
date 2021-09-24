@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.Services.Controllers;
@@ -6,6 +7,7 @@ using UrbaniecZelenay.SKS.Package.Services.DTOs;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class LogisticsPartnerApiTests
     {
         // MethodNameToTest_Scenario_Outcome
@@ -42,8 +44,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                     Street = "Teststrasse 2"
                 },
             };
-            var controller = new LogisticsPartnerApiController();
             var trackingId = "PYJRB4HZ6";
+            var controller = new LogisticsPartnerApiController();
 
             var result = controller.TransitionParcel(validParcel, trackingId);
             
@@ -55,7 +57,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         }
         
         [Test]
-        public void TransitionParcel_ZeroWeight_Error()
+        public void TransitionParcel_ZeroWeight_ErrorReturned()
         {
             var validParcel = new Parcel
             {
