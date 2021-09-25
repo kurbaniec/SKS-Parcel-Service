@@ -17,16 +17,20 @@ steps:
   displayName: 'dotnet build $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: Publish
   inputs:
     command: 'publish'
     arguments: '/p:IsWebConfigTransformDisabled=true'
     publishWebProjects: true
 
 - task: DotNetCoreCLI@2
+  displayName: 'Run Tests'
   inputs:
     command: test
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    testRunTitle: TestsResult
+
 
 - task: PublishPipelineArtifact@1
   inputs:
