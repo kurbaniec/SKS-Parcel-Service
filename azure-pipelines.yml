@@ -17,20 +17,25 @@ steps:
   displayName: 'dotnet build $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  displayName: Publish
+  displayName: 'publish'
   inputs:
     command: 'publish'
     arguments: '/p:IsWebConfigTransformDisabled=true'
     publishWebProjects: true
 
 - task: DotNetCoreCLI@2
-  displayName: 'Run Tests'
+  displayName: 'test'
   inputs:
     command: test
     projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --logger trx'
     testRunTitle: TestsResult
 
+- task: PublishTestResults@2
+  inputs:
+    testRunner: NUnit
+    testResultsFiles: '**/*.trx'
+    failTaskOnFailedTests: true
 
 - task: PublishPipelineArtifact@1
   inputs:
