@@ -9,9 +9,11 @@
  */
 
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
+using UrbaniecZelenay.SKS.Package.Services.DTOs.Deserialization;
 
 namespace UrbaniecZelenay.SKS.Package.Services.DTOs
 { 
@@ -19,6 +21,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
     /// 
     /// </summary>
     [DataContract]
+    [JsonConverter(typeof(HopJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public partial class Hop
     { 
         /// <summary>
@@ -34,7 +38,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>Unique CODE of the hop.</value>
         [Required]
-        [RegularExpression("/^[A-Z]{4}\\d{1,4}$/")]
+        [RegularExpression(@"^[A-Z]{4}\d{1,4}$")]
         [DataMember(Name="code")]
         public string Code { get; set; }
 

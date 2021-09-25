@@ -9,6 +9,7 @@
  */
 
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
@@ -19,7 +20,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
     /// 
     /// </summary>
     [DataContract]
-    public partial class Receipient
+    [ExcludeFromCodeCoverage]
+    public partial class Recipient
     { 
         /// <summary>
         /// Name of person or company.
@@ -73,7 +75,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Receipient {\n");
+            sb.Append("class Recipient {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Street: ").Append(Street).Append("\n");
             sb.Append("  PostalCode: ").Append(PostalCode).Append("\n");

@@ -9,6 +9,7 @@
  */
 
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
@@ -19,6 +20,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
     /// 
     /// </summary>
     [DataContract]
+    [ExcludeFromCodeCoverage]
     public partial class Parcel
     { 
         /// <summary>
@@ -30,12 +32,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         public float? Weight { get; set; }
 
         /// <summary>
-        /// Gets or Sets Receipient
+        /// Gets or Sets Recipient
         /// </summary>
         [Required]
 
-        [DataMember(Name="receipient")]
-        public Receipient Receipient { get; set; }
+        [DataMember(Name="recipient")]
+        public Recipient Recipient { get; set; }
 
         /// <summary>
         /// Gets or Sets Sender
@@ -43,7 +45,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         [Required]
 
         [DataMember(Name="sender")]
-        public Receipient Sender { get; set; }
+        public Recipient Sender { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -54,7 +56,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
             var sb = new StringBuilder();
             sb.Append("class Parcel {\n");
             sb.Append("  Weight: ").Append(Weight).Append("\n");
-            sb.Append("  Receipient: ").Append(Receipient).Append("\n");
+            sb.Append("  Recipient: ").Append(Recipient).Append("\n");
             sb.Append("  Sender: ").Append(Sender).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -81,8 +83,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
                 // Suitable nullity checks etc, of course :)
                     if (Weight != null)
                     hashCode = hashCode * 59 + Weight.GetHashCode();
-                    if (Receipient != null)
-                    hashCode = hashCode * 59 + Receipient.GetHashCode();
+                    if (Recipient != null)
+                    hashCode = hashCode * 59 + Recipient.GetHashCode();
                     if (Sender != null)
                     hashCode = hashCode * 59 + Sender.GetHashCode();
                 return hashCode;
