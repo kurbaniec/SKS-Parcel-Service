@@ -22,6 +22,12 @@ steps:
     arguments: '/p:IsWebConfigTransformDisabled=true'
     publishWebProjects: true
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Pipeline.Workspace)'
