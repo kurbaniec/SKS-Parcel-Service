@@ -42,5 +42,37 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             Assert.NotNull(error);
             Assert.NotNull(error.ErrorMessage);
         }
+
+        [Test]
+        public void ReportParcelHop_ValidTrackingIdAndCode_SuccessStatusReturned()
+        {
+            var trackingId = "PYJRB4HZ6";
+            var hopCode = "AAAA1234";
+
+            var controller = new StaffApiController();
+
+            var result = controller.ReportParcelHop(trackingId, hopCode);
+
+            var statusCode = result as StatusCodeResult;
+            Assert.NotNull(statusCode);
+            Assert.AreEqual(200, statusCode.StatusCode);
+        }
+        
+        [Test]
+        public void ReportParcelHop_NullCode_ErrorReturned()
+        {
+            var trackingId = "PYJRB4HZ6";
+            string hopCode = null;
+
+            var controller = new StaffApiController();
+
+            var result = controller.ReportParcelHop(trackingId, hopCode);
+            
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
     }
 }

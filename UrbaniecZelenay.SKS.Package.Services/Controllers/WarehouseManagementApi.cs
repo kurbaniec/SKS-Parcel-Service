@@ -50,7 +50,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(404);
             string exampleJson = null;
-            exampleJson = "\"\"";
+            exampleJson =
+                "{\"hopType\": \"string\", \"code\": \"string\", \"description\": \"string\", \"processingDelayMins\": 0, \"locationName\": \"string\", \"locationCoordinates\": {\"lat\": 0, \"lon\": 0}, \"level\": 0, \"nextHops\": [{\"traveltimeMins\": 0, \"hop\": {\"hopType\": \"string\", \"code\": \"string\", \"description\": \"string\", \"processingDelayMins\": 0, \"locationName\": \"string\", \"locationCoordinates\": {\"lat\": 0, \"lon\": 0}}}]}";
 
             var example = exampleJson != null
                 ? JsonConvert.DeserializeObject<Warehouse>(exampleJson)
@@ -73,6 +74,14 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "An error occurred loading.")]
         public virtual IActionResult GetWarehouse([FromRoute] [Required] string code)
         {
+            if (code == null)
+            {
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = "Code must not be null."
+                }); 
+            }
+            
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(Warehouse));
 
@@ -82,7 +91,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(404);
             string exampleJson = null;
-            exampleJson = "\"\"";
+            exampleJson = "{\"hopType\": \"string\", \"code\": \"string\", \"description\": \"string\", \"processingDelayMins\": 0, \"locationName\": \"string\", \"locationCoordinates\": {\"lat\": 0, \"lon\": 0}, \"level\": 0, \"nextHops\": [{\"traveltimeMins\": 0, \"hop\": {\"hopType\": \"string\", \"code\": \"string\", \"description\": \"string\", \"processingDelayMins\": 0, \"locationName\": \"string\", \"locationCoordinates\": {\"lat\": 0, \"lon\": 0}}}]}";
 
             var example = exampleJson != null
                 ? JsonConvert.DeserializeObject<Warehouse>(exampleJson)
@@ -103,13 +112,20 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult ImportWarehouses([FromBody] Warehouse body)
         {
+            if (body == null)
+            {
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = "Warehouse body must not be null."
+                });
+            }
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200);
 
             //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(400, default(Error));
 
-            throw new NotImplementedException();
+            return StatusCode(200);
         }
     }
 }

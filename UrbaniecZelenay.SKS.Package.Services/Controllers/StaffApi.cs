@@ -78,6 +78,13 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId,
             [FromRoute] [Required] [RegularExpression(@"^[A-Z]{4}\d{1,4}$")] string code)
         {
+            if (code == null)
+            {
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = "No code given"
+                });
+            }
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200);
 
@@ -87,7 +94,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(404);
 
-            throw new NotImplementedException();
+            return StatusCode(200);
         }
     }
 }
