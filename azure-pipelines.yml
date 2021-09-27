@@ -28,8 +28,13 @@ steps:
   inputs:
     command: test
     projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --collect "XPlat Code Coverage"'
     testRunTitle: TestsResult
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/tests/**/coverage.cobertura.xml'
 
 - task: PublishPipelineArtifact@1
   inputs:
