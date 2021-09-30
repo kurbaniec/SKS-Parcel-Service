@@ -9,13 +9,12 @@
  */
 
 using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+using UrbaniecZelenay.SKS.Package.BusinessLogic;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 
@@ -27,6 +26,15 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     [ApiController]
     public class StaffApiController : ControllerBase
     {
+        private readonly IStaffLogic staffLogic;
+        private readonly IMapper mapper;
+        
+        public StaffApiController(IMapper mapper)
+        {
+            this.staffLogic = new StaffLogic();
+            this.mapper = mapper;
+        }
+        
         /// <summary>
         /// Report that a Parcel has been delivered at it&#x27;s final destination address. 
         /// </summary>
@@ -42,22 +50,42 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         public virtual IActionResult ReportParcelDelivery(
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId)
         {
-            if (trackingId == null)
+            // if (trackingId == null)
+            // {
+            //     return StatusCode(400, new Error
+            //     {
+            //         ErrorMessage = "No tracking ID given"
+            //     });
+            // }
+            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(200);
+            //
+            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(400, default(Error));
+            //
+            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(404);
+            
+            try
+            {
+                staffLogic.ReportParcelDelivery(trackingId);
+            }
+            catch (ArgumentNullException)
             {
                 return StatusCode(400, new Error
                 {
-                    ErrorMessage = "No tracking ID given"
+                    ErrorMessage = "Invalid Payload"
                 });
             }
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200);
-
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(Error));
-
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404);
-
+            // TODO NotFoundException
+            // catch (NotFoundException)
+            // {
+            //     return StatusCode(404, new Error
+            //     {
+            //         ErrorMessage = "Parcel does not exist with this tracking ID or hop with code not found."
+            //     });
+            // }
+            
             return StatusCode(200);
         }
 
@@ -78,22 +106,44 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId,
             [FromRoute] [Required] [RegularExpression(@"^[A-Z]{4}\d{1,4}$")] string code)
         {
-            if (code == null)
+            // if (code == null)
+            // {
+            //     return StatusCode(400, new Error
+            //     {
+            //         ErrorMessage = "No code given"
+            //     });
+            // }
+            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(200);
+            //
+            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(400, default(Error));
+            //
+            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(404);
+            //
+            // return StatusCode(200);
+            
+            try
+            {
+                staffLogic.ReportParcelHop(trackingId, code);
+            }
+            catch (ArgumentNullException)
             {
                 return StatusCode(400, new Error
                 {
-                    ErrorMessage = "No code given"
+                    ErrorMessage = "Invalid Payload"
                 });
             }
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200);
-
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(Error));
-
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404);
-
+            // TODO NotFoundException
+            // catch (NotFoundException)
+            // {
+            //     return StatusCode(404, new Error
+            //     {
+            //         ErrorMessage = "Parcel does not exist with this tracking ID or hop with code not found."
+            //     });
+            // }
+            
             return StatusCode(200);
         }
     }
