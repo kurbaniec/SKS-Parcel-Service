@@ -2,7 +2,7 @@
 using AutoMapper;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 using BlParcel=UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
-
+using BlRecipient=UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Recipient;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Mappings
 {
@@ -19,6 +19,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
         {
             CreateMap<Parcel, BlParcel>().ReverseMap();
             CreateMap<BlParcel, TrackingInformation>();
+            CreateMap<BlParcel, NewParcelInfo>();
+            CreateMap<Recipient, BlRecipient>().ReverseMap();
         }
     }
 }

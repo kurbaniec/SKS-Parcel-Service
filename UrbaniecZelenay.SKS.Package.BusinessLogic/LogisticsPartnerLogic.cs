@@ -5,15 +5,25 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
-    public class RecipientLogic : IRecipientLogic
+    public class LogisticsPartnerLogic : ILogisticsPartnerLogic
     {
-        public Parcel TrackParcel(string? trackingId)
+        public Parcel TransitionParcel(Parcel? body, string? trackingId)
         {
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            if (body.Weight <= 0)
+            {
+                throw new ArgumentException("Parcel weight cannot be <= 0");
+            }
+
             if (trackingId == null)
             {
                 throw new ArgumentNullException(nameof(trackingId));
             }
-
+            
             return new Parcel
             {
                 TrackingId = trackingId,
@@ -34,7 +44,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                     City = "Vienna",
                     Country = "Austria"
                 },
-                State = Parcel.StateEnum.InTransportEnum,
+                State = Parcel.StateEnum.TransferredEnum,
                 VisitedHops = new List<HopArrival>(),
                 FutureHops = new List<HopArrival>()
             };
