@@ -15,21 +15,20 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace UrbaniecZelenay.SKS.Package.Services.DTOs
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
     [DataContract]
     [ExcludeFromCodeCoverage]
     public partial class Transferwarehouse : Hop
-    { 
+    {
         /// <summary>
         /// GeoJSON of the are covered by the logistics partner.
         /// </summary>
         /// <value>GeoJSON of the are covered by the logistics partner.</value>
         [Required]
-
-        [DataMember(Name="regionGeoJson")]
+        [DataMember(Name = "regionGeoJson")]
         public string RegionGeoJson { get; set; }
 
         /// <summary>
@@ -37,8 +36,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>Name of the logistics partner.</value>
         [Required]
-
-        [DataMember(Name="logisticsPartner")]
+        [DataMember(Name = "logisticsPartner")]
         public string LogisticsPartner { get; set; }
 
         /// <summary>
@@ -46,8 +44,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>BaseURL of the logistics partner&#x27;s REST service.</value>
         [Required]
-
-        [DataMember(Name="logisticsPartnerUrl")]
+        [DataMember(Name = "logisticsPartnerUrl")]
         public string LogisticsPartnerUrl { get; set; }
 
         /// <summary>
@@ -69,7 +66,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
-        public  new string ToJson()
+        public new string ToJson()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
@@ -84,11 +81,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (RegionGeoJson != null)
+                if (RegionGeoJson != null)
                     hashCode = hashCode * 59 + RegionGeoJson.GetHashCode();
-                    if (LogisticsPartner != null)
+                if (LogisticsPartner != null)
                     hashCode = hashCode * 59 + LogisticsPartner.GetHashCode();
-                    if (LogisticsPartnerUrl != null)
+                if (LogisticsPartnerUrl != null)
                     hashCode = hashCode * 59 + LogisticsPartnerUrl.GetHashCode();
                 return hashCode;
             }

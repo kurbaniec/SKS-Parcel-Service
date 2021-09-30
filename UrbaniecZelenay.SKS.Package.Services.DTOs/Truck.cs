@@ -15,21 +15,20 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace UrbaniecZelenay.SKS.Package.Services.DTOs
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
     [DataContract]
     [ExcludeFromCodeCoverage]
     public partial class Truck : Hop
-    { 
+    {
         /// <summary>
         /// GeoJSON of the are covered by the truck.
         /// </summary>
         /// <value>GeoJSON of the are covered by the truck.</value>
         [Required]
-
-        [DataMember(Name="regionGeoJson")]
+        [DataMember(Name = "regionGeoJson")]
         public string RegionGeoJson { get; set; }
 
         /// <summary>
@@ -37,8 +36,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>The truck&#x27;s number plate.</value>
         [Required]
-
-        [DataMember(Name="numberPlate")]
+        [DataMember(Name = "numberPlate")]
         public string NumberPlate { get; set; }
 
         /// <summary>
@@ -59,7 +57,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
-        public  new string ToJson()
+        public new string ToJson()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
@@ -74,9 +72,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (RegionGeoJson != null)
+                if (RegionGeoJson != null)
                     hashCode = hashCode * 59 + RegionGeoJson.GetHashCode();
-                    if (NumberPlate != null)
+                if (NumberPlate != null)
                     hashCode = hashCode * 59 + NumberPlate.GetHashCode();
                 return hashCode;
             }

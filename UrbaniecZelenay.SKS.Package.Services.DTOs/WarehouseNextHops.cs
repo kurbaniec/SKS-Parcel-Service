@@ -15,28 +15,26 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace UrbaniecZelenay.SKS.Package.Services.DTOs
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
     [DataContract]
     [ExcludeFromCodeCoverage]
     public partial class WarehouseNextHops
-    { 
+    {
         /// <summary>
         /// Gets or Sets TraveltimeMins
         /// </summary>
         [Required]
-
-        [DataMember(Name="traveltimeMins")]
+        [DataMember(Name = "traveltimeMins")]
         public int? TraveltimeMins { get; set; }
 
         /// <summary>
         /// Gets or Sets Hop
         /// </summary>
         [Required]
-
-        [DataMember(Name="hop")]
+        [DataMember(Name = "hop")]
         public Hop Hop { get; set; }
 
         /// <summary>
@@ -72,9 +70,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (TraveltimeMins != null)
+                if (TraveltimeMins != null)
                     hashCode = hashCode * 59 + TraveltimeMins.GetHashCode();
-                    if (Hop != null)
+                if (Hop != null)
                     hashCode = hashCode * 59 + Hop.GetHashCode();
                 return hashCode;
             }
