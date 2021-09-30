@@ -77,7 +77,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
                     ErrorMessage = "Invalid Payload"
                 });
             }
-            // TODO NotFoundException
+            // TODO Create NotFoundException
             // catch (NotFoundException)
             // {
             //     return StatusCode(404, new Error
@@ -135,7 +135,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
                     ErrorMessage = "Invalid Payload"
                 });
             }
-            // TODO NotFoundException
+            // TODO Create NotFoundException
             // catch (NotFoundException)
             // {
             //     return StatusCode(404, new Error
