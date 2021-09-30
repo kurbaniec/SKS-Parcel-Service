@@ -10,7 +10,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,8 +19,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using UrbaniecZelenay.SKS.Package.Services.Filters;
 
 
@@ -54,6 +51,8 @@ namespace UrbaniecZelenay.SKS.Package.Services
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+            
             // Add framework services.
             services
                 .AddMvc(options =>

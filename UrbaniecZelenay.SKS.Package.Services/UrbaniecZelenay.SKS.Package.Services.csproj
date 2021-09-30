@@ -9,6 +9,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.2.1" />
@@ -19,6 +20,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Entities\UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic\UrbaniecZelenay.SKS.Package.BusinessLogic.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.DTOs\UrbaniecZelenay.SKS.Package.Services.DTOs.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.Interfaces\UrbaniecZelenay.SKS.Package.Services.Interfaces.csproj" />
   </ItemGroup>

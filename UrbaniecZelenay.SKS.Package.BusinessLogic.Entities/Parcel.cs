@@ -37,7 +37,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         /// State of the parcel.
         /// </summary>
         /// <value>State of the parcel.</value>
-        private enum StateEnum
+        public enum StateEnum
         {
             /// <summary>
             /// Enum PickupEnum for Pickup
