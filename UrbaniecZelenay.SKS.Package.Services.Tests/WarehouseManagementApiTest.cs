@@ -20,12 +20,30 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         public void ExportWarehouse_Valid_AllWarehousesReturned()
         {
             var controller = new WarehouseManagementApiController();
+            
             var result = controller.ExportWarehouses();
 
             var objectResult = result as ObjectResult;
             Assert.NotNull(objectResult);
             var warehouse = objectResult.Value as Warehouse;
             Assert.NotNull(warehouse);
+        }
+        
+        [Test]
+        public void ExportWarehouse_InternalError_ErrorReturned()
+        {
+            var controller = new WarehouseManagementApiController
+            {
+                triggerFaultyUnitTest = true
+            };
+
+            var result = controller.ExportWarehouses();
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
         }
 
         [Test]

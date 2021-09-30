@@ -27,6 +27,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     [ApiController]
     public class WarehouseManagementApiController : ControllerBase
     {
+        // TODO remove this
+        public bool triggerFaultyUnitTest = false;
+        
         /// <summary>
         /// Exports the hierarchy of Warehouse and Truck objects. 
         /// </summary>
@@ -41,6 +44,13 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "An error occurred loading.")]
         public virtual IActionResult ExportWarehouses()
         {
+            if (triggerFaultyUnitTest)
+            {
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = "An error occurred loading."
+                }); 
+            }
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(Warehouse));
 
