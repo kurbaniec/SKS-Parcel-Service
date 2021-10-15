@@ -76,6 +76,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             // return new OkObjectResult(example);
             
             var blParcel = mapper.Map<BlParcel>(body);
+            blParcel.FutureHops.Add(null);
             
             BlParcel blResult;
             try
