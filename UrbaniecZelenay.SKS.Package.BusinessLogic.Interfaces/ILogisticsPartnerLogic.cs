@@ -8,9 +8,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces
         /// <summary>
         /// Submit a new parcel to the logistics service. 
         /// </summary>
-        /// <param name="body"></param>
-        /// <param name="trackingId"></param>
+        /// <param name="parcel"></param>
         /// <returns></returns>
-        public Parcel TransitionParcel(Parcel? body, string? trackingId);
+        public Parcel TransitionParcel(Parcel? parcel);
     }
 }

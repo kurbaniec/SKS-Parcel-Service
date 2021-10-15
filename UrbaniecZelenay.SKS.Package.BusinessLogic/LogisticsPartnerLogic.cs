@@ -7,26 +7,21 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
     public class LogisticsPartnerLogic : ILogisticsPartnerLogic
     {
-        public Parcel TransitionParcel(Parcel? body, string? trackingId)
+        public Parcel TransitionParcel(Parcel? parcel)
         {
-            if (body == null)
+            if (parcel == null)
             {
-                throw new ArgumentNullException(nameof(body));
+                throw new ArgumentNullException(nameof(parcel));
             }
 
-            if (body.Weight <= 0)
+            if (parcel.Weight <= 0)
             {
                 throw new ArgumentException("Parcel weight cannot be <= 0");
             }
 
-            if (trackingId == null)
-            {
-                throw new ArgumentNullException(nameof(trackingId));
-            }
-            
             return new Parcel
             {
-                TrackingId = trackingId,
+                TrackingId = parcel.TrackingId,
                 Weight = 1,
                 Recipient = new Recipient
                 {
