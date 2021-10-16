@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
@@ -9,14 +12,18 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
     {
         public Parcel TransitionParcel(Parcel? body, string? trackingId)
         {
+            
             if (body == null)
             {
                 throw new ArgumentNullException(nameof(body));
             }
 
-            if (body.Weight <= 0)
+            IValidator<Parcel> parcelValidator = new ParcelValidator();
+            var validationResult = parcelValidator.Validate(body);
+            if (!validationResult.IsValid)
             {
-                throw new ArgumentException("Parcel weight cannot be <= 0");
+                string validationErrors = string.Join(Environment.NewLine, validationResult.Errors);
+                throw new ArgumentException(validationErrors);
             }
 
             if (trackingId == null)

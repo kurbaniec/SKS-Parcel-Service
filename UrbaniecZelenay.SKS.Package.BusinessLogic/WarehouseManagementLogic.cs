@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentValidation;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
@@ -55,6 +57,14 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             {
                 throw new ArgumentNullException(nameof(body));
             }
+            IValidator<Warehouse> parcelValidator = new WarehouseValidator();
+            var validationResult = parcelValidator.Validate(body);
+            if (!validationResult.IsValid)
+            {
+                string validationErrors = string.Join(Environment.NewLine, validationResult.Errors);
+                throw new ArgumentException(validationErrors);
+            }
+
         }
     }
 }

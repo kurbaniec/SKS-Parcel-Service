@@ -15,4 +15,10 @@
         <PackageReference Include="coverlet.collector" Version="3.0.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Entities\UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic\UrbaniecZelenay.SKS.Package.BusinessLogic.csproj" />
+    </ItemGroup>
+
 </Project>
