@@ -30,13 +30,13 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly ILogisticsPartnerLogic logisticsPartnerLogic;
         private readonly IMapper mapper;
-        
+
         public LogisticsPartnerApiController(IMapper mapper)
         {
             this.logisticsPartnerLogic = new LogisticsPartnerLogic();
             this.mapper = mapper;
         }
-        
+
         /// <summary>
         /// Transfer an existing parcel into the system from the service of a logistics partner. 
         /// </summary>
@@ -52,7 +52,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             description: "Successfully transitioned the parcel")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult TransitionParcel([FromBody] Parcel body,
-            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId)
+            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
+            string trackingId)
         {
             // if (body.Weight <= 0)
             // {
@@ -74,13 +75,17 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //     ? JsonConvert.DeserializeObject<NewParcelInfo>(exampleJson)
             //     : default(NewParcelInfo); //TODO: Change the data returned
             // return new OkObjectResult(example);
-            
-            var blParcel = mapper.Map<BlParcel>(body);
-            
+
+            // Pass parameter (here trackingId) to AutoMapper
+            // See: https://stackoverflow.com/a/34419562/12347616
+            // One could also call `blParcel.TrackingIDd=tracking` after mapper invocation.
+            var blParcel = mapper.Map<BlParcel>(body, 
+                opt => opt.AfterMap((_, dest) => dest.TrackingId=trackingId));
+
             BlParcel blResult;
             try
             {
-                blResult = logisticsPartnerLogic.TransitionParcel(blParcel, trackingId);
+                blResult = logisticsPartnerLogic.TransitionParcel(blParcel);
             }
             catch (ArgumentNullException)
             {
