@@ -9,15 +9,16 @@
  */
 
 using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+using UrbaniecZelenay.SKS.Package.BusinessLogic;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
+using BlParcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Controllers
 {
@@ -27,6 +28,21 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     [ApiController]
     public class LogisticsPartnerApiController : ControllerBase
     {
+        private readonly ILogisticsPartnerLogic logisticsPartnerLogic;
+        private readonly IMapper mapper;
+
+        public LogisticsPartnerApiController(IMapper mapper)
+        {
+            this.logisticsPartnerLogic = new LogisticsPartnerLogic();
+            this.mapper = mapper;
+        }
+        
+        // public LogisticsPartnerApiController(IMapper mapper, ILogisticsPartnerLogic logisticsPartnerLogic)
+        // {
+        //     this.logisticsPartnerLogic = logisticsPartnerLogic;
+        //     this.mapper = mapper;
+        // }
+
         /// <summary>
         /// Transfer an existing parcel into the system from the service of a logistics partner. 
         /// </summary>
@@ -42,28 +58,58 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             description: "Successfully transitioned the parcel")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult TransitionParcel([FromBody] Parcel body,
-            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId)
+            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
+            string trackingId)
         {
-            if (body.Weight <= 0)
+            // if (body.Weight <= 0)
+            // {
+            //     return StatusCode(400, new Error
+            //     {
+            //         ErrorMessage = "Invalid Weight"
+            //     });
+            // }
+            //
+            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(200, default(NewParcelInfo));
+            //
+            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(400, default(Error));
+            // string exampleJson = null;
+            // exampleJson = "{\n  \"trackingId\" : \"PYJRB4HZ6\"\n}";
+            //
+            // var example = exampleJson != null
+            //     ? JsonConvert.DeserializeObject<NewParcelInfo>(exampleJson)
+            //     : default(NewParcelInfo); //TODO: Change the data returned
+            // return new OkObjectResult(example);
+
+            // Pass parameter (here trackingId) to AutoMapper
+            // See: https://stackoverflow.com/a/34419562/12347616
+            // One could also call `blParcel.TrackingIDd=tracking` after mapper invocation.
+            var blParcel = mapper.Map<BlParcel>(body, 
+                opt => opt.AfterMap((_, dest) => dest.TrackingId=trackingId));
+
+            BlParcel blResult;
+            try
+            {
+                blResult = logisticsPartnerLogic.TransitionParcel(blParcel);
+            }
+            catch (ArgumentNullException)
             {
                 return StatusCode(400, new Error
                 {
-                    ErrorMessage = "Invalid Weight"
+                    ErrorMessage = "Invalid Payload"
                 });
             }
-            
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(NewParcelInfo));
+            catch (ArgumentException ex)
+            {
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
 
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(Error));
-            string exampleJson = null;
-            exampleJson = "{\n  \"trackingId\" : \"PYJRB4HZ6\"\n}";
-
-            var example = exampleJson != null
-                ? JsonConvert.DeserializeObject<NewParcelInfo>(exampleJson)
-                : default(NewParcelInfo); //TODO: Change the data returned
-            return new OkObjectResult(example);
+            var svcResult = mapper.Map<NewParcelInfo>(blResult);
+            return new ObjectResult(svcResult);
         }
     }
 }

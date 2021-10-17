@@ -8,6 +8,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package.Services.Tests", "UrbaniecZelenay.SKS.Package.Services.Tests\UrbaniecZelenay.SKS.Package.Services.Tests.csproj", "{AD13DB77-05FA-435A-B945-59FA5787A0A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package.BusinessLogic.Entities", "UrbaniecZelenay.SKS.Package.BusinessLogic.Entities\UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.csproj", "{5EA7976E-C6D8-4385-A6DF-103709F8E66F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces", "UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces.csproj", "{F791BAFC-503A-4460-AB1D-BFA41F38BA2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package.BusinessLogic.Tests", "UrbaniecZelenay.SKS.Package.BusinessLogic.Tests\UrbaniecZelenay.SKS.Package.BusinessLogic.Tests.csproj", "{F78C9233-DFD8-42DF-839F-B5C4008F0D9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package.BusinessLogic", "UrbaniecZelenay.SKS.Package.BusinessLogic\UrbaniecZelenay.SKS.Package.BusinessLogic.csproj", "{3BD904B4-E19A-41D9-AFF5-D08537591486}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +38,21 @@ Global
 		{AD13DB77-05FA-435A-B945-59FA5787A0A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD13DB77-05FA-435A-B945-59FA5787A0A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD13DB77-05FA-435A-B945-59FA5787A0A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EA7976E-C6D8-4385-A6DF-103709F8E66F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA7976E-C6D8-4385-A6DF-103709F8E66F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA7976E-C6D8-4385-A6DF-103709F8E66F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA7976E-C6D8-4385-A6DF-103709F8E66F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F791BAFC-503A-4460-AB1D-BFA41F38BA2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F791BAFC-503A-4460-AB1D-BFA41F38BA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F791BAFC-503A-4460-AB1D-BFA41F38BA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F791BAFC-503A-4460-AB1D-BFA41F38BA2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F78C9233-DFD8-42DF-839F-B5C4008F0D9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F78C9233-DFD8-42DF-839F-B5C4008F0D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F78C9233-DFD8-42DF-839F-B5C4008F0D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F78C9233-DFD8-42DF-839F-B5C4008F0D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BD904B4-E19A-41D9-AFF5-D08537591486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD904B4-E19A-41D9-AFF5-D08537591486}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD904B4-E19A-41D9-AFF5-D08537591486}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BD904B4-E19A-41D9-AFF5-D08537591486}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

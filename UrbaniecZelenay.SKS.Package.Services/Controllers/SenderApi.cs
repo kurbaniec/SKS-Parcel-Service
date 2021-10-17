@@ -9,15 +9,15 @@
  */
 
 using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+using UrbaniecZelenay.SKS.Package.BusinessLogic;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
+using BlParcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Controllers
 {
@@ -27,6 +27,20 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     [ApiController]
     public class SenderApiController : ControllerBase
     {
+        private readonly ISenderLogic senderLogic;
+        private readonly IMapper mapper;
+        
+        public SenderApiController(IMapper mapper)
+        {
+            this.senderLogic = new SenderLogic();
+            this.mapper = mapper;
+        }
+        
+        // public SenderApiController(IMapper mapper, ISenderLogic senderLogic)
+        // {
+        //     this.senderLogic = senderLogic;
+        //     this.mapper = mapper;
+        // }
         /// <summary>
         /// Submit a new parcel to the logistics service. 
         /// </summary>
@@ -42,25 +56,50 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult SubmitParcel([FromBody] Parcel body)
         {
-            if (body == null)
+            // if (body == null)
+            // {
+            //     return StatusCode(400, new Error
+            //     {
+            //         ErrorMessage = "No parcel given"
+            //     });
+            // }
+            // //TODO: Uncomment the next line to return response 201 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(201, default(NewParcelInfo));
+            //
+            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // // return StatusCode(400, default(Error));
+            // string exampleJson = null;
+            // exampleJson = "{\n  \"trackingId\" : \"PYJRB4HZ6\"\n}";
+            //
+            // var example = exampleJson != null
+            //     ? JsonConvert.DeserializeObject<NewParcelInfo>(exampleJson)
+            //     : default(NewParcelInfo); //TODO: Change the data returned
+            // return new ObjectResult(example);
+            
+            var blParcel = mapper.Map<BlParcel>(body);
+            
+            BlParcel blResult;
+            try
+            {
+                blResult = senderLogic.SubmitParcel(blParcel);
+            }
+            catch (ArgumentNullException)
             {
                 return StatusCode(400, new Error
                 {
-                    ErrorMessage = "No parcel given"
+                    ErrorMessage = "Invalid Payload"
                 });
             }
-            //TODO: Uncomment the next line to return response 201 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(201, default(NewParcelInfo));
+            catch (ArgumentException ex)
+            {
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
 
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(Error));
-            string exampleJson = null;
-            exampleJson = "{\n  \"trackingId\" : \"PYJRB4HZ6\"\n}";
-
-            var example = exampleJson != null
-                ? JsonConvert.DeserializeObject<NewParcelInfo>(exampleJson)
-                : default(NewParcelInfo); //TODO: Change the data returned
-            return new ObjectResult(example);
+            var svcResult = mapper.Map<NewParcelInfo>(blResult);
+            return StatusCode(201, svcResult);
         }
     }
 }

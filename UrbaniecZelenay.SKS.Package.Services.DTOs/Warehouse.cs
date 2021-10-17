@@ -16,20 +16,19 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace UrbaniecZelenay.SKS.Package.Services.DTOs
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
     [DataContract]
     [ExcludeFromCodeCoverage]
     public partial class Warehouse : Hop
-    { 
+    {
         /// <summary>
         /// Gets or Sets Level
         /// </summary>
         [Required]
-
-        [DataMember(Name="level")]
+        [DataMember(Name = "level")]
         public int? Level { get; set; }
 
         /// <summary>
@@ -37,8 +36,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>Next hops after this warehouse (warehouses or trucks).</value>
         [Required]
-
-        [DataMember(Name="nextHops")]
+        [DataMember(Name = "nextHops")]
         public List<WarehouseNextHops> NextHops { get; set; }
 
         /// <summary>
@@ -59,7 +57,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// Returns the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
-        public  new string ToJson()
+        public new string ToJson()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
@@ -74,9 +72,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Level != null)
+                if (Level != null)
                     hashCode = hashCode * 59 + Level.GetHashCode();
-                    if (NextHops != null)
+                if (NextHops != null)
                     hashCode = hashCode * 59 + NextHops.GetHashCode();
                 return hashCode;
             }

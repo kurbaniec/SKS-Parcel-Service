@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using UrbaniecZelenay.SKS.Package.Services.DTOs.Deserialization;
 
 namespace UrbaniecZelenay.SKS.Package.Services.DTOs
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
@@ -24,13 +24,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
     [JsonConverter(typeof(HopJsonConverter))]
     [ExcludeFromCodeCoverage]
     public partial class Hop
-    { 
+    {
         /// <summary>
         /// Gets or Sets HopType
         /// </summary>
         [Required]
-
-        [DataMember(Name="hopType")]
+        [DataMember(Name = "hopType")]
         public string HopType { get; set; }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// <value>Unique CODE of the hop.</value>
         [Required]
         [RegularExpression(@"^[A-Z]{4}\d{1,4}$")]
-        [DataMember(Name="code")]
+        [DataMember(Name = "code")]
         public string Code { get; set; }
 
         /// <summary>
@@ -47,8 +46,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>Description of the hop.</value>
         [Required]
-
-        [DataMember(Name="description")]
+        [DataMember(Name = "description")]
         public string Description { get; set; }
 
         /// <summary>
@@ -56,8 +54,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>Delay processing takes on the hop.</value>
         [Required]
-
-        [DataMember(Name="processingDelayMins")]
+        [DataMember(Name = "processingDelayMins")]
         public int? ProcessingDelayMins { get; set; }
 
         /// <summary>
@@ -65,16 +62,14 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>Name of the location (village, city, ..) of the hop.</value>
         [Required]
-
-        [DataMember(Name="locationName")]
+        [DataMember(Name = "locationName")]
         public string LocationName { get; set; }
 
         /// <summary>
         /// Gets or Sets LocationCoordinates
         /// </summary>
         [Required]
-
-        [DataMember(Name="locationCoordinates")]
+        [DataMember(Name = "locationCoordinates")]
         public GeoCoordinate LocationCoordinates { get; set; }
 
         /// <summary>
@@ -114,17 +109,17 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (HopType != null)
+                if (HopType != null)
                     hashCode = hashCode * 59 + HopType.GetHashCode();
-                    if (Code != null)
+                if (Code != null)
                     hashCode = hashCode * 59 + Code.GetHashCode();
-                    if (Description != null)
+                if (Description != null)
                     hashCode = hashCode * 59 + Description.GetHashCode();
-                    if (ProcessingDelayMins != null)
+                if (ProcessingDelayMins != null)
                     hashCode = hashCode * 59 + ProcessingDelayMins.GetHashCode();
-                    if (LocationName != null)
+                if (LocationName != null)
                     hashCode = hashCode * 59 + LocationName.GetHashCode();
-                    if (LocationCoordinates != null)
+                if (LocationCoordinates != null)
                     hashCode = hashCode * 59 + LocationCoordinates.GetHashCode();
                 return hashCode;
             }

@@ -16,14 +16,14 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace UrbaniecZelenay.SKS.Package.Services.DTOs
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
     [DataContract]
     [ExcludeFromCodeCoverage]
     public partial class TrackingInformation
-    { 
+    {
         /// <summary>
         /// State of the parcel.
         /// </summary>
@@ -34,36 +34,36 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
             /// <summary>
             /// Enum PickupEnum for Pickup
             /// </summary>
-            [EnumMember(Value = "Pickup")]
-            PickupEnum = 0,
+            [EnumMember(Value = "Pickup")] PickupEnum = 0,
+
             /// <summary>
             /// Enum InTransportEnum for InTransport
             /// </summary>
-            [EnumMember(Value = "InTransport")]
-            InTransportEnum = 1,
+            [EnumMember(Value = "InTransport")] InTransportEnum = 1,
+
             /// <summary>
             /// Enum InTruckDeliveryEnum for InTruckDelivery
             /// </summary>
             [EnumMember(Value = "InTruckDelivery")]
             InTruckDeliveryEnum = 2,
+
             /// <summary>
             /// Enum TransferredEnum for Transferred
             /// </summary>
-            [EnumMember(Value = "Transferred")]
-            TransferredEnum = 3,
+            [EnumMember(Value = "Transferred")] TransferredEnum = 3,
+
             /// <summary>
             /// Enum DeliveredEnum for Delivered
             /// </summary>
-            [EnumMember(Value = "Delivered")]
-            DeliveredEnum = 4        }
+            [EnumMember(Value = "Delivered")] DeliveredEnum = 4
+        }
 
         /// <summary>
         /// State of the parcel.
         /// </summary>
         /// <value>State of the parcel.</value>
         [Required]
-
-        [DataMember(Name="state")]
+        [DataMember(Name = "state")]
         public StateEnum? State { get; set; }
 
         /// <summary>
@@ -71,8 +71,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>Hops visited in the past.</value>
         [Required]
-
-        [DataMember(Name="visitedHops")]
+        [DataMember(Name = "visitedHops")]
         public List<HopArrival> VisitedHops { get; set; }
 
         /// <summary>
@@ -80,8 +79,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         /// </summary>
         /// <value>Hops coming up in the future - their times are estimations.</value>
         [Required]
-
-        [DataMember(Name="futureHops")]
+        [DataMember(Name = "futureHops")]
         public List<HopArrival> FutureHops { get; set; }
 
         /// <summary>
@@ -118,11 +116,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (State != null)
+                if (State != null)
                     hashCode = hashCode * 59 + State.GetHashCode();
-                    if (VisitedHops != null)
+                if (VisitedHops != null)
                     hashCode = hashCode * 59 + VisitedHops.GetHashCode();
-                    if (FutureHops != null)
+                if (FutureHops != null)
                     hashCode = hashCode * 59 + FutureHops.GetHashCode();
                 return hashCode;
             }

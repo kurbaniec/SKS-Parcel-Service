@@ -10,7 +10,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Microsoft.AspNetCore.Authentication;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,8 +20,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using UrbaniecZelenay.SKS.Package.Services.Filters;
 
 
@@ -54,21 +52,22 @@ namespace UrbaniecZelenay.SKS.Package.Services
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+            
             // Add framework services.
             services
                 .AddMvc(options =>
                 {
                     options.InputFormatters.RemoveType<Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter>();
                     options.OutputFormatters.RemoveType<Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonOutputFormatter>();
-                })
+                }).AddFluentValidation(mvcConfiguration => mvcConfiguration.RegisterValidatorsFromAssemblyContaining<Startup>())
                 .AddNewtonsoftJson(opts =>
                 {
                     opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     opts.SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
                 })
                 .AddXmlSerializerFormatters();
-
-
+            
             services
                 .AddSwaggerGen(c =>
                 {
