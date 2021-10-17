@@ -39,6 +39,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             this.recipientLogic = new RecipientLogic();
             this.mapper = mapper;
         }
+        
+        // public RecipientApiController(IMapper mapper, IRecipientLogic recipientLogic)
+        // {
+        //     this.recipientLogic = recipientLogic;
+        //     this.mapper = mapper;
+        // }
 
         /// <summary>
         /// Find the latest state of a parcel by its tracking ID. 

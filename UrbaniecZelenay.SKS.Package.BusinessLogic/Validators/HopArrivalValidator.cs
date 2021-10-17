@@ -11,7 +11,6 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Validators
             RuleFor(h => h.Code)
                 .NotEmpty()
                 .Matches(@"^[A-Z]{4}\d{1,4}$");
-            RuleFor(h => h.DateTime).NotNull();
             RuleFor(h => h.Description)
                 .NotEmpty()
                 .Matches(@"^[a-zA-Z0-9ßäÄöÖüÜ\ \-]+$");

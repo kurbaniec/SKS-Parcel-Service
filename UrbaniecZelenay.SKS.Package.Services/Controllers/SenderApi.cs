@@ -36,6 +36,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             this.mapper = mapper;
         }
         
+        // public SenderApiController(IMapper mapper, ISenderLogic senderLogic)
+        // {
+        //     this.senderLogic = senderLogic;
+        //     this.mapper = mapper;
+        // }
         /// <summary>
         /// Submit a new parcel to the logistics service. 
         /// </summary>

@@ -35,6 +35,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             this.mapper = mapper;
         }
         
+        // public StaffApiController(IMapper mapper, IStaffLogic staffLogic)
+        // {
+        //     this.staffLogic = staffLogic;
+        //     this.mapper = mapper;
+        // }
+        
         /// <summary>
         /// Report that a Parcel has been delivered at it&#x27;s final destination address. 
         /// </summary>

@@ -8,8 +8,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Validators
         public ParcelValidator()
         {
             RuleFor(p => p.TrackingId)
-                .NotEmpty()
-                .Matches(@"^[A-Z0-9]{9}$");
+                .Matches(@"^[A-Z0-9]{9}$")
+                .When(p => p != null);
             RuleFor(p => p.Weight).GreaterThanOrEqualTo(0);
             RuleFor(p => p.Recipient).NotNull();
             RuleFor(p => p.Sender).NotNull();

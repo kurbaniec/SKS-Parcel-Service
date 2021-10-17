@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using FluentValidation;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
@@ -31,7 +32,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             };
         }
 
-        public Warehouse GetWarehouse(string? code)
+        public Warehouse GetWarehouse(string code)
         {
             if (code == null)
             {

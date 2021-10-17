@@ -22,12 +22,6 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 string validationErrors = string.Join(Environment.NewLine, validationResult.Errors);
                 throw new ArgumentException(validationErrors);
             }
-
-
-            if (body.Weight <= 0)
-            {
-                throw new ArgumentException("Parcel weight cannot be <= 0");
-            }
             
             return new Parcel
             {

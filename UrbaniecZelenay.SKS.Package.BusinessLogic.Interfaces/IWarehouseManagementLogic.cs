@@ -1,4 +1,5 @@
-﻿using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
+﻿using System.Linq.Expressions;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces
 {
@@ -17,7 +18,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        public Warehouse GetWarehouse(string? code);
+        public Warehouse GetWarehouse(string code);
 
         /// <summary>
         /// Imports a hierarchy of Warehouse and Truck objects. 

@@ -36,6 +36,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             this.logisticsPartnerLogic = new LogisticsPartnerLogic();
             this.mapper = mapper;
         }
+        
+        // public LogisticsPartnerApiController(IMapper mapper, ILogisticsPartnerLogic logisticsPartnerLogic)
+        // {
+        //     this.logisticsPartnerLogic = logisticsPartnerLogic;
+        //     this.mapper = mapper;
+        // }
 
         /// <summary>
         /// Transfer an existing parcel into the system from the service of a logistics partner. 

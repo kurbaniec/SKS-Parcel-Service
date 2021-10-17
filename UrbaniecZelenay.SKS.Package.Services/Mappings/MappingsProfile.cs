@@ -32,6 +32,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
                 //.ForMember(blParcel => blParcel.VisitedHops, opt => opt.NullSubstitute(new List<HopArrival>())).ReverseMap();
                 .ForMember(blParcel => blParcel.FutureHops, opt => opt.MapFrom(x => new List<HopArrival>()))
                 .ForMember(blParcel => blParcel.VisitedHops, opt => opt.MapFrom(x => new List<HopArrival>()))
+                // Need to check if the if InTransport State is correct!
+                .ForMember(blParcel => blParcel.State, opt => opt.MapFrom(x => BlParcel.StateEnum.InTransportEnum))
                 .ReverseMap();
             CreateMap<BlParcel, TrackingInformation>();
             CreateMap<BlParcel, NewParcelInfo>();

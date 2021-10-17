@@ -40,6 +40,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             this.mapper = mapper;
         }
 
+        // public WarehouseManagementApiController(IMapper mapper, IWarehouseManagementLogic warehouseManagementLogic)
+        // {
+        //     this.mapper = mapper;
+        //     this.warehouseManagementLogic = warehouseManagementLogic;
+        // }
+
         
         /// <summary>
         /// Exports the hierarchy of Warehouse and Truck objects. 
