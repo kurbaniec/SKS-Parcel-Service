@@ -7,6 +7,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Entities\UrbaniecZelenay.SKS.Package.DataAccess.Entities.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces.csproj" />
     </ItemGroup>
 
     <ItemGroup>

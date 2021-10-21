@@ -4,11 +4,19 @@ using FluentValidation;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
     public class SenderLogic : ISenderLogic
     {
+        private readonly IParcelRepository parcelRepository;
+        
+        public SenderLogic(IParcelRepository parcelRepository)
+        {
+            this.parcelRepository = parcelRepository;
+        }
+        
         public Parcel SubmitParcel(Parcel? body)
         {
             if (body == null)
@@ -22,6 +30,9 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 string validationErrors = string.Join(Environment.NewLine, validationResult.Errors);
                 throw new ArgumentException(validationErrors);
             }
+
+            var p = new DataAccess.Entities.Parcel();
+            parcelRepository.Create(p);
             
             return new Parcel
             {

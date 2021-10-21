@@ -15,6 +15,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 
@@ -29,9 +30,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly IStaffLogic staffLogic;
         private readonly IMapper mapper;
         
-        public StaffApiController(IMapper mapper)
+        public StaffApiController(ParcelLogisticsContext context, IMapper mapper)
         {
-            this.staffLogic = new StaffLogic();
+            this.staffLogic = new StaffLogic(new ParcelRepository(context));
             this.mapper = mapper;
         }
         

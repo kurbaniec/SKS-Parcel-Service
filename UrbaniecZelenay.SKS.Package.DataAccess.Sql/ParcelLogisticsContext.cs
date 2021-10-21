@@ -5,6 +5,8 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 {
     public class ParcelLogisticsContext : DbContext
     {
+        public ParcelLogisticsContext() {}
+        
         // Constructor used by ASP.NET Core
         public ParcelLogisticsContext(DbContextOptions<ParcelLogisticsContext> options) : base(options)
         {
