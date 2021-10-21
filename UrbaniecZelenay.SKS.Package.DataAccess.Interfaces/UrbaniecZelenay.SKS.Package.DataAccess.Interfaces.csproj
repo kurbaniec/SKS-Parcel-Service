@@ -5,4 +5,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Entities\UrbaniecZelenay.SKS.Package.DataAccess.Entities.csproj" />
+    </ItemGroup>
+
 </Project>
