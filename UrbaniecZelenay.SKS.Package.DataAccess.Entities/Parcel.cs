@@ -71,17 +71,22 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// </summary>
         /// <value>State of the parcel.</value>
         public StateEnum? State { get; set; }
-
+        
+        // Configure multiple one-to-many relations
+        // See: https://stackoverflow.com/a/54196808/12347616
+        
         /// <summary>
         /// Hops visited in the past.
         /// </summary>
         /// <value>Hops visited in the past.</value>
+        [InverseProperty("VisitedHopsParcel")]
         public List<HopArrival> VisitedHops { get; set; }
 
         /// <summary>
         /// Hops coming up in the future - their times are estimations.
         /// </summary>
         /// <value>Hops coming up in the future - their times are estimations.</value>
+        [InverseProperty("FutureHopsParcel")]
         public List<HopArrival> FutureHops { get; set; }
     }
 }

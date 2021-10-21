@@ -6,7 +6,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
     [ExcludeFromCodeCoverage]
     public class WarehouseNextHops
     {
-        [Key] private int Id { get; set; }
+        [Key] public int Id { get; set; }
         
         /// <summary>
         /// Gets or Sets TraveltimeMins
