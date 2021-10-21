@@ -32,7 +32,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         
         public StaffApiController(ParcelLogisticsContext context, IMapper mapper)
         {
-            this.staffLogic = new StaffLogic(new ParcelRepository(context));
+            this.staffLogic = new StaffLogic(new ParcelRepository(context), mapper);
             this.mapper = mapper;
         }
         

@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutoMapper;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
     public class RecipientLogic : IRecipientLogic
     {
+        private readonly IParcelRepository parcelRepository;
+        private readonly IMapper mapper;
+        
+        public RecipientLogic(IParcelRepository parcelRepository, IMapper mapper)
+        {
+            this.parcelRepository = parcelRepository;
+            this.mapper = mapper;
+        }
+        
         public Parcel TrackParcel(string? trackingId)
         {
             if (trackingId == null)

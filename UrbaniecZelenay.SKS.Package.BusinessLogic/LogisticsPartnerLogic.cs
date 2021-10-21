@@ -1,15 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
     public class LogisticsPartnerLogic : ILogisticsPartnerLogic
     {
+        private readonly IParcelRepository parcelRepository;
+        private readonly IMapper mapper;
+        
+        public LogisticsPartnerLogic(IParcelRepository parcelRepository, IMapper mapper)
+        {
+            this.parcelRepository = parcelRepository;
+            this.mapper = mapper;
+        }
+        
         public Parcel TransitionParcel(Parcel? parcel)
         {
             if (parcel == null)

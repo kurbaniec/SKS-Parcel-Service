@@ -16,6 +16,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 using BlParcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
@@ -31,9 +32,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly ILogisticsPartnerLogic logisticsPartnerLogic;
         private readonly IMapper mapper;
 
-        public LogisticsPartnerApiController(IMapper mapper)
+        public LogisticsPartnerApiController(ParcelLogisticsContext context, IMapper mapper)
         {
-            this.logisticsPartnerLogic = new LogisticsPartnerLogic();
+            this.logisticsPartnerLogic = new LogisticsPartnerLogic(new ParcelRepository(context), mapper);
             this.mapper = mapper;
         }
         

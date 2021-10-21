@@ -35,7 +35,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         {
             // Use Dependency Injected context
             // See: https://docs.microsoft.com/en-us/ef/core/dbcontext-configuration/#dbcontext-in-dependency-injection-for-aspnet-core
-            this.senderLogic = new SenderLogic(new ParcelRepository(context));
+            this.senderLogic = new SenderLogic(new ParcelRepository(context), mapper);
             this.mapper = mapper;
         }
         

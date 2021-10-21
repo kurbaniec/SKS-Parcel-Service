@@ -19,6 +19,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 using BlParcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
@@ -34,9 +35,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly IRecipientLogic recipientLogic;
         private readonly IMapper mapper;
         
-        public RecipientApiController(IMapper mapper)
+        public RecipientApiController(ParcelLogisticsContext context, IMapper mapper)
         {
-            this.recipientLogic = new RecipientLogic();
+            this.recipientLogic = new RecipientLogic(new ParcelRepository(context), mapper);
             this.mapper = mapper;
         }
         

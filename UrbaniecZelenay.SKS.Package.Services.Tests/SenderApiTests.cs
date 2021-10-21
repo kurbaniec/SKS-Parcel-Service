@@ -50,7 +50,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                     Street = "Teststrasse 2"
                 },
             };
-            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfile()); });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             
             Mock<ISenderLogic> mockSenderLogic = new Mock<ISenderLogic>();
             mockSenderLogic.Setup(m => m.SubmitParcel(It.IsAny<BlParcel>()))
@@ -94,7 +94,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         public void SubmitParcel_NullParcel_ErrorReturned()
         {
             Parcel nullParcel = null;
-            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfile()); });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
 
             Mock<ISenderLogic> mockSenderLogic = new Mock<ISenderLogic>();
             mockSenderLogic.Setup(m => m.SubmitParcel(It.Is<BlParcel>(p => p == null)))

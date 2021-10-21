@@ -19,6 +19,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 using BlWarehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Warehouse;
@@ -34,9 +35,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly IWarehouseManagementLogic warehouseManagementLogic;
         private readonly IMapper mapper;
         
-        public WarehouseManagementApiController(IMapper mapper)
+        public WarehouseManagementApiController(ParcelLogisticsContext context, IMapper mapper)
         {
-            this.warehouseManagementLogic = new WarehouseManagementLogic();
+            this.warehouseManagementLogic = new WarehouseManagementLogic(new WarehouseRepository(context), mapper);
             this.mapper = mapper;
         }
 

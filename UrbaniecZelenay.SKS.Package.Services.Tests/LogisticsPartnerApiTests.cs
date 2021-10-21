@@ -59,7 +59,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var trackingId = "PYJRB4HZ6";
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MappingsProfile());
+                mc.AddProfile(new MappingsProfileSvcBl());
             });
             
             Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
@@ -127,7 +127,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var trackingId = "PYJRB4HZ6";
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MappingsProfile());
+                mc.AddProfile(new MappingsProfileSvcBl());
             });
             
             Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();

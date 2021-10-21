@@ -15,12 +15,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
     /// Configure AutoMapper.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class MappingsProfile : Profile
+    public class MappingsProfileSvcBl : Profile
     {
         /// <summary>
         /// Create mappings for AutoMapper.
         /// </summary>
-        public MappingsProfile()
+        public MappingsProfileSvcBl()
         {
             // Does not change behavior when property does not exist on Source
             // See: https://docs.automapper.org/en/stable/Lists-and-arrays.html#handling-null-collections

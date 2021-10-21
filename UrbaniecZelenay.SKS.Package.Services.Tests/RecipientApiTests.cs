@@ -31,7 +31,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         public void TrackParcel_ValidTrackingId_TrackingInformationReturned()
         {
             var trackingId = "PYJRB4HZ6";
-            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfile()); });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
 
             Mock<IRecipientLogic> mockRecipientLogic = new Mock<IRecipientLogic>();
             mockRecipientLogic.Setup(m => m.TrackParcel(It.IsAny<string>())).Returns(new BlParcel
@@ -76,7 +76,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         public void TrackParcel_NullTrackingId_ErrorReturned()
         {
             string trackingId = null;
-            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfile()); });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
 
             Mock<IRecipientLogic> mockRecipientLogic = new Mock<IRecipientLogic>();
             mockRecipientLogic.Setup(m => m.TrackParcel(It.Is<string>(s => s == null)))

@@ -1,15 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using AutoMapper;
 using FluentValidation;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
     public class WarehouseManagementLogic : IWarehouseManagementLogic
     {
+        private readonly IWarehouseRepository warehouseRepository;
+        private readonly IMapper mapper;
+        
+        public WarehouseManagementLogic(IWarehouseRepository warehouseRepository, IMapper mapper)
+        {
+            this.warehouseRepository = warehouseRepository;
+            this.mapper = mapper;
+        }
+        
         public bool TriggerExportWarehouseException { get; set; } = false;
         public Warehouse ExportWarehouses()
         {
