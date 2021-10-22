@@ -8,6 +8,6 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
         Parcel Update(Parcel parcel);
         void Delete(Parcel parcel);
 
-        Parcel GetByTrackingId(string trackingId);
+        Parcel? GetByTrackingId(string trackingId);
     }
 }

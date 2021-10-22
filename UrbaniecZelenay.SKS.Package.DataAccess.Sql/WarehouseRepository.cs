@@ -1,4 +1,6 @@
-﻿using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore.Storage;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
@@ -14,17 +16,19 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         
         public Warehouse Create(Warehouse warehouse)
         {
-            throw new System.NotImplementedException();
+            // TODO Detect already existing warehouses?
+            context.Warehouses.Add(warehouse);
+            return warehouse;
         }
 
-        public Warehouse GetAll()
+        public Warehouse? GetAll()
         {
-            throw new System.NotImplementedException();
+            return context.Warehouses.FirstOrDefault(w => w.Level == 0);
         }
 
-        public Warehouse GetByCode(string code)
+        public Warehouse? GetByCode(string code)
         {
-            throw new System.NotImplementedException();
+            return context.Warehouses.FirstOrDefault(w => w.Code == code);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
     {
         Warehouse Create(Warehouse warehouse);
 
-        Warehouse GetAll();
-        Warehouse GetByCode(string code);
+        Warehouse? GetAll();
+        Warehouse? GetByCode(string code);
     }
 }

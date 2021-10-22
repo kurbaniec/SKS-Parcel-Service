@@ -32,17 +32,18 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public Parcel Update(Parcel parcel)
         {
-            throw new System.NotImplementedException();
+            context.Parcels.Update(parcel);
+            return parcel;
         }
 
         public void Delete(Parcel parcel)
         {
-            throw new System.NotImplementedException();
+            context.Parcels.Remove(parcel);
         }
 
-        public Parcel GetByTrackingId(string trackingId)
+        public Parcel? GetByTrackingId(string trackingId)
         {
-            throw new System.NotImplementedException();
+           return context.Parcels.FirstOrDefault(p => p.TrackingId == trackingId);
         }
     }
 }
