@@ -9,7 +9,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
     public class HopArrival
     {
         [Key] public int Id { get; set; }
-
+        
         private Hop hop { get; set; }
         
         /// <summary>
