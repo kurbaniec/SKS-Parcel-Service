@@ -48,21 +48,33 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw new ArgumentNullException(nameof(code));
             }
 
-            var dalParcel = parcelRepository.GetByTrackingId(trackingId);
-            if (dalParcel == null) return;
-            var blParcel = mapper.Map<Parcel>(dalParcel);
-            
-            // TODO create automapper for BlHopArrival to DalHopArrival
+            // TODO test this with database
             // property hop must be generated from BlHopArrvial info
             
-            // TODO hopArrival
             // Query hop from DAL
             // Convert to BL 
             // Create HopArrival from it
             // Add HopArrival to parcel
             // Convert to DAL
+            
+            var dalParcel = parcelRepository.GetByTrackingId(trackingId);
+            if (dalParcel == null) return;
+            var dalHop = warehouseRepository.GetHopByCode(code);
+            if (dalHop == null) return;
 
-            var kek = new HopArrival();
+            var blParcel = mapper.Map<Parcel>(dalParcel);
+            var blHop = mapper.Map<Hop>(dalHop);
+
+            var hopArrival = new HopArrival()
+            {
+                Code = blHop.Code,
+                DateTime = DateTime.Now,
+                Description = blHop.Description
+            };
+            blParcel.VisitedHops.Add(hopArrival);
+
+            dalParcel = mapper.Map<DalParcel>(blParcel);
+            parcelRepository.Update(dalParcel);
         }
     }
 }

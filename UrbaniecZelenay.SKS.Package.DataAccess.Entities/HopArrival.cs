@@ -10,7 +10,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
     {
         [Key] public int Id { get; set; }
         
-        private Hop hop { get; set; }
+        public Hop Hop { get; private set; }
         
         /// <summary>
         /// The date/time the parcel arrived at the hop.
@@ -24,14 +24,14 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// <value>Unique CODE of the hop.</value>
         [RegularExpression(@"^[A-Z]{4}\d{1,4}$")]
         [NotMapped]
-        public string Code => hop.Code;
+        public string Code => Hop.Code;
         
         /// <summary>
         /// Description of the hop.
         /// </summary>
         /// <value>Description of the hop.</value>
         [NotMapped]
-        public string Description => hop.Description;
+        public string Description => Hop.Description;
         
         // Configure multiple one-to-many relations
         // See: https://stackoverflow.com/a/54196808/12347616

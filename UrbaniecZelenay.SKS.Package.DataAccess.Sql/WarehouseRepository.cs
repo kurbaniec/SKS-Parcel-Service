@@ -26,7 +26,12 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             return context.Warehouses.FirstOrDefault(w => w.Level == 0);
         }
 
-        public Warehouse? GetByCode(string code)
+        public Hop? GetHopByCode(string code)
+        {
+            return context.Hops.FirstOrDefault(w => w.Code == code);
+        }
+
+        public Warehouse? GetWarehouseByCode(string code)
         {
             return context.Warehouses.FirstOrDefault(w => w.Code == code);
         }

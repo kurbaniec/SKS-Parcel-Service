@@ -7,6 +7,7 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
+using DalWarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Warehouse;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
@@ -22,7 +23,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
         }
         
         public bool TriggerExportWarehouseException { get; set; } = false;
-        public Warehouse ExportWarehouses()
+        public Warehouse? ExportWarehouses()
         {
             // TODO: Create custom exception
             if (TriggerExportWarehouseException)
@@ -30,37 +31,46 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw new InvalidOperationException();
             }
             
-            return new Warehouse
-            {
-                HopType = "Warehouse",
-                Code = "AUTA05",
-                Description = "Root Warehouse - Österreich",
-                ProcessingDelayMins = 186,
-                LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate{Lat = 47.247829, Lon = 13.884382},
-                Level = 0,
-                NextHops = new List<WarehouseNextHops>()
-            };
+            // return new Warehouse
+            // {
+            //     HopType = "Warehouse",
+            //     Code = "AUTA05",
+            //     Description = "Root Warehouse - Österreich",
+            //     ProcessingDelayMins = 186,
+            //     LocationName = "Root",
+            //     LocationCoordinates = new GeoCoordinate{Lat = 47.247829, Lon = 13.884382},
+            //     Level = 0,
+            //     NextHops = new List<WarehouseNextHops>()
+            // };
+
+            var dalWarehouse = warehouseRepository.GetAll();
+            if (dalWarehouse == null) return null;
+            var blWarehouse = mapper.Map<Warehouse>(dalWarehouse);
+            return blWarehouse;
         }
 
-        public Warehouse GetWarehouse(string code)
+        public Warehouse? GetWarehouse(string code)
         {
             if (code == null)
             {
                 throw new ArgumentNullException(nameof(code));
             }
             
-            return new Warehouse
-            {
-                HopType = "Warehouse",
-                Code = "AUTA05",
-                Description = "Root Warehouse - Österreich",
-                ProcessingDelayMins = 186,
-                LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate{Lat = 47.247829, Lon = 13.884382},
-                Level = 0,
-                NextHops = new List<WarehouseNextHops>()
-            };
+            // return new Warehouse
+            // {
+            //     HopType = "Warehouse",
+            //     Code = "AUTA05",
+            //     Description = "Root Warehouse - Österreich",
+            //     ProcessingDelayMins = 186,
+            //     LocationName = "Root",
+            //     LocationCoordinates = new GeoCoordinate{Lat = 47.247829, Lon = 13.884382},
+            //     Level = 0,
+            //     NextHops = new List<WarehouseNextHops>()
+            // };
+            var dalWarehouse = warehouseRepository.GetWarehouseByCode(code);
+            if (dalWarehouse == null) return null;
+            var blWarehouse = mapper.Map<Warehouse>(dalWarehouse);
+            return blWarehouse;
         }
 
         public void ImportWarehouses(Warehouse? body)
@@ -77,6 +87,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw new ArgumentException(validationErrors);
             }
 
+            var dalWarehouse = mapper.Map<DalWarehouse>(body);
+            warehouseRepository.Create(dalWarehouse);
         }
     }
 }
