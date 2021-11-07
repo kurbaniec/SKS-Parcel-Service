@@ -9,6 +9,6 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces
         /// </summary>
         /// <param name="trackingId"></param>
         /// <returns></returns>
-        public Parcel TrackParcel(string? trackingId);
+        public Parcel? TrackParcel(string? trackingId);
     }
 }

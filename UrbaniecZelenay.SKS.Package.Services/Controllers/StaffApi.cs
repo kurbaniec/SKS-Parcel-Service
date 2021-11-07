@@ -13,8 +13,11 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 
@@ -28,19 +31,20 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly IStaffLogic staffLogic;
         private readonly IMapper mapper;
-        
-        public StaffApiController(IMapper mapper)
+
+        [ActivatorUtilitiesConstructor]
+        public StaffApiController(IParcelLogisticsContext context, IMapper mapper, IStaffLogic staffLogic)
         {
-            this.staffLogic = new StaffLogic();
+            this.staffLogic = new StaffLogic(new ParcelRepository(context), new WarehouseRepository(context), mapper);
             this.mapper = mapper;
         }
-        
-        // public StaffApiController(IMapper mapper, IStaffLogic staffLogic)
-        // {
-        //     this.staffLogic = staffLogic;
-        //     this.mapper = mapper;
-        // }
-        
+
+        public StaffApiController(IMapper mapper, IStaffLogic staffLogic)
+        {
+            this.staffLogic = staffLogic;
+            this.mapper = mapper;
+        }
+
         /// <summary>
         /// Report that a Parcel has been delivered at it&#x27;s final destination address. 
         /// </summary>
@@ -54,7 +58,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerOperation("ReportParcelDelivery")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult ReportParcelDelivery(
-            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId)
+            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
+            string trackingId)
         {
             // if (trackingId == null)
             // {
@@ -71,7 +76,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //
             // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // // return StatusCode(404);
-            
+
             try
             {
                 staffLogic.ReportParcelDelivery(trackingId);
@@ -91,7 +96,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //         ErrorMessage = "Parcel does not exist with this tracking ID or hop with code not found."
             //     });
             // }
-            
+
             return StatusCode(200);
         }
 
@@ -109,8 +114,10 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerOperation("ReportParcelHop")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult ReportParcelHop(
-            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId,
-            [FromRoute] [Required] [RegularExpression(@"^[A-Z]{4}\d{1,4}$")] string code)
+            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
+            string trackingId,
+            [FromRoute] [Required] [RegularExpression(@"^[A-Z]{4}\d{1,4}$")]
+            string code)
         {
             // if (code == null)
             // {
@@ -129,7 +136,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             // // return StatusCode(404);
             //
             // return StatusCode(200);
-            
+
             try
             {
                 staffLogic.ReportParcelHop(trackingId, code);
@@ -149,7 +156,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //         ErrorMessage = "Parcel does not exist with this tracking ID or hop with code not found."
             //     });
             // }
-            
+
             return StatusCode(200);
         }
     }

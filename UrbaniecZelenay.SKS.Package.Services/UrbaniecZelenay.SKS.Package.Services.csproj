@@ -23,6 +23,7 @@
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Entities\UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic\UrbaniecZelenay.SKS.Package.BusinessLogic.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Sql\UrbaniecZelenay.SKS.Package.DataAccess.Sql.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.DTOs\UrbaniecZelenay.SKS.Package.Services.DTOs.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.Interfaces\UrbaniecZelenay.SKS.Package.Services.Interfaces.csproj" />
   </ItemGroup>

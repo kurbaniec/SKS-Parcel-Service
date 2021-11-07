@@ -1,10 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using FluentValidation;
+using Moq;
 using NUnit.Framework;
-using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
+using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
+using DalRecipient = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Recipient;
+using DalHopArrival = UrbaniecZelenay.SKS.Package.DataAccess.Entities.HopArrival;
+using DalHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Hop;
+using Parcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
 {
@@ -20,8 +30,48 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         public void ReportParcelDelivery_TrackingIdNull_ExceptionThrown()
         {
             string trackingId = null;
-            IStaffLogic staffLogic = new StaffLogic();
-            Assert.Throws<ArgumentNullException>(() => staffLogic.ReportParcelDelivery(trackingId)); 
+            Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
+            mockParcelRepo.Setup(m => m.GetByTrackingId(It.IsAny<string>())).Returns(new DalParcel
+            {
+                TrackingId = "PYJRB4HZ6",
+                Weight = 1,
+                Recipient = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                Sender = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                State = DalParcel.StateEnum.TransferredEnum,
+                VisitedHops = new List<DalHopArrival>(),
+                FutureHops = new List<DalHopArrival>()
+            });
+
+            Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
+            mockWarehouseRepo.Setup(m => m.GetHopByCode(It.IsAny<string>())).Returns(new DalHop
+            {
+                Code = "AUTA01",
+                Description = "Root Warehouse - Österreich",
+                HopType = "Warehouse",
+                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationName = "Root",
+                ProcessingDelayMins = 186
+            });
+
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+
+            IStaffLogic staffLogic = new StaffLogic(mockParcelRepo.Object, mockWarehouseRepo.Object,
+                mapperConfig.CreateMapper());
+            Assert.Throws<ArgumentNullException>(() => staffLogic.ReportParcelDelivery(trackingId));
         }
 
         [Test]
@@ -29,33 +79,167 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         {
             string trackingId = null;
             string code = "AUTA05";
-            IStaffLogic staffLogic = new StaffLogic();
-            Assert.Throws<ArgumentNullException>(() => staffLogic.ReportParcelHop(trackingId, code)); 
+            Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
+            mockParcelRepo.Setup(m => m.GetByTrackingId(It.IsAny<string>())).Returns(new DalParcel
+            {
+                TrackingId = "PYJRB4HZ6",
+                Weight = 1,
+                Recipient = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                Sender = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                State = DalParcel.StateEnum.TransferredEnum,
+                VisitedHops = new List<DalHopArrival>(),
+                FutureHops = new List<DalHopArrival>()
+            });
+
+            Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
+            mockWarehouseRepo.Setup(m => m.GetHopByCode(It.IsAny<string>())).Returns(new DalHop
+            {
+                Code = "AUTA01",
+                Description = "Root Warehouse - Österreich",
+                HopType = "Warehouse",
+                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationName = "Root",
+                ProcessingDelayMins = 186
+            });
+
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+
+            IStaffLogic staffLogic = new StaffLogic(mockParcelRepo.Object, mockWarehouseRepo.Object,
+                mapperConfig.CreateMapper());
+            Assert.Throws<ArgumentNullException>(() => staffLogic.ReportParcelHop(trackingId, code));
         }
-        
+
         [Test]
         public void ReportParcelHop_CodeNull_ExceptionThrown()
         {
             string trackingId = "PYJRB4HZ6";
             string code = null;
-            IStaffLogic staffLogic = new StaffLogic();
-            Assert.Throws<ArgumentNullException>(() => staffLogic.ReportParcelHop(trackingId, code)); 
+            Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
+            mockParcelRepo.Setup(m => m.GetByTrackingId(It.IsAny<string>())).Returns(new DalParcel
+            {
+                TrackingId = "PYJRB4HZ6",
+                Weight = 1,
+                Recipient = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                Sender = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                State = DalParcel.StateEnum.TransferredEnum,
+                VisitedHops = new List<DalHopArrival>(),
+                FutureHops = new List<DalHopArrival>()
+            });
+
+            Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
+            mockWarehouseRepo.Setup(m => m.GetHopByCode(It.IsAny<string>())).Returns(new DalHop
+            {
+                Code = "AUTA01",
+                Description = "Root Warehouse - Österreich",
+                HopType = "Warehouse",
+                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationName = "Root",
+                ProcessingDelayMins = 186
+            });
+
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+
+            IStaffLogic staffLogic = new StaffLogic(mockParcelRepo.Object, mockWarehouseRepo.Object,
+                mapperConfig.CreateMapper());
+            Assert.Throws<ArgumentNullException>(() => staffLogic.ReportParcelHop(trackingId, code));
         }
+
         [Test]
         public void TrackParcel_ValidTrackingId_ParcelReturned()
         {
-            string trackingId = "PYJRB4HZ6";            
-            IRecipientLogic recipientLogic = new RecipientLogic();
+            string trackingId = "PYJRB4HZ6";
+            Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
+            mockParcelRepo.Setup(m => m.GetByTrackingId(It.IsAny<string>())).Returns(new DalParcel
+            {
+                TrackingId = "PYJRB4HZ6",
+                Weight = 1,
+                Recipient = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                Sender = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                State = DalParcel.StateEnum.TransferredEnum,
+                VisitedHops = new List<DalHopArrival>(),
+                FutureHops = new List<DalHopArrival>()
+            });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+            IRecipientLogic recipientLogic = new RecipientLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
             Parcel blParcel = recipientLogic.TrackParcel(trackingId);
             IValidator<Parcel> parcelValidator = new ParcelValidator();
             var validationResult = parcelValidator.Validate(blParcel);
             Assert.IsTrue(validationResult.IsValid);
         }
+
         [Test]
         public void TrackParcel_TrackingIdNull_ExceptionThrown()
         {
-            string trackingId = null;            
-            IRecipientLogic recipientLogic = new RecipientLogic();
+            string trackingId = null;
+            Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
+            mockParcelRepo.Setup(m => m.GetByTrackingId(It.IsAny<string>())).Returns(new DalParcel
+            {
+                TrackingId = "PYJRB4HZ6",
+                Weight = 1,
+                Recipient = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                Sender = new DalRecipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                State = DalParcel.StateEnum.TransferredEnum,
+                VisitedHops = new List<DalHopArrival>(),
+                FutureHops = new List<DalHopArrival>()
+            });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+            IRecipientLogic recipientLogic = new RecipientLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
             Assert.Throws<ArgumentNullException>(() => recipientLogic.TrackParcel(trackingId));
         }
     }

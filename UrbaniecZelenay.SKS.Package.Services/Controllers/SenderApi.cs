@@ -13,8 +13,11 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Newtonsoft.Json;
 using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 using BlParcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
@@ -30,17 +33,20 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly ISenderLogic senderLogic;
         private readonly IMapper mapper;
         
-        public SenderApiController(IMapper mapper)
+        [ActivatorUtilitiesConstructor]
+        public SenderApiController(IParcelLogisticsContext context, IMapper mapper, ISenderLogic senderLogic)
         {
-            this.senderLogic = new SenderLogic();
+            // Use Dependency Injected context
+            // See: https://docs.microsoft.com/en-us/ef/core/dbcontext-configuration/#dbcontext-in-dependency-injection-for-aspnet-core
+            this.senderLogic = new SenderLogic(new ParcelRepository(context), mapper);
             this.mapper = mapper;
         }
         
-        // public SenderApiController(IMapper mapper, ISenderLogic senderLogic)
-        // {
-        //     this.senderLogic = senderLogic;
-        //     this.mapper = mapper;
-        // }
+        public SenderApiController(IMapper mapper, ISenderLogic senderLogic)
+        {
+            this.senderLogic = senderLogic;
+            this.mapper = mapper;
+        }
         /// <summary>
         /// Submit a new parcel to the logistics service. 
         /// </summary>

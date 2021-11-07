@@ -11,14 +11,14 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces
         /// Exports the hierarchy of Warehouse and Truck objects. 
         /// </summary>
         /// <returns></returns>
-        public Warehouse ExportWarehouses();
+        public Warehouse? ExportWarehouses();
 
         /// <summary>
         /// Get a certain warehouse or truck by code.
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        public Warehouse GetWarehouse(string code);
+        public Warehouse? GetWarehouse(string code);
 
         /// <summary>
         /// Imports a hierarchy of Warehouse and Truck objects. 

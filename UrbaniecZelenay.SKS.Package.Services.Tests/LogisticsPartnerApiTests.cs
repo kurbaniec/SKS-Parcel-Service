@@ -59,7 +59,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var trackingId = "PYJRB4HZ6";
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MappingsProfile());
+                mc.AddProfile(new MappingsProfileSvcBl());
             });
             
             Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
@@ -89,8 +89,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             });
 
             
-            var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper());
-            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(),mockLogisticsPartnerLogic.Object);
+            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper());
+            var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(),mockLogisticsPartnerLogic.Object);
 
             var result = controller.TransitionParcel(validParcel, trackingId);
             
@@ -127,15 +127,15 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var trackingId = "PYJRB4HZ6";
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MappingsProfile());
+                mc.AddProfile(new MappingsProfileSvcBl());
             });
             
             Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
             mockLogisticsPartnerLogic.Setup(m => m.TransitionParcel(It.Is<BlParcel>(p => p.Weight < 0)))
                 .Throws(new ArgumentException("Weight must be >= 0"));
             
-            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(), mockLogisticsPartnerLogic.Object);
-           var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
+            var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(), mockLogisticsPartnerLogic.Object);
+           // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
 
             var result = controller.TransitionParcel(validParcel, trackingId);
             

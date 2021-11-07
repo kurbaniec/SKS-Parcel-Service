@@ -23,13 +23,13 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         public void ReportParcelDelivery_ValidTrackingId_SuccessStatusReturned()
         {
             var trackingId = "PYJRB4HZ6";
-            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfile()); });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
 
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelDelivery(It.IsAny<string>()));
 
-            // var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
-            var controller = new StaffApiController(mapperConfig.CreateMapper());
+            var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
+            // var controller = new StaffApiController(mapperConfig.CreateMapper());
 
             var result = controller.ReportParcelDelivery(trackingId);
 
@@ -42,13 +42,13 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         public void ReportParcelDelivery_NullTrackingId_ErrorReturned()
         {
             string trackingId = null;
-            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfile()); });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelDelivery(It.Is<string>(s => s == null)))
                 .Throws(new ArgumentNullException("Error Tracking id must not be null!"));
 
-            // var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
-            var controller = new StaffApiController(mapperConfig.CreateMapper());
+            var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
+            // var controller = new StaffApiController(mapperConfig.CreateMapper());
             var result = controller.ReportParcelDelivery(trackingId);
 
             var objectResult = result as ObjectResult;
@@ -64,12 +64,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var trackingId = "PYJRB4HZ6";
             var hopCode = "AAAA1234";
 
-            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfile()); });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelHop(It.IsAny<string>(), It.IsAny<string>()));
 
-            // var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
-            var controller = new StaffApiController(mapperConfig.CreateMapper());
+            var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
+            // var controller = new StaffApiController(mapperConfig.CreateMapper());
             var result = controller.ReportParcelHop(trackingId, hopCode);
 
             var statusCode = result as StatusCodeResult;
@@ -83,13 +83,13 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var trackingId = "PYJRB4HZ6";
             string hopCode = null;
 
-            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfile()); });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelHop(It.IsAny<string>(), It.Is<string>(s => s == null)))
                 .Throws(new ArgumentNullException("Error Tracking id must not be null!"));
 
-            // var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
-            var controller = new StaffApiController(mapperConfig.CreateMapper());
+            var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
+            // var controller = new StaffApiController(mapperConfig.CreateMapper());
 
             var result = controller.ReportParcelHop(trackingId, hopCode);
 
