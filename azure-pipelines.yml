@@ -27,7 +27,8 @@ steps:
   displayName: 'Delete past coverage reports'
   inputs:
     SourceFolder: '$(Agent.TempDirectory)'
-    Contents: '**/coverage.cobertura.xml'
+    #Contents: '**/coverage.cobertura.xml'
+    Contents: '**/*'
 
 - task: DotNetCoreCLI@2
   displayName: 'test'
