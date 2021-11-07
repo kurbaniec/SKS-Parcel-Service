@@ -23,7 +23,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using UrbaniecZelenay.SKS.Package.BusinessLogic;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Filters;
 
@@ -110,6 +113,16 @@ namespace UrbaniecZelenay.SKS.Package.Services
             // And: https://stackoverflow.com/a/60399887/12347616
             services.AddDbContext<ParcelLogisticsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ParcelLogisticsContext")));
+            // Register the service and implementation for the database context
+            services.AddScoped<IParcelLogisticsContext>(provider => provider.GetService<ParcelLogisticsContext>());
+            services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+            services.AddScoped<IParcelRepository, ParcelRepository>();
+            services.AddScoped<IWarehouseManagementLogic, WarehouseManagementLogic>();
+            services.AddScoped<IStaffLogic, StaffLogic>();
+            services.AddScoped<ISenderLogic, SenderLogic>();
+            services.AddScoped<IRecipientLogic, RecipientLogic>();
+            services.AddScoped<ILogisticsPartnerLogic, LogisticsPartnerLogic>();
+            // services.AddScoped<ILogisticsPartnerLogic, LogisticsPartnerLogic>();
         }
 
         /// <summary>

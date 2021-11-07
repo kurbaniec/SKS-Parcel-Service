@@ -8,9 +8,10 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 {
     public class ParcelRepository : IParcelRepository
     {
-        private readonly ParcelLogisticsContext context;
+        private readonly IParcelLogisticsContext context;
+        public bool UseTransactions { get; set; } = true;
 
-        public ParcelRepository(ParcelLogisticsContext context)
+        public ParcelRepository(IParcelLogisticsContext context)
         {
             this.context = context;
         }
@@ -20,6 +21,8 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             // Working with transactions
             // See: https://docs.microsoft.com/en-us/ef/ef6/saving/transactions
             using IDbContextTransaction transaction = context.Database.BeginTransaction();
+            // ParcelLogisticsContext c = new ParcelLogisticsContext();
+            // c.Database.BeginTransaction();
             var trackingId = context.Parcels.Max(p => p.TrackingId) ?? "000000000";
             // See: https://stackoverflow.com/a/5418361/12347616
             var newTrackingId = $"{int.Parse(trackingId) + 1:D9}";
@@ -33,12 +36,14 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         public Parcel Update(Parcel parcel)
         {
             context.Parcels.Update(parcel);
+            context.SaveChanges();
             return parcel;
         }
 
         public void Delete(Parcel parcel)
         {
             context.Parcels.Remove(parcel);
+            context.SaveChanges();
         }
 
         public Parcel? GetByTrackingId(string trackingId)

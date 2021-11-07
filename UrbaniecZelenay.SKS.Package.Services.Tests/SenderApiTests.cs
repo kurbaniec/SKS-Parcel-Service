@@ -79,8 +79,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                     FutureHops = new List<BlHopArrival>()
                 });
 
-            // var controller = new SenderApiController(mapperConfig.CreateMapper(), mockSenderLogic.Object);
-            var controller = new SenderApiController(mapperConfig.CreateMapper());
+            var controller = new SenderApiController(mapperConfig.CreateMapper(), mockSenderLogic.Object);
+            // var controller = new SenderApiController(mapperConfig.CreateMapper());
 
             var result = controller.SubmitParcel(validParcel);
 
@@ -100,8 +100,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             mockSenderLogic.Setup(m => m.SubmitParcel(It.Is<BlParcel>(p => p == null)))
                 .Throws(new ArgumentNullException("Error Parcel must not be null!"));
 
-            // var controller = new SenderApiController(mapperConfig.CreateMapper(), mockSenderLogic.Object);
-            var controller = new SenderApiController(mapperConfig.CreateMapper());
+            var controller = new SenderApiController(mapperConfig.CreateMapper(), mockSenderLogic.Object);
+            // var controller = new SenderApiController(mapperConfig.CreateMapper());
 
             var result = controller.SubmitParcel(nullParcel);
 

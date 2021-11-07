@@ -7,9 +7,9 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 {
     public class WarehouseRepository : IWarehouseRepository
     {
-        private readonly ParcelLogisticsContext context;
+        private readonly IParcelLogisticsContext context;
 
-        public WarehouseRepository(ParcelLogisticsContext context)
+        public WarehouseRepository(IParcelLogisticsContext context)
         {
             this.context = context;
         }
@@ -18,6 +18,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         {
             // TODO Detect already existing warehouses?
             context.Warehouses.Add(warehouse);
+            context.SaveChanges();
             return warehouse;
         }
 
@@ -28,6 +29,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public Hop? GetHopByCode(string code)
         {
+            Hop? tmp = context.Hops.FirstOrDefault(w => w.Code == code);
             return context.Hops.FirstOrDefault(w => w.Code == code);
         }
 

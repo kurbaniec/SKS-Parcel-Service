@@ -60,8 +60,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             });
 
 
-            // var controller = new RecipientApiController(mapperConfig.CreateMapper(), mockRecipientLogic.Object);
-            var controller = new RecipientApiController(mapperConfig.CreateMapper());
+            var controller = new RecipientApiController(mapperConfig.CreateMapper(), mockRecipientLogic.Object);
+            // var controller = new RecipientApiController(mapperConfig.CreateMapper());
 
 
             var result = controller.TrackParcel(trackingId);
@@ -82,8 +82,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             mockRecipientLogic.Setup(m => m.TrackParcel(It.Is<string>(s => s == null)))
                 .Throws(new ArgumentNullException("tracking Id mustnot be null!"));
 
-            // var controller = new RecipientApiController(mapperConfig.CreateMapper(), mockRecipientLogic.Object);
-            var controller = new RecipientApiController(mapperConfig.CreateMapper());
+            var controller = new RecipientApiController(mapperConfig.CreateMapper(), mockRecipientLogic.Object);
+            // var controller = new RecipientApiController(mapperConfig.CreateMapper());
 
             var result = controller.TrackParcel(trackingId);
 

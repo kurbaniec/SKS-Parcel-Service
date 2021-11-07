@@ -13,8 +13,10 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
@@ -30,17 +32,18 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly IStaffLogic staffLogic;
         private readonly IMapper mapper;
 
-        public StaffApiController(ParcelLogisticsContext context, IMapper mapper)
+        [ActivatorUtilitiesConstructor]
+        public StaffApiController(IParcelLogisticsContext context, IMapper mapper, IStaffLogic staffLogic)
         {
             this.staffLogic = new StaffLogic(new ParcelRepository(context), new WarehouseRepository(context), mapper);
             this.mapper = mapper;
         }
 
-        // public StaffApiController(IMapper mapper, IStaffLogic staffLogic)
-        // {
-        //     this.staffLogic = staffLogic;
-        //     this.mapper = mapper;
-        // }
+        public StaffApiController(IMapper mapper, IStaffLogic staffLogic)
+        {
+            this.staffLogic = staffLogic;
+            this.mapper = mapper;
+        }
 
         /// <summary>
         /// Report that a Parcel has been delivered at it&#x27;s final destination address. 

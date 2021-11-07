@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 {
-    public class ParcelLogisticsContext : DbContext
+    public class ParcelLogisticsContext : DbContext, IParcelLogisticsContext
     {
         public ParcelLogisticsContext() {}
         

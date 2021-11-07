@@ -17,8 +17,10 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
@@ -35,19 +37,20 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly IWarehouseManagementLogic warehouseManagementLogic;
         private readonly IMapper mapper;
         
-        public WarehouseManagementApiController(ParcelLogisticsContext context, IMapper mapper)
+        [ActivatorUtilitiesConstructor]
+        public WarehouseManagementApiController(IParcelLogisticsContext context, IMapper mapper, IWarehouseManagementLogic warehouseManagementLogic)
         {
             this.warehouseManagementLogic = new WarehouseManagementLogic(new WarehouseRepository(context), mapper);
             this.mapper = mapper;
         }
 
-        // public WarehouseManagementApiController(IMapper mapper, IWarehouseManagementLogic warehouseManagementLogic)
-        // {
-        //     this.mapper = mapper;
-        //     this.warehouseManagementLogic = warehouseManagementLogic;
-        // }
+        public WarehouseManagementApiController(IMapper mapper, IWarehouseManagementLogic warehouseManagementLogic)
+        {
+            this.mapper = mapper;
+            this.warehouseManagementLogic = warehouseManagementLogic;
+        }
 
-        
+
         /// <summary>
         /// Exports the hierarchy of Warehouse and Truck objects. 
         /// </summary>
@@ -78,7 +81,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //     ? JsonConvert.DeserializeObject<Warehouse>(exampleJson)
             //     : default(Warehouse); //TODO: Change the data returned
             // return new ObjectResult(example);
-            
+
             BlWarehouse blResult;
             try
             {
@@ -89,7 +92,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
                 return StatusCode(400, new Error
                 {
                     ErrorMessage = "The operation failed due to an error."
-                }); 
+                });
             }
 
             var svcResult = mapper.Map<Warehouse>(blResult);
@@ -126,7 +129,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //     ? JsonConvert.DeserializeObject<Warehouse>(exampleJson)
             //     : default(Warehouse); //TODO: Change the data returned
             // return new ObjectResult(example);
-            
+
             BlWarehouse blResult;
             try
             {
@@ -137,7 +140,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
                 return StatusCode(400, new Error
                 {
                     ErrorMessage = "Code must not be null."
-                }); 
+                });
             }
 
             var svcResult = mapper.Map<Warehouse>(blResult);
@@ -169,7 +172,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
                     ErrorMessage = "Warehouse body must not be null."
                 });
             }
-            
+
             return StatusCode(200);
         }
     }

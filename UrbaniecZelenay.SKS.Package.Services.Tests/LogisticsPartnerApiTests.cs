@@ -89,8 +89,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             });
 
             
-            var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper());
-            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(),mockLogisticsPartnerLogic.Object);
+            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper());
+            var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(),mockLogisticsPartnerLogic.Object);
 
             var result = controller.TransitionParcel(validParcel, trackingId);
             
@@ -134,8 +134,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             mockLogisticsPartnerLogic.Setup(m => m.TransitionParcel(It.Is<BlParcel>(p => p.Weight < 0)))
                 .Throws(new ArgumentException("Weight must be >= 0"));
             
-            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(), mockLogisticsPartnerLogic.Object);
-           var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
+            var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(), mockLogisticsPartnerLogic.Object);
+           // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
 
             var result = controller.TransitionParcel(validParcel, trackingId);
             

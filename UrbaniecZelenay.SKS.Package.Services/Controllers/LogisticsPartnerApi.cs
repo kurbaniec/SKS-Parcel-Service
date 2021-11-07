@@ -14,8 +14,10 @@ using Swashbuckle.AspNetCore.Annotations;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
@@ -32,17 +34,20 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly ILogisticsPartnerLogic logisticsPartnerLogic;
         private readonly IMapper mapper;
 
-        public LogisticsPartnerApiController(ParcelLogisticsContext context, IMapper mapper)
+
+        [ActivatorUtilitiesConstructor]
+        public LogisticsPartnerApiController(IParcelLogisticsContext context, IMapper mapper,
+            ILogisticsPartnerLogic logisticsPartnerLogic)
         {
             this.logisticsPartnerLogic = new LogisticsPartnerLogic(new ParcelRepository(context), mapper);
             this.mapper = mapper;
         }
-        
-        // public LogisticsPartnerApiController(IMapper mapper, ILogisticsPartnerLogic logisticsPartnerLogic)
-        // {
-        //     this.logisticsPartnerLogic = logisticsPartnerLogic;
-        //     this.mapper = mapper;
-        // }
+
+        public LogisticsPartnerApiController(IMapper mapper, ILogisticsPartnerLogic logisticsPartnerLogic)
+        {
+            this.logisticsPartnerLogic = logisticsPartnerLogic;
+            this.mapper = mapper;
+        }
 
         /// <summary>
         /// Transfer an existing parcel into the system from the service of a logistics partner. 
@@ -86,8 +91,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             // Pass parameter (here trackingId) to AutoMapper
             // See: https://stackoverflow.com/a/34419562/12347616
             // One could also call `blParcel.TrackingIDd=tracking` after mapper invocation.
-            var blParcel = mapper.Map<BlParcel>(body, 
-                opt => opt.AfterMap((_, dest) => dest.TrackingId=trackingId));
+            var blParcel = mapper.Map<BlParcel>(body,
+                opt => opt.AfterMap((_, dest) => dest.TrackingId = trackingId));
 
             BlParcel blResult;
             try

@@ -17,8 +17,10 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
@@ -35,17 +37,18 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly IRecipientLogic recipientLogic;
         private readonly IMapper mapper;
         
-        public RecipientApiController(ParcelLogisticsContext context, IMapper mapper)
+        [ActivatorUtilitiesConstructor]
+        public RecipientApiController(IParcelLogisticsContext context, IMapper mapper)
         {
             this.recipientLogic = new RecipientLogic(new ParcelRepository(context), mapper);
             this.mapper = mapper;
         }
         
-        // public RecipientApiController(IMapper mapper, IRecipientLogic recipientLogic)
-        // {
-        //     this.recipientLogic = recipientLogic;
-        //     this.mapper = mapper;
-        // }
+        public RecipientApiController(IMapper mapper, IRecipientLogic recipientLogic)
+        {
+            this.recipientLogic = recipientLogic;
+            this.mapper = mapper;
+        }
 
         /// <summary>
         /// Find the latest state of a parcel by its tracking ID. 
