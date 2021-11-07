@@ -23,6 +23,12 @@ steps:
     arguments: '/p:IsWebConfigTransformDisabled=true'
     publishWebProjects: true
 
+- task: DeleteFiles@1
+  displayName: 'Delete past coverage reports'
+  inputs:
+    SourceFolder: '$(Agent.TempDirectory)'
+    Contents: '**/coverage.cobertura.xml'
+
 - task: DotNetCoreCLI@2
   displayName: 'test'
   inputs:
