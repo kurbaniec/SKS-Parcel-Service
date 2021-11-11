@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 {
+    [ExcludeFromCodeCoverage]
     public class ParcelLogisticsContext : DbContext, IParcelLogisticsContext
     {
         public ParcelLogisticsContext() {}
@@ -12,6 +14,11 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         // Constructor used by ASP.NET Core
         public ParcelLogisticsContext(DbContextOptions<ParcelLogisticsContext> options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
         }
 
         // Create properties

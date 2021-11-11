@@ -59,10 +59,10 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
-            };
-            List<Warehouse> warehouses = new List<Warehouse> { validWarehouse };
-            myDbMoq.Setup(m => m.Warehouses)
-                .Returns(ParcelLogisticsContextMock.GetQueryableMockDbSet<Warehouse>(warehouses));
+            } as Hop;
+            List<Hop> warehouses = new List<Hop> { validWarehouse };
+            myDbMoq.Setup(m => m.Hops)
+                .Returns(ParcelLogisticsContextMock.GetQueryableMockDbSet<Hop>(warehouses));
             // 
             Mock<DatabaseFacade> dbFacadeMock =
                 new Mock<DatabaseFacade>(MockBehavior.Strict, new Mock<DbContext>().Object);
