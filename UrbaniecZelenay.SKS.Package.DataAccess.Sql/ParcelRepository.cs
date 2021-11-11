@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -15,7 +16,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         {
             this.context = context;
         }
-        
+
         public Parcel Create(Parcel parcel)
         {
             // Working with transactions
@@ -48,7 +49,10 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public Parcel? GetByTrackingId(string trackingId)
         {
-           return context.Parcels.FirstOrDefault(p => p.TrackingId == trackingId);
+            return context.Parcels
+                .Include(p => p.VisitedHops)
+                .Include(p => p.FutureHops)
+                .FirstOrDefault(p => p.TrackingId == trackingId);
         }
     }
 }

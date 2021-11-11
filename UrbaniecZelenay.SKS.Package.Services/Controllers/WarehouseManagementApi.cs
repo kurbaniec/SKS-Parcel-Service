@@ -130,7 +130,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             //     : default(Warehouse); //TODO: Change the data returned
             // return new ObjectResult(example);
 
-            BlWarehouse blResult;
+            BlWarehouse? blResult;
             try
             {
                 blResult = warehouseManagementLogic.GetWarehouse(code);
@@ -142,6 +142,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
                     ErrorMessage = "Code must not be null."
                 });
             }
+
+            if (blResult == null) return StatusCode(404);
 
             var svcResult = mapper.Map<Warehouse>(blResult);
             return new ObjectResult(svcResult);

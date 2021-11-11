@@ -149,9 +149,9 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
-            };
-            myDbMoq.Setup(m => m.Warehouses)
-                .Returns(ParcelLogisticsContextMock.GetQueryableMockDbSet<Warehouse>(new List<Warehouse>{validWarehouse}));
+            } as Hop;
+            myDbMoq.Setup(m => m.Hops)
+                .Returns(ParcelLogisticsContextMock.GetQueryableMockDbSet<Hop>(new List<Hop>{validWarehouse}));
             // 
             Mock<DatabaseFacade> dbFacadeMock =
                 new Mock<DatabaseFacade>(MockBehavior.Strict, new Mock<DbContext>().Object);
@@ -177,9 +177,9 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
-            };
-            myDbMoq.Setup(m => m.Warehouses)
-                .Returns(ParcelLogisticsContextMock.GetQueryableMockDbSet<Warehouse>(new List<Warehouse>{validWarehouse}));
+            } as Hop;
+            myDbMoq.Setup(m => m.Hops)
+                .Returns(ParcelLogisticsContextMock.GetQueryableMockDbSet<Hop>(new List<Hop>{validWarehouse}));
             // 
             Mock<DatabaseFacade> dbFacadeMock =
                 new Mock<DatabaseFacade>(MockBehavior.Strict, new Mock<DbContext>().Object);

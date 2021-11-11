@@ -51,7 +51,11 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public Warehouse? GetWarehouseByCode(string code)
         {
-            return context.Warehouses.SingleOrDefault(w => w.Code == code);
+            return context.Hops
+                .OfType<Warehouse>()
+                .Include(hop => hop.NextHops)
+                .ThenInclude(nextHop => nextHop.Hop)
+                .AsEnumerable().SingleOrDefault(w => w.Code == code);
         }
     }
 }
