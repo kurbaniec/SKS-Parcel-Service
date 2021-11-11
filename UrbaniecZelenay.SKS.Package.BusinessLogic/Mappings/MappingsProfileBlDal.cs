@@ -8,6 +8,8 @@ using DalWarehouseNextHops = UrbaniecZelenay.SKS.Package.DataAccess.Entities.War
 using DalHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Hop;
 using DalGeoCoordinate = UrbaniecZelenay.SKS.Package.DataAccess.Entities.GeoCoordinate;
 using DalHopArrival = UrbaniecZelenay.SKS.Package.DataAccess.Entities.HopArrival;
+using DalTruck = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Truck;
+using DalTransferwarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Transferwarehouse;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings
 {
@@ -25,9 +27,11 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings
             AllowNullCollections = false;
             CreateMap<Parcel, DalParcel>().ReverseMap();
             CreateMap<Recipient, DalRecipient>().ReverseMap();
+            CreateMap<Hop, DalHop>().IncludeAllDerived().ReverseMap().IncludeAllDerived();
             CreateMap<Warehouse, DalWarehouse>().ReverseMap();
             CreateMap<WarehouseNextHops, DalWarehouseNextHops>().ReverseMap();
-            CreateMap<Hop, DalHop>().ReverseMap();
+            CreateMap<Truck, DalTruck>().ReverseMap();
+            CreateMap<Transferwarehouse, DalTransferwarehouse>().ReverseMap();
             CreateMap<GeoCoordinate, DalGeoCoordinate>().ReverseMap();
             CreateMap<HopArrival, DalHopArrival>()
                 .ForMember(dalHopArrival => dalHopArrival.Hop,

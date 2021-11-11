@@ -8,6 +8,8 @@ using BlWarehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Warehouse
 using BlWarehouseNextHops = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.WarehouseNextHops;
 using BlHop = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Hop;
 using BlGeoCoordinate = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.GeoCoordinate;
+using BlTruck = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Truck;
+using BlTransferwarehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Transferwarehouse;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Mappings
 {
@@ -38,9 +40,15 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
             CreateMap<BlParcel, TrackingInformation>();
             CreateMap<BlParcel, NewParcelInfo>();
             CreateMap<Recipient, BlRecipient>().ReverseMap();
+            // Check for inheritance
+            // See: https://docs.automapper.org/en/stable/Mapping-inheritance.html
+            // IncludeAllDerived needs to be called on base and reversed mapping
+            // See: https://stackoverflow.com/a/62085857/12347616
+            CreateMap<Hop, BlHop>().IncludeAllDerived().ReverseMap().IncludeAllDerived();
             CreateMap<Warehouse, BlWarehouse>().ReverseMap();
             CreateMap<WarehouseNextHops, BlWarehouseNextHops>().ReverseMap();
-            CreateMap<Hop, BlHop>().ReverseMap();
+            CreateMap<Truck, BlTruck>().ReverseMap();
+            CreateMap<Transferwarehouse, BlTransferwarehouse>().ReverseMap();
             CreateMap<GeoCoordinate, BlGeoCoordinate>().ReverseMap();
         }
     }

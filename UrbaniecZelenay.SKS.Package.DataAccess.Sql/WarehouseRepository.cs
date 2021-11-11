@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
@@ -14,10 +15,17 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         {
             this.context = context;
         }
-        
+
         public Warehouse Create(Warehouse warehouse)
         {
             // TODO Detect already existing warehouses?
+            var check = context.Warehouses.SingleOrDefault(w => w.Code == warehouse.Code);
+            if (check != null)
+            {
+                // TODO throw error?
+                Console.WriteLine("Already exists");
+                return check;
+            }
             context.Warehouses.Add(warehouse);
             context.SaveChanges();
             return warehouse;
@@ -25,23 +33,25 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public Warehouse? GetAll()
         {
-            //return context.Warehouses.FirstOrDefault(w => w.Level == 0);
-            return context.Hops.OfType<Warehouse>()
+            // Source: Max
+            // Load everything from DB (using AsEnumerable) and filter at the end
+            // (with SingleOrDefault) for the root warehouse
+            return context.Hops
+                .OfType<Warehouse>()
                 .Include(hop => hop.NextHops)
                 .ThenInclude(nextHop => nextHop.Hop)
                 .AsEnumerable()
-                .FirstOrDefault(hop => hop.Level == 0);
+                .SingleOrDefault(hop => hop.Level == 0);
         }
 
         public Hop? GetHopByCode(string code)
         {
-            Hop? tmp = context.Hops.FirstOrDefault(w => w.Code == code);
-            return context.Hops.FirstOrDefault(w => w.Code == code);
+            return context.Hops.SingleOrDefault(w => w.Code == code);
         }
 
         public Warehouse? GetWarehouseByCode(string code)
         {
-            return context.Warehouses.FirstOrDefault(w => w.Code == code);
+            return context.Warehouses.SingleOrDefault(w => w.Code == code);
         }
     }
 }
