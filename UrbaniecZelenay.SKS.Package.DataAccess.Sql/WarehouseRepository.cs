@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -24,7 +25,12 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public Warehouse? GetAll()
         {
-            return context.Warehouses.FirstOrDefault(w => w.Level == 0);
+            //return context.Warehouses.FirstOrDefault(w => w.Level == 0);
+            return context.Hops.OfType<Warehouse>()
+                .Include(hop => hop.NextHops)
+                .ThenInclude(nextHop => nextHop.Hop)
+                .AsEnumerable()
+                .FirstOrDefault(hop => hop.Level == 0);
         }
 
         public Hop? GetHopByCode(string code)
