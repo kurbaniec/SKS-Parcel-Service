@@ -58,6 +58,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         { 
             logger.LogInformation($"Submit Parcel {body?.ToJson()}");
             var blParcel = mapper.Map<BlParcel>(body);
+            logger.LogDebug($"Mapping Svc/Bl {body} => {blParcel}");
             
             BlParcel blResult;
             try
@@ -80,6 +81,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             }
 
             var svcResult = mapper.Map<NewParcelInfo>(blResult);
+            logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
             return StatusCode(201, svcResult);
         }
     }

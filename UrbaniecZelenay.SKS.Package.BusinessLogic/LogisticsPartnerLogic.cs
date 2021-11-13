@@ -44,6 +44,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             }
 
             var dalParcel = mapper.Map<DalParcel>(parcel);
+            logger.LogDebug($"Mapping Bl/Dal {parcel} => {dalParcel}");
             dalParcel = parcelRepository.Create(dalParcel);
 
             // return new Parcel
@@ -72,6 +73,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             // };
             
             var blResult = mapper.Map<Parcel>(dalParcel);
+            logger.LogDebug($"Mapping Dal/Bl {dalParcel} => {blResult}");
             return blResult;
         }
     }

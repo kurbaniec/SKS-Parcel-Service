@@ -57,6 +57,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             var dalResult = parcelRepository.GetByTrackingId(trackingId);
             if (dalResult == null) return null;
             var blResult = mapper.Map<Parcel>(dalResult);
+            logger.LogDebug($"Mapping Dal/Bl {dalResult} => {blResult}");
             return blResult;
         }
     }

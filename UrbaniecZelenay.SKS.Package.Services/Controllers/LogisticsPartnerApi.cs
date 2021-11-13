@@ -65,7 +65,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             logger.LogInformation($"Transition Parcel with ID {trackingId}");
             var blParcel = mapper.Map<BlParcel>(body,
                 opt => opt.AfterMap((_, dest) => dest.TrackingId = trackingId));
-
+            logger.LogDebug($"Mapping Svc/Bl {body} => {blParcel}");
+            
             BlParcel blResult;
             try
             {
@@ -87,6 +88,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             }
 
             var svcResult = mapper.Map<NewParcelInfo>(blResult);
+            logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
             return new ObjectResult(svcResult);
         }
     }

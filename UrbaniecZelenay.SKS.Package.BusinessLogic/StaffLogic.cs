@@ -39,6 +39,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             var blParcel = mapper.Map<Parcel>(dalParcel);
             blParcel.State = Parcel.StateEnum.DeliveredEnum;
             dalParcel = mapper.Map<DalParcel>(blParcel);
+            logger.LogDebug($"Mapping Bl/Dal {blParcel} => {dalParcel}");
             parcelRepository.Update(dalParcel);
         }
 
@@ -83,6 +84,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             blParcel.VisitedHops.Add(hopArrival);
 
             dalParcel = mapper.Map<DalParcel>(blParcel);
+            logger.LogDebug($"Mapping Bl/Dal {blParcel} => {dalParcel}");
             parcelRepository.Update(dalParcel);
         }
     }

@@ -112,6 +112,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             if (blResult == null) return StatusCode(404);
 
             var svcResult = mapper.Map<Warehouse>(blResult);
+            logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
             return new ObjectResult(svcResult);
         }
 
@@ -130,6 +131,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         {
             logger.LogInformation($"Import warehouses with hierarchy {body?.ToJson()}");
             var blWarehouse = mapper.Map<BlWarehouse>(body);
+            logger.LogDebug($"Mapping Svc/Bl {body} => {blWarehouse}");
             try
             {
                 warehouseManagementLogic.ImportWarehouses(blWarehouse);

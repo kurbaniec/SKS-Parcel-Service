@@ -50,6 +50,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             var dalWarehouse = warehouseRepository.GetAll();
             if (dalWarehouse == null) return null;
             var blWarehouse = mapper.Map<Warehouse>(dalWarehouse);
+            logger.LogDebug($"Mapping Dal/Bl {dalWarehouse} => {blWarehouse}");
             return blWarehouse;
         }
 
@@ -76,6 +77,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             var dalWarehouse = warehouseRepository.GetWarehouseByCode(code);
             if (dalWarehouse == null) return null;
             var blWarehouse = mapper.Map<Warehouse>(dalWarehouse);
+            logger.LogDebug($"Mapping Dal/Bl {dalWarehouse} => {blWarehouse}");
             return blWarehouse;
         }
 
@@ -96,6 +98,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             }
 
             var dalWarehouse = mapper.Map<DalWarehouse>(body);
+            logger.LogDebug($"Mapping Bl/Dal {body} => {dalWarehouse}");
             warehouseRepository.Create(dalWarehouse);
         }
     }
