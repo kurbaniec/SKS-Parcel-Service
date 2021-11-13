@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -31,9 +32,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly IStaffLogic staffLogic;
         private readonly IMapper mapper;
+        private readonly ILogger<StaffApiController> logger;
 
-        public StaffApiController(IMapper mapper, IStaffLogic staffLogic)
+        public StaffApiController(ILogger<StaffApiController> logger, IMapper mapper, IStaffLogic staffLogic)
         {
+            this.logger = logger;
             this.staffLogic = staffLogic;
             this.mapper = mapper;
         }
@@ -54,6 +57,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
             string trackingId)
         {
+            logger.LogInformation($"Report Parcel Delivery for ID {trackingId}");
             try
             {
                 staffLogic.ReportParcelDelivery(trackingId);
@@ -96,6 +100,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z]{4}\d{1,4}$")]
             string code)
         {
+            logger.LogInformation($"Report Parcel Hop for Parcel with ID {trackingId}");
             try
             {
                 staffLogic.ReportParcelHop(trackingId, code);

@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -33,9 +34,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly ILogisticsPartnerLogic logisticsPartnerLogic;
         private readonly IMapper mapper;
+        private readonly ILogger<LogisticsPartnerApiController> logger;
 
-        public LogisticsPartnerApiController(IMapper mapper, ILogisticsPartnerLogic logisticsPartnerLogic)
+        public LogisticsPartnerApiController(ILogger<LogisticsPartnerApiController> logger, IMapper mapper,
+            ILogisticsPartnerLogic logisticsPartnerLogic)
         {
+            this.logger = logger;
             this.logisticsPartnerLogic = logisticsPartnerLogic;
             this.mapper = mapper;
         }
@@ -58,6 +62,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
             string trackingId)
         {
+            logger.LogInformation($"Transition Parcel with ID {trackingId}");
             var blParcel = mapper.Map<BlParcel>(body,
                 opt => opt.AfterMap((_, dest) => dest.TrackingId = trackingId));
 

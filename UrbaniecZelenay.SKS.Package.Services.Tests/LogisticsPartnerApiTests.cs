@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
@@ -27,7 +28,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         // SubmitParcel_ValidParcel_TrackingIdReturned
         // SubmitParcel_ZeroWeight_ValidationError
         // SubmitParcel_NullParcel_ArgumentExpection
-        
+
         [SetUp]
         public void Setup()
         {
@@ -57,11 +58,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 },
             };
             var trackingId = "PYJRB4HZ6";
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileSvcBl());
-            });
-            
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<LogisticsPartnerApiController>>();
             Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
             mockLogisticsPartnerLogic.Setup(m => m.TransitionParcel(It.IsAny<BlParcel>())).Returns(new BlParcel
             {
@@ -87,20 +85,19 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 VisitedHops = new List<BlHopArrival>(),
                 FutureHops = new List<BlHopArrival>()
             });
-
-            
             // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper());
-            var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(),mockLogisticsPartnerLogic.Object);
+            var controller = new LogisticsPartnerApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockLogisticsPartnerLogic.Object);
 
             var result = controller.TransitionParcel(validParcel, trackingId);
-            
+
             var okResult = result as ObjectResult;
             Assert.NotNull(okResult);
             var newParcelInfo = okResult.Value as NewParcelInfo;
             Assert.NotNull(newParcelInfo);
             Assert.AreEqual(trackingId, newParcelInfo.TrackingId);
         }
-        
+
         [Test]
         public void TransitionParcel_NegativeWeight_ErrorReturned()
         {
@@ -125,20 +122,18 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 },
             };
             var trackingId = "PYJRB4HZ6";
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileSvcBl());
-            });
-            
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<LogisticsPartnerApiController>>();
             Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
             mockLogisticsPartnerLogic.Setup(m => m.TransitionParcel(It.Is<BlParcel>(p => p.Weight < 0)))
                 .Throws(new ArgumentException("Weight must be >= 0"));
-            
-            var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper(), mockLogisticsPartnerLogic.Object);
-           // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
+
+            var controller = new LogisticsPartnerApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockLogisticsPartnerLogic.Object);
+            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
 
             var result = controller.TransitionParcel(validParcel, trackingId);
-            
+
             var objectResult = result as ObjectResult;
             Assert.NotNull(objectResult);
             var error = objectResult.Value as Error;

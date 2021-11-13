@@ -18,6 +18,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -36,9 +37,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly IRecipientLogic recipientLogic;
         private readonly IMapper mapper;
+        private readonly ILogger<RecipientApiController> logger;
 
-        public RecipientApiController(IMapper mapper, IRecipientLogic recipientLogic)
+        public RecipientApiController(ILogger<RecipientApiController> logger, IMapper mapper,
+            IRecipientLogic recipientLogic)
         {
+            this.logger = logger;
             this.recipientLogic = recipientLogic;
             this.mapper = mapper;
         }
@@ -58,8 +62,10 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             description: "Parcel exists, here&#x27;s the tracking information.")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult TrackParcel(
-            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId)
+            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
+            string trackingId)
         {
+            logger.LogInformation($"Track Parcel with ID {trackingId}");
             BlParcel blResult;
             try
             {

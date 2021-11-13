@@ -18,6 +18,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -36,9 +37,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly IWarehouseManagementLogic warehouseManagementLogic;
         private readonly IMapper mapper;
+        private readonly ILogger<WarehouseManagementApiController> logger;
 
-        public WarehouseManagementApiController(IMapper mapper, IWarehouseManagementLogic warehouseManagementLogic)
+        public WarehouseManagementApiController(ILogger<WarehouseManagementApiController> logger, IMapper mapper,
+            IWarehouseManagementLogic warehouseManagementLogic)
         {
+            this.logger = logger;
             this.mapper = mapper;
             this.warehouseManagementLogic = warehouseManagementLogic;
         }
@@ -58,6 +62,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "An error occurred loading.")]
         public virtual IActionResult ExportWarehouses()
         {
+            logger.LogInformation("Export Warehouses");
             BlWarehouse blResult;
             try
             {
@@ -90,6 +95,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "An error occurred loading.")]
         public virtual IActionResult GetWarehouse([FromRoute] [Required] string code)
         {
+            logger.LogInformation($"Get Warehouse with ID {code}");
             BlWarehouse? blResult;
             try
             {
@@ -122,6 +128,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult ImportWarehouses([FromBody] Warehouse body)
         {
+            logger.LogInformation($"Import warehouses with hierarchy {body?.ToJson()}");
             var blWarehouse = mapper.Map<BlWarehouse>(body);
             try
             {

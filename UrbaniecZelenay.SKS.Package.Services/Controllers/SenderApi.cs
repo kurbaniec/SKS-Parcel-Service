@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using Newtonsoft.Json;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -32,9 +33,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly ISenderLogic senderLogic;
         private readonly IMapper mapper;
+        private readonly ILogger<SenderApiController> logger;
 
-        public SenderApiController(IMapper mapper, ISenderLogic senderLogic)
+        public SenderApiController(ILogger<SenderApiController> logger, IMapper mapper, ISenderLogic senderLogic)
         {
+            this.logger = logger;
             this.senderLogic = senderLogic;
             this.mapper = mapper;
         }
@@ -52,7 +55,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             description: "Successfully submitted the new parcel")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult SubmitParcel([FromBody] Parcel body)
-        {
+        { 
+            logger.LogInformation($"Submit Parcel {body?.ToJson()}");
             var blParcel = mapper.Map<BlParcel>(body);
             
             BlParcel blResult;
