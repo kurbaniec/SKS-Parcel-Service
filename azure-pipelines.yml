@@ -16,6 +16,14 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
+- task: FileTransform@1
+  inputs:
+    folderPath: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    fileType: 'json'
+    targetFiles: |
+      **/AppSettings.json
+      **/appsettings.json
+
 - task: DotNetCoreCLI@2
   displayName: 'publish'
   inputs:
