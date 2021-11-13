@@ -95,7 +95,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "An error occurred loading.")]
         public virtual IActionResult GetWarehouse([FromRoute] [Required] string code)
         {
-            logger.LogInformation($"Get Warehouse with ID {code}");
+            logger.LogInformation($"Get Warehouse with Code {code}");
             BlWarehouse? blResult;
             try
             {

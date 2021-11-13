@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using AutoMapper;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
@@ -15,9 +16,11 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
     {
         private readonly IWarehouseRepository warehouseRepository;
         private readonly IMapper mapper;
-        
-        public WarehouseManagementLogic(IWarehouseRepository warehouseRepository, IMapper mapper)
+        private readonly ILogger<WarehouseManagementLogic> logger;
+
+        public WarehouseManagementLogic(ILogger<WarehouseManagementLogic> logger, IWarehouseRepository warehouseRepository, IMapper mapper)
         {
+            this.logger = logger;
             this.warehouseRepository = warehouseRepository;
             this.mapper = mapper;
         }
@@ -25,6 +28,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
         public bool TriggerExportWarehouseException { get; set; } = false;
         public Warehouse? ExportWarehouses()
         {
+            logger.LogInformation("Export Warehouses");
             // TODO: Create custom exception
             if (TriggerExportWarehouseException)
             {
@@ -51,8 +55,10 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 
         public Warehouse? GetWarehouse(string code)
         {
+            logger.LogInformation($"Get Warehouse with Code {code}");
             if (code == null)
             {
+                logger.LogError("Code is null");
                 throw new ArgumentNullException(nameof(code));
             }
             
@@ -75,8 +81,10 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 
         public void ImportWarehouses(Warehouse? body)
         {
+            logger.LogInformation($"Import warehouses with hierarchy {body}");
             if (body == null)
             {
+                logger.LogError("Warehouse is null");
                 throw new ArgumentNullException(nameof(body));
             }
             IValidator<Warehouse> parcelValidator = new WarehouseValidator();

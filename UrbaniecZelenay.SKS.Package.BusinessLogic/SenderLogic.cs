@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoMapper;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
@@ -14,17 +15,21 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
     {
         private readonly IParcelRepository parcelRepository;
         private readonly IMapper mapper;
-        
-        public SenderLogic(IParcelRepository parcelRepository, IMapper mapper)
+        private readonly ILogger<SenderLogic> logger;
+
+        public SenderLogic(ILogger<SenderLogic> logger, IParcelRepository parcelRepository, IMapper mapper)
         {
+            this.logger = logger;
             this.parcelRepository = parcelRepository;
             this.mapper = mapper;
         }
         
         public Parcel SubmitParcel(Parcel? body)
         {
+            logger.LogInformation($"Submit Parcel {body}");
             if (body == null)
             {
+                logger.LogError("Parcel is null");
                 throw new ArgumentNullException(nameof(body));
             }
             IValidator<Parcel> parcelValidator = new ParcelValidator();
@@ -32,6 +37,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             if (!validationResult.IsValid)
             {
                 string validationErrors = string.Join(Environment.NewLine, validationResult.Errors);
+                logger.LogError($"Validation Errors: {validationErrors}");
                 throw new ArgumentException(validationErrors);
             }
 

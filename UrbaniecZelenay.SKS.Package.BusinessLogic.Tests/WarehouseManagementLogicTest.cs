@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
@@ -27,6 +28,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         public void ExportWarehouse_InternalError_ExceptionThrown()
         {
             Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
+            var mockLogger = new Mock<ILogger<WarehouseManagementLogic>>();
             mockWarehouseRepo.Setup(m => m.GetAll()).Returns(new DataAccess.Entities.Warehouse
             {
                 Code = "AUTA01",
@@ -42,7 +44,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
             IWarehouseManagementLogic warehouseManagementLogic =
-                new WarehouseManagementLogic(mockWarehouseRepo.Object, mapperConfig.CreateMapper());
+                new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
             warehouseManagementLogic.TriggerExportWarehouseException = true;
             Assert.Throws<InvalidOperationException>(() => warehouseManagementLogic.ExportWarehouses());
         }
@@ -51,6 +53,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         public void ExportWarehouse_Valid_AllWarehousesReturned()
         {
             Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
+            var mockLogger = new Mock<ILogger<WarehouseManagementLogic>>();
             mockWarehouseRepo.Setup(m => m.GetAll()).Returns(new DataAccess.Entities.Warehouse
             {
                 Code = "AUTA01",
@@ -67,7 +70,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
             IWarehouseManagementLogic warehouseManagementLogic =
-                new WarehouseManagementLogic(mockWarehouseRepo.Object, mapperConfig.CreateMapper());
+                new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
             Warehouse result = warehouseManagementLogic.ExportWarehouses();
             Assert.NotNull(result);
         }
@@ -76,6 +79,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         public void GetWarehouse_ValidCode_WarehouseReturned()
         {
             string code = "AUTA05";
+            var mockLogger = new Mock<ILogger<WarehouseManagementLogic>>();
             Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
             mockWarehouseRepo.Setup(m => m.GetWarehouseByCode(It.IsAny<string>())).Returns(
                 new DataAccess.Entities.Warehouse
@@ -93,7 +97,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
             IWarehouseManagementLogic warehouseManagementLogic =
-                new WarehouseManagementLogic(mockWarehouseRepo.Object, mapperConfig.CreateMapper());
+                new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
             Warehouse result = warehouseManagementLogic.GetWarehouse(code);
             Assert.NotNull(result);
         }
@@ -102,6 +106,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         public void GetWarehouse_CodeNull_ExceptionThrown()
         {
             string code = null;
+            var mockLogger = new Mock<ILogger<WarehouseManagementLogic>>();
             Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
             mockWarehouseRepo.Setup(m => m.GetWarehouseByCode(It.IsAny<string>())).Returns(
                 new DataAccess.Entities.Warehouse
@@ -119,7 +124,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
             IWarehouseManagementLogic warehouseManagementLogic =
-                new WarehouseManagementLogic(mockWarehouseRepo.Object, mapperConfig.CreateMapper());
+                new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
             Assert.Throws<ArgumentNullException>(() => warehouseManagementLogic.GetWarehouse(code));
         }
 
@@ -137,11 +142,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
             };
+            var mockLogger = new Mock<ILogger<WarehouseManagementLogic>>();
             Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
             IWarehouseManagementLogic warehouseManagementLogic =
-                new WarehouseManagementLogic(mockWarehouseRepo.Object, mapperConfig.CreateMapper());
+                new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
             warehouseManagementLogic.ImportWarehouses(validWarehouse);
             Assert.True(true);
         }
@@ -150,10 +156,11 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         public void ImportWarehouses_InvalidWarehouseNextHopsNull_NoException()
         {
             Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
+            var mockLogger = new Mock<ILogger<WarehouseManagementLogic>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
             IWarehouseManagementLogic warehouseManagementLogic =
-                new WarehouseManagementLogic(mockWarehouseRepo.Object, mapperConfig.CreateMapper());
+                new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
             var invalidWarehouse = new Warehouse
             {
                 HopType = "Warehouse",
@@ -173,10 +180,11 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         public void ImportWarehouses_NullWarehouse_NoException()
         {
             Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
+            var mockLogger = new Mock<ILogger<WarehouseManagementLogic>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
             IWarehouseManagementLogic warehouseManagementLogic =
-                new WarehouseManagementLogic(mockWarehouseRepo.Object, mapperConfig.CreateMapper());
+                new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
             Warehouse invalidWarehouse = null;
             Assert.Throws<ArgumentNullException>(() => warehouseManagementLogic.ImportWarehouses(invalidWarehouse));
             Assert.True(true);
