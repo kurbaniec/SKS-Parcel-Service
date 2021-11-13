@@ -36,14 +36,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly IRecipientLogic recipientLogic;
         private readonly IMapper mapper;
-        
-        [ActivatorUtilitiesConstructor]
-        public RecipientApiController(IParcelLogisticsContext context, IMapper mapper)
-        {
-            this.recipientLogic = new RecipientLogic(new ParcelRepository(context), mapper);
-            this.mapper = mapper;
-        }
-        
+
         public RecipientApiController(IMapper mapper, IRecipientLogic recipientLogic)
         {
             this.recipientLogic = recipientLogic;
@@ -67,28 +60,6 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         public virtual IActionResult TrackParcel(
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId)
         {
-            // if (trackingId == null)
-            // {
-            //     
-            // }
-            //
-            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(200, default(TrackingInformation));
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            //
-            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(404);
-            // string exampleJson = null;
-            // exampleJson =
-            //     "{\n  \"visitedHops\" : [ {\n    \"dateTime\" : \"2000-01-23T04:56:07.000+00:00\",\n    \"code\" : \"code\",\n    \"description\" : \"description\"\n  }, {\n    \"dateTime\" : \"2000-01-23T04:56:07.000+00:00\",\n    \"code\" : \"code\",\n    \"description\" : \"description\"\n  } ],\n  \"futureHops\" : [ null, null ],\n  \"state\" : \"Pickup\"\n}";
-            //
-            // var example = exampleJson != null
-            //     ? JsonConvert.DeserializeObject<TrackingInformation>(exampleJson)
-            //     : default(TrackingInformation); //TODO: Change the data returned
-            // return new ObjectResult(example);
-            
             BlParcel blResult;
             try
             {

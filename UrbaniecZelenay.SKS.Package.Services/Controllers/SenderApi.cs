@@ -32,16 +32,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly ISenderLogic senderLogic;
         private readonly IMapper mapper;
-        
-        [ActivatorUtilitiesConstructor]
-        public SenderApiController(IParcelLogisticsContext context, IMapper mapper, ISenderLogic senderLogic)
-        {
-            // Use Dependency Injected context
-            // See: https://docs.microsoft.com/en-us/ef/core/dbcontext-configuration/#dbcontext-in-dependency-injection-for-aspnet-core
-            this.senderLogic = new SenderLogic(new ParcelRepository(context), mapper);
-            this.mapper = mapper;
-        }
-        
+
         public SenderApiController(IMapper mapper, ISenderLogic senderLogic)
         {
             this.senderLogic = senderLogic;
@@ -62,26 +53,6 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult SubmitParcel([FromBody] Parcel body)
         {
-            // if (body == null)
-            // {
-            //     return StatusCode(400, new Error
-            //     {
-            //         ErrorMessage = "No parcel given"
-            //     });
-            // }
-            // //TODO: Uncomment the next line to return response 201 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(201, default(NewParcelInfo));
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            // string exampleJson = null;
-            // exampleJson = "{\n  \"trackingId\" : \"PYJRB4HZ6\"\n}";
-            //
-            // var example = exampleJson != null
-            //     ? JsonConvert.DeserializeObject<NewParcelInfo>(exampleJson)
-            //     : default(NewParcelInfo); //TODO: Change the data returned
-            // return new ObjectResult(example);
-            
             var blParcel = mapper.Map<BlParcel>(body);
             
             BlParcel blResult;

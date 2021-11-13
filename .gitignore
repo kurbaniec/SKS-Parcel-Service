@@ -1,5 +1,7 @@
 # ASP.NET Core Settings
 appsettings.json
+**/appsettings.development.json
+**/AppSettings.Development.json
 # Docker file 
 docker-compose.yaml
 

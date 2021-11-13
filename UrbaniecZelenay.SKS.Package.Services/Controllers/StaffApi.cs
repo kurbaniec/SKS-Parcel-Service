@@ -32,13 +32,6 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         private readonly IStaffLogic staffLogic;
         private readonly IMapper mapper;
 
-        [ActivatorUtilitiesConstructor]
-        public StaffApiController(IParcelLogisticsContext context, IMapper mapper, IStaffLogic staffLogic)
-        {
-            this.staffLogic = new StaffLogic(new ParcelRepository(context), new WarehouseRepository(context), mapper);
-            this.mapper = mapper;
-        }
-
         public StaffApiController(IMapper mapper, IStaffLogic staffLogic)
         {
             this.staffLogic = staffLogic;
@@ -61,22 +54,6 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
             string trackingId)
         {
-            // if (trackingId == null)
-            // {
-            //     return StatusCode(400, new Error
-            //     {
-            //         ErrorMessage = "No tracking ID given"
-            //     });
-            // }
-            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(200);
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            //
-            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(404);
-
             try
             {
                 staffLogic.ReportParcelDelivery(trackingId);
@@ -119,24 +96,6 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z]{4}\d{1,4}$")]
             string code)
         {
-            // if (code == null)
-            // {
-            //     return StatusCode(400, new Error
-            //     {
-            //         ErrorMessage = "No code given"
-            //     });
-            // }
-            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(200);
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            //
-            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(404);
-            //
-            // return StatusCode(200);
-
             try
             {
                 staffLogic.ReportParcelHop(trackingId, code);
