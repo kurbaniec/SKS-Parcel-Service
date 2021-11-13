@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
@@ -51,7 +52,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 },
             };
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
-            
+            var mockLogger = new Mock<ILogger<SenderApiController>>();
             Mock<ISenderLogic> mockSenderLogic = new Mock<ISenderLogic>();
             mockSenderLogic.Setup(m => m.SubmitParcel(It.IsAny<BlParcel>()))
                 .Returns(new BlParcel
@@ -78,8 +79,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                     VisitedHops = new List<BlHopArrival>(),
                     FutureHops = new List<BlHopArrival>()
                 });
-
-            var controller = new SenderApiController(mapperConfig.CreateMapper(), mockSenderLogic.Object);
+            var controller = new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
             // var controller = new SenderApiController(mapperConfig.CreateMapper());
 
             var result = controller.SubmitParcel(validParcel);
@@ -95,12 +95,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         {
             Parcel nullParcel = null;
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
-
+            var mockLogger = new Mock<ILogger<SenderApiController>>();
             Mock<ISenderLogic> mockSenderLogic = new Mock<ISenderLogic>();
             mockSenderLogic.Setup(m => m.SubmitParcel(It.Is<BlParcel>(p => p == null)))
                 .Throws(new ArgumentNullException("Error Parcel must not be null!"));
-
-            var controller = new SenderApiController(mapperConfig.CreateMapper(), mockSenderLogic.Object);
+            var controller = new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
             // var controller = new SenderApiController(mapperConfig.CreateMapper());
 
             var result = controller.SubmitParcel(nullParcel);

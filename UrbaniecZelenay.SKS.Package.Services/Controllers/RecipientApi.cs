@@ -18,6 +18,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -36,16 +37,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly IRecipientLogic recipientLogic;
         private readonly IMapper mapper;
-        
-        [ActivatorUtilitiesConstructor]
-        public RecipientApiController(IParcelLogisticsContext context, IMapper mapper)
+        private readonly ILogger<RecipientApiController> logger;
+
+        public RecipientApiController(ILogger<RecipientApiController> logger, IMapper mapper,
+            IRecipientLogic recipientLogic)
         {
-            this.recipientLogic = new RecipientLogic(new ParcelRepository(context), mapper);
-            this.mapper = mapper;
-        }
-        
-        public RecipientApiController(IMapper mapper, IRecipientLogic recipientLogic)
-        {
+            this.logger = logger;
             this.recipientLogic = recipientLogic;
             this.mapper = mapper;
         }
@@ -65,30 +62,10 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             description: "Parcel exists, here&#x27;s the tracking information.")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult TrackParcel(
-            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")] string trackingId)
+            [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
+            string trackingId)
         {
-            // if (trackingId == null)
-            // {
-            //     
-            // }
-            //
-            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(200, default(TrackingInformation));
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            //
-            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(404);
-            // string exampleJson = null;
-            // exampleJson =
-            //     "{\n  \"visitedHops\" : [ {\n    \"dateTime\" : \"2000-01-23T04:56:07.000+00:00\",\n    \"code\" : \"code\",\n    \"description\" : \"description\"\n  }, {\n    \"dateTime\" : \"2000-01-23T04:56:07.000+00:00\",\n    \"code\" : \"code\",\n    \"description\" : \"description\"\n  } ],\n  \"futureHops\" : [ null, null ],\n  \"state\" : \"Pickup\"\n}";
-            //
-            // var example = exampleJson != null
-            //     ? JsonConvert.DeserializeObject<TrackingInformation>(exampleJson)
-            //     : default(TrackingInformation); //TODO: Change the data returned
-            // return new ObjectResult(example);
-            
+            logger.LogInformation($"Track Parcel with ID {trackingId}");
             BlParcel blResult;
             try
             {
@@ -103,6 +80,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             }
 
             var svcResult = mapper.Map<TrackingInformation>(blResult);
+            logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
             return new ObjectResult(svcResult);
         }
     }

@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using Newtonsoft.Json;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -32,18 +33,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly ISenderLogic senderLogic;
         private readonly IMapper mapper;
-        
-        [ActivatorUtilitiesConstructor]
-        public SenderApiController(IParcelLogisticsContext context, IMapper mapper, ISenderLogic senderLogic)
+        private readonly ILogger<SenderApiController> logger;
+
+        public SenderApiController(ILogger<SenderApiController> logger, IMapper mapper, ISenderLogic senderLogic)
         {
-            // Use Dependency Injected context
-            // See: https://docs.microsoft.com/en-us/ef/core/dbcontext-configuration/#dbcontext-in-dependency-injection-for-aspnet-core
-            this.senderLogic = new SenderLogic(new ParcelRepository(context), mapper);
-            this.mapper = mapper;
-        }
-        
-        public SenderApiController(IMapper mapper, ISenderLogic senderLogic)
-        {
+            this.logger = logger;
             this.senderLogic = senderLogic;
             this.mapper = mapper;
         }
@@ -61,28 +55,10 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             description: "Successfully submitted the new parcel")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult SubmitParcel([FromBody] Parcel body)
-        {
-            // if (body == null)
-            // {
-            //     return StatusCode(400, new Error
-            //     {
-            //         ErrorMessage = "No parcel given"
-            //     });
-            // }
-            // //TODO: Uncomment the next line to return response 201 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(201, default(NewParcelInfo));
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            // string exampleJson = null;
-            // exampleJson = "{\n  \"trackingId\" : \"PYJRB4HZ6\"\n}";
-            //
-            // var example = exampleJson != null
-            //     ? JsonConvert.DeserializeObject<NewParcelInfo>(exampleJson)
-            //     : default(NewParcelInfo); //TODO: Change the data returned
-            // return new ObjectResult(example);
-            
+        { 
+            logger.LogInformation($"Submit Parcel {body?.ToJson()}");
             var blParcel = mapper.Map<BlParcel>(body);
+            logger.LogDebug($"Mapping Svc/Bl {body} => {blParcel}");
             
             BlParcel blResult;
             try
@@ -105,6 +81,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             }
 
             var svcResult = mapper.Map<NewParcelInfo>(blResult);
+            logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
             return StatusCode(201, svcResult);
         }
     }

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
@@ -57,12 +58,13 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
             Mock<IDbContextTransaction> dbTransactionMock = new Mock<IDbContextTransaction>();
             dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
             myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
-            IParcelRepository parcelRepository = new ParcelRepository(myDbMoq.Object);
+            var mockLogger = new Mock<ILogger<ParcelRepository>>();
+            IParcelRepository parcelRepository = new ParcelRepository(mockLogger.Object, myDbMoq.Object);
             Parcel? p = parcelRepository.GetByTrackingId(trackingId);
             Assert.NotNull(p);
             Assert.AreEqual(p.TrackingId, trackingId);
         }
-        
+
         [Test]
         public void Update_ValidParcel_UpdatedParcelReturned()
         {
@@ -100,15 +102,16 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
             Mock<IDbContextTransaction> dbTransactionMock = new Mock<IDbContextTransaction>();
             dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
             myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
-            IParcelRepository parcelRepository = new ParcelRepository(myDbMoq.Object);
+            var mockLogger = new Mock<ILogger<ParcelRepository>>();
+            IParcelRepository parcelRepository = new ParcelRepository(mockLogger.Object, myDbMoq.Object);
             validParcel.Weight = 100;
             Parcel? p = parcelRepository.Update(validParcel);
             Assert.NotNull(p);
             Assert.AreEqual(p.TrackingId, trackingId);
-            
+
             Assert.AreEqual(p.Weight, 100);
         }
-        
+
         [Test]
         public void Delete_ValidParcel_ParcelRemoved()
         {
@@ -146,13 +149,14 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
             Mock<IDbContextTransaction> dbTransactionMock = new Mock<IDbContextTransaction>();
             dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
             myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
-            IParcelRepository parcelRepository = new ParcelRepository(myDbMoq.Object);
+            var mockLogger = new Mock<ILogger<ParcelRepository>>();
+            IParcelRepository parcelRepository = new ParcelRepository(mockLogger.Object, myDbMoq.Object);
             parcelRepository.Create(validParcel);
             parcelRepository.Delete(validParcel);
             Parcel? p = parcelRepository.GetByTrackingId(trackingId);
             Assert.IsNull(p);
         }
-        
+
         [Test]
         public void GetByTrackingId_InvalidTrackingId_NullReturned()
         {
@@ -190,7 +194,8 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
             Mock<IDbContextTransaction> dbTransactionMock = new Mock<IDbContextTransaction>();
             dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
             myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
-            IParcelRepository parcelRepository = new ParcelRepository(myDbMoq.Object);
+            var mockLogger = new Mock<ILogger<ParcelRepository>>();
+            IParcelRepository parcelRepository = new ParcelRepository(mockLogger.Object, myDbMoq.Object);
             Parcel? p = parcelRepository.GetByTrackingId("");
             Assert.IsNull(p);
         }
@@ -232,7 +237,8 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
             Mock<IDbContextTransaction> dbTransactionMock = new Mock<IDbContextTransaction>();
             dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
             myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
-            IParcelRepository parcelRepository = new ParcelRepository(myDbMoq.Object);
+            var mockLogger = new Mock<ILogger<ParcelRepository>>();
+            IParcelRepository parcelRepository = new ParcelRepository(mockLogger.Object, myDbMoq.Object);
             parcelRepository.Create(validParcel);
         }
     }

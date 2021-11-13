@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
@@ -32,7 +33,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         {
             var trackingId = "PYJRB4HZ6";
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
-
+            var mockLogger = new Mock<ILogger<RecipientApiController>>();
             Mock<IRecipientLogic> mockRecipientLogic = new Mock<IRecipientLogic>();
             mockRecipientLogic.Setup(m => m.TrackParcel(It.IsAny<string>())).Returns(new BlParcel
             {
@@ -58,9 +59,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 VisitedHops = new List<BlHopArrival>(),
                 FutureHops = new List<BlHopArrival>()
             });
-
-
-            var controller = new RecipientApiController(mapperConfig.CreateMapper(), mockRecipientLogic.Object);
+            var controller = new RecipientApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockRecipientLogic.Object);
             // var controller = new RecipientApiController(mapperConfig.CreateMapper());
 
 
@@ -77,12 +77,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         {
             string trackingId = null;
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
-
+            var mockLogger = new Mock<ILogger<RecipientApiController>>();
             Mock<IRecipientLogic> mockRecipientLogic = new Mock<IRecipientLogic>();
             mockRecipientLogic.Setup(m => m.TrackParcel(It.Is<string>(s => s == null)))
                 .Throws(new ArgumentNullException("tracking Id mustnot be null!"));
-
-            var controller = new RecipientApiController(mapperConfig.CreateMapper(), mockRecipientLogic.Object);
+            var controller = new RecipientApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockRecipientLogic.Object);
             // var controller = new RecipientApiController(mapperConfig.CreateMapper());
 
             var result = controller.TrackParcel(trackingId);

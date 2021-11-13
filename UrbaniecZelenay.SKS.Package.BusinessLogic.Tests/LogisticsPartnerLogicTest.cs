@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
@@ -18,7 +19,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
 {
     [ExcludeFromCodeCoverage]
     public class LogisticsPartnerLogicTest
-    {   
+    {
         [SetUp]
         public void Setup()
         {
@@ -51,7 +52,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<HopArrival>(),
                 FutureHops = new List<HopArrival>()
             };
-
+            var mockLogger = new Mock<ILogger<LogisticsPartnerLogic>>();
             Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
             mockParcelRepo.Setup(m => m.Create(It.IsAny<DalParcel>())).Returns(new DalParcel
             {
@@ -77,17 +78,17 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<DalHopArrival>(),
                 FutureHops = new List<DalHopArrival>()
             });
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileBlDal());
-            });
-            ILogisticsPartnerLogic logisticsPartnerLogic = new LogisticsPartnerLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+            ILogisticsPartnerLogic logisticsPartnerLogic =
+                new LogisticsPartnerLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
             Assert.Throws<ArgumentException>(() => logisticsPartnerLogic.TransitionParcel(invalidParcel));
         }
+
         [Test]
         public void TransitionParcel_ParcelNull_ExceptionThrown()
         {
             Parcel invalidParcel = null;
+            var mockLogger = new Mock<ILogger<LogisticsPartnerLogic>>();
             Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
             mockParcelRepo.Setup(m => m.Create(It.IsAny<DalParcel>())).Returns(new DalParcel
             {
@@ -113,13 +114,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<DalHopArrival>(),
                 FutureHops = new List<DalHopArrival>()
             });
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileBlDal());
-            });
-            ILogisticsPartnerLogic logisticsPartnerLogic = new LogisticsPartnerLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+            ILogisticsPartnerLogic logisticsPartnerLogic =
+                new LogisticsPartnerLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
             Assert.Throws<ArgumentNullException>(() => logisticsPartnerLogic.TransitionParcel(invalidParcel));
-        } 
+        }
+
         [Test]
         public void TransitionParcel_ValidParcel_NewParcelReturned()
         {
@@ -147,7 +147,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<HopArrival>(),
                 FutureHops = new List<HopArrival>()
             };
-
+            var mockLogger = new Mock<ILogger<LogisticsPartnerLogic>>();
             Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
             mockParcelRepo.Setup(m => m.Create(It.IsAny<DalParcel>())).Returns(new DalParcel
             {
@@ -173,11 +173,9 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<DalHopArrival>(),
                 FutureHops = new List<DalHopArrival>()
             });
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileBlDal());
-            });
-            ILogisticsPartnerLogic logisticsPartnerLogic = new LogisticsPartnerLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+            ILogisticsPartnerLogic logisticsPartnerLogic =
+                new LogisticsPartnerLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
             Parcel blParcel = logisticsPartnerLogic.TransitionParcel(validParcel);
             IValidator<Parcel> parcelValidator = new ParcelValidator();
             var validationResult = parcelValidator.Validate(blParcel);

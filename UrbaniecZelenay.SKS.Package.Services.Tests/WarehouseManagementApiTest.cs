@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
@@ -42,10 +43,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 Level = 0,
                 NextHops = new List<BlWarehouseNextHops>()
             });
-
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             var controller =
-                new WarehouseManagementApiController(mapperConfig.CreateMapper(), mockWarehouseManagementLogic.Object);
+                new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                    mockWarehouseManagementLogic.Object);
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
 
 
@@ -62,13 +64,15 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         {
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
             mockWarehouseManagementLogic.Setup(m => m.ExportWarehouses()).Throws(new InvalidOperationException());
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             var controller =
-                new WarehouseManagementApiController(mapperConfig.CreateMapper(), mockWarehouseManagementLogic.Object);
+                new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                    mockWarehouseManagementLogic.Object);
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
 
             var result = controller.ExportWarehouses();
-            
+
             var objectResult = result as ObjectResult;
             Assert.NotNull(objectResult);
             var error = objectResult.Value as Error;
@@ -92,9 +96,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 Level = 0,
                 NextHops = new List<BlWarehouseNextHops>()
             });
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             var controller =
-                new WarehouseManagementApiController(mapperConfig.CreateMapper(), mockWarehouseManagementLogic.Object);
+                new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                    mockWarehouseManagementLogic.Object);
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
             var result = controller.GetWarehouse(code);
 
@@ -111,9 +117,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
             mockWarehouseManagementLogic.Setup(m => m.GetWarehouse(It.Is<string>(s => s == null)))
                 .Throws(new ArgumentNullException());
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
-            var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper(), mockWarehouseManagementLogic.Object);
+            var controller = new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockWarehouseManagementLogic.Object);
             var result = controller.GetWarehouse(code);
 
             var objectResult = result as ObjectResult;
@@ -139,9 +147,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             };
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
             mockWarehouseManagementLogic.Setup(m => m.ImportWarehouses(It.IsAny<BlWarehouse>()));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
-            var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper(), mockWarehouseManagementLogic.Object);
+            var controller = new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockWarehouseManagementLogic.Object);
             var result = controller.ImportWarehouses(validWarehouse);
 
             var statusCode = result as StatusCodeResult;
@@ -157,9 +167,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
             mockWarehouseManagementLogic.Setup(m => m.ImportWarehouses(It.Is<BlWarehouse>(w => w == null)))
                 .Throws(new ArgumentNullException());
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
-            var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper(), mockWarehouseManagementLogic.Object);
+            var controller = new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockWarehouseManagementLogic.Object);
 
             var result = controller.ImportWarehouses(validWarehouse);
 

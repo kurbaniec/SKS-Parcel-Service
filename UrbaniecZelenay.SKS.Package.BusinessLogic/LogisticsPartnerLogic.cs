@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
@@ -15,17 +16,21 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
     {
         private readonly IParcelRepository parcelRepository;
         private readonly IMapper mapper;
-        
-        public LogisticsPartnerLogic(IParcelRepository parcelRepository, IMapper mapper)
+        private readonly ILogger<LogisticsPartnerLogic> logger;
+
+        public LogisticsPartnerLogic(ILogger<LogisticsPartnerLogic> logger, IParcelRepository parcelRepository, IMapper mapper)
         {
+            this.logger = logger;
             this.parcelRepository = parcelRepository;
             this.mapper = mapper;
         }
         
         public Parcel TransitionParcel(Parcel? parcel)
         {
+            logger.LogInformation($"Transition Parcel with ID {parcel?.TrackingId}");
             if (parcel == null)
             {
+                logger.LogError("Parcel is null");
                 throw new ArgumentNullException(nameof(parcel));
             }
 
@@ -34,10 +39,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             if (!validationResult.IsValid)
             {
                 string validationErrors = string.Join(Environment.NewLine, validationResult.Errors);
+                logger.LogError($"Validation Errors: {validationErrors}");
                 throw new ArgumentException(validationErrors);
             }
 
             var dalParcel = mapper.Map<DalParcel>(parcel);
+            logger.LogDebug($"Mapping Bl/Dal {parcel} => {dalParcel}");
             dalParcel = parcelRepository.Create(dalParcel);
 
             // return new Parcel
@@ -66,6 +73,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             // };
             
             var blResult = mapper.Map<Parcel>(dalParcel);
+            logger.LogDebug($"Mapping Dal/Bl {dalParcel} => {blResult}");
             return blResult;
         }
     }

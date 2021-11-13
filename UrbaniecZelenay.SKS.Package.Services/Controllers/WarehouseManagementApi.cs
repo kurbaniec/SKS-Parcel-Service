@@ -18,6 +18,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -36,16 +37,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly IWarehouseManagementLogic warehouseManagementLogic;
         private readonly IMapper mapper;
-        
-        [ActivatorUtilitiesConstructor]
-        public WarehouseManagementApiController(IParcelLogisticsContext context, IMapper mapper, IWarehouseManagementLogic warehouseManagementLogic)
-        {
-            this.warehouseManagementLogic = new WarehouseManagementLogic(new WarehouseRepository(context), mapper);
-            this.mapper = mapper;
-        }
+        private readonly ILogger<WarehouseManagementApiController> logger;
 
-        public WarehouseManagementApiController(IMapper mapper, IWarehouseManagementLogic warehouseManagementLogic)
+        public WarehouseManagementApiController(ILogger<WarehouseManagementApiController> logger, IMapper mapper,
+            IWarehouseManagementLogic warehouseManagementLogic)
         {
+            this.logger = logger;
             this.mapper = mapper;
             this.warehouseManagementLogic = warehouseManagementLogic;
         }
@@ -65,23 +62,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "An error occurred loading.")]
         public virtual IActionResult ExportWarehouses()
         {
-            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(200, default(Warehouse));
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            //
-            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(404);
-            // string exampleJson = null;
-            // exampleJson =
-            //     "{\"hopType\": \"string\", \"code\": \"string\", \"description\": \"string\", \"processingDelayMins\": 0, \"locationName\": \"string\", \"locationCoordinates\": {\"lat\": 0, \"lon\": 0}, \"level\": 0, \"nextHops\": [{\"traveltimeMins\": 0, \"hop\": {\"hopType\": \"string\", \"code\": \"string\", \"description\": \"string\", \"processingDelayMins\": 0, \"locationName\": \"string\", \"locationCoordinates\": {\"lat\": 0, \"lon\": 0}}}]}";
-            //
-            // var example = exampleJson != null
-            //     ? JsonConvert.DeserializeObject<Warehouse>(exampleJson)
-            //     : default(Warehouse); //TODO: Change the data returned
-            // return new ObjectResult(example);
-
+            logger.LogInformation("Export Warehouses");
             BlWarehouse blResult;
             try
             {
@@ -114,22 +95,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "An error occurred loading.")]
         public virtual IActionResult GetWarehouse([FromRoute] [Required] string code)
         {
-            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(200, default(Warehouse));
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            //
-            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(404);
-            // string exampleJson = null;
-            // exampleJson = "{\"hopType\": \"string\", \"code\": \"string\", \"description\": \"string\", \"processingDelayMins\": 0, \"locationName\": \"string\", \"locationCoordinates\": {\"lat\": 0, \"lon\": 0}, \"level\": 0, \"nextHops\": [{\"traveltimeMins\": 0, \"hop\": {\"hopType\": \"string\", \"code\": \"string\", \"description\": \"string\", \"processingDelayMins\": 0, \"locationName\": \"string\", \"locationCoordinates\": {\"lat\": 0, \"lon\": 0}}}]}";
-            //
-            // var example = exampleJson != null
-            //     ? JsonConvert.DeserializeObject<Warehouse>(exampleJson)
-            //     : default(Warehouse); //TODO: Change the data returned
-            // return new ObjectResult(example);
-
+            logger.LogInformation($"Get Warehouse with Code {code}");
             BlWarehouse? blResult;
             try
             {
@@ -146,6 +112,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             if (blResult == null) return StatusCode(404);
 
             var svcResult = mapper.Map<Warehouse>(blResult);
+            logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
             return new ObjectResult(svcResult);
         }
 
@@ -162,7 +129,9 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "The operation failed due to an error.")]
         public virtual IActionResult ImportWarehouses([FromBody] Warehouse body)
         {
+            logger.LogInformation($"Import warehouses with hierarchy {body?.ToJson()}");
             var blWarehouse = mapper.Map<BlWarehouse>(body);
+            logger.LogDebug($"Mapping Svc/Bl {body} => {blWarehouse}");
             try
             {
                 warehouseManagementLogic.ImportWarehouses(blWarehouse);

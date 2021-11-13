@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
@@ -51,7 +52,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<HopArrival>(),
                 FutureHops = new List<HopArrival>()
             };
-
+            var mockLogger = new Mock<ILogger<SenderLogic>>();
             Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
             mockParcelRepo.Setup(m => m.Create(It.IsAny<DalParcel>())).Returns(new DalParcel
             {
@@ -77,22 +78,21 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<DalHopArrival>(),
                 FutureHops = new List<DalHopArrival>()
             });
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileBlDal());
-            });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
-            
-            ISenderLogic senderLogic = new SenderLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
+
+            ISenderLogic senderLogic =
+                new SenderLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
             Parcel blParcel = senderLogic.SubmitParcel(validParcel);
             IValidator<Parcel> parcelValidator = new ParcelValidator();
             var validationResult = parcelValidator.Validate(blParcel);
             Assert.IsTrue(validationResult.IsValid);
         }
-        
+
         [Test]
         public void SubmitParcel_ParcelNull_ParcelReturned()
         {
+            var mockLogger = new Mock<ILogger<SenderLogic>>();
             Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
             mockParcelRepo.Setup(m => m.Create(It.IsAny<DalParcel>())).Returns(new DalParcel
             {
@@ -118,16 +118,13 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<DalHopArrival>(),
                 FutureHops = new List<DalHopArrival>()
             });
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileBlDal());
-            });
-
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
             
-            ISenderLogic senderLogic = new SenderLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
+            ISenderLogic senderLogic =
+                new SenderLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
             Assert.Throws<ArgumentNullException>(() => senderLogic.SubmitParcel(null));
         }
-        
+
         [Test]
         public void SubmitParcel_InvalidParcelSenderNull_ParcelReturned()
         {
@@ -148,7 +145,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<HopArrival>(),
                 FutureHops = new List<HopArrival>()
             };
-
+            var mockLogger = new Mock<ILogger<SenderLogic>>();
             Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
             mockParcelRepo.Setup(m => m.Create(It.IsAny<DalParcel>())).Returns(new DalParcel
             {
@@ -174,14 +171,11 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<DalHopArrival>(),
                 FutureHops = new List<DalHopArrival>()
             });
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileBlDal());
-            });
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
-            
-            ISenderLogic senderLogic = new SenderLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
+
+            ISenderLogic senderLogic = new SenderLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
             Assert.Throws<ArgumentException>(() => senderLogic.SubmitParcel(validParcel));
-        } 
+        }
     }
 }

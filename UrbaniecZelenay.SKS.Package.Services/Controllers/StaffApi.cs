@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -31,16 +32,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly IStaffLogic staffLogic;
         private readonly IMapper mapper;
+        private readonly ILogger<StaffApiController> logger;
 
-        [ActivatorUtilitiesConstructor]
-        public StaffApiController(IParcelLogisticsContext context, IMapper mapper, IStaffLogic staffLogic)
+        public StaffApiController(ILogger<StaffApiController> logger, IMapper mapper, IStaffLogic staffLogic)
         {
-            this.staffLogic = new StaffLogic(new ParcelRepository(context), new WarehouseRepository(context), mapper);
-            this.mapper = mapper;
-        }
-
-        public StaffApiController(IMapper mapper, IStaffLogic staffLogic)
-        {
+            this.logger = logger;
             this.staffLogic = staffLogic;
             this.mapper = mapper;
         }
@@ -61,22 +57,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
             string trackingId)
         {
-            // if (trackingId == null)
-            // {
-            //     return StatusCode(400, new Error
-            //     {
-            //         ErrorMessage = "No tracking ID given"
-            //     });
-            // }
-            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(200);
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            //
-            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(404);
-
+            logger.LogInformation($"Report Parcel Delivery for ID {trackingId}");
             try
             {
                 staffLogic.ReportParcelDelivery(trackingId);
@@ -119,24 +100,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z]{4}\d{1,4}$")]
             string code)
         {
-            // if (code == null)
-            // {
-            //     return StatusCode(400, new Error
-            //     {
-            //         ErrorMessage = "No code given"
-            //     });
-            // }
-            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(200);
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            //
-            // //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(404);
-            //
-            // return StatusCode(200);
-
+            logger.LogInformation($"Report Parcel Hop for Parcel with ID {trackingId}");
             try
             {
                 staffLogic.ReportParcelHop(trackingId, code);

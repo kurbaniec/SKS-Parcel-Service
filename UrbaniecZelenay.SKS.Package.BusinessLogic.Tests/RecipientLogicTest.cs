@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
@@ -27,7 +28,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         [Test]
         public void TrackParcel_ValidTrackingId_ParcelReturned()
         {
-            string trackingId = "PYJRB4HZ6";            
+            string trackingId = "PYJRB4HZ6";
+            var mockLogger = new Mock<ILogger<RecipientLogic>>();
             Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
             mockParcelRepo.Setup(m => m.GetByTrackingId(It.IsAny<string>())).Returns(new DalParcel
             {
@@ -53,21 +55,21 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<DalHopArrival>(),
                 FutureHops = new List<DalHopArrival>()
             });
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileBlDal());
-            });
-            
-            IRecipientLogic recipientLogic = new RecipientLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+
+            IRecipientLogic recipientLogic =
+                new RecipientLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
             Parcel blParcel = recipientLogic.TrackParcel(trackingId);
             IValidator<Parcel> parcelValidator = new ParcelValidator();
             var validationResult = parcelValidator.Validate(blParcel);
             Assert.IsTrue(validationResult.IsValid);
         }
+
         [Test]
         public void TrackParcel_TrackingIdNull_ExceptionThrown()
         {
-            string trackingId = null;            
+            string trackingId = null;
+            var mockLogger = new Mock<ILogger<RecipientLogic>>();
             Mock<IParcelRepository> mockParcelRepo = new Mock<IParcelRepository>();
             mockParcelRepo.Setup(m => m.GetByTrackingId(It.IsAny<string>())).Returns(new DalParcel
             {
@@ -93,12 +95,9 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 VisitedHops = new List<DalHopArrival>(),
                 FutureHops = new List<DalHopArrival>()
             });
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingsProfileBlDal());
-            });
-            
-            IRecipientLogic recipientLogic = new RecipientLogic(mockParcelRepo.Object, mapperConfig.CreateMapper());
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
+
+            IRecipientLogic recipientLogic = new RecipientLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
             Assert.Throws<ArgumentNullException>(() => recipientLogic.TrackParcel(trackingId));
         }
     }

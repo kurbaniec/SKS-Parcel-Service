@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -33,18 +34,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     {
         private readonly ILogisticsPartnerLogic logisticsPartnerLogic;
         private readonly IMapper mapper;
+        private readonly ILogger<LogisticsPartnerApiController> logger;
 
-
-        [ActivatorUtilitiesConstructor]
-        public LogisticsPartnerApiController(IParcelLogisticsContext context, IMapper mapper,
+        public LogisticsPartnerApiController(ILogger<LogisticsPartnerApiController> logger, IMapper mapper,
             ILogisticsPartnerLogic logisticsPartnerLogic)
         {
-            this.logisticsPartnerLogic = new LogisticsPartnerLogic(new ParcelRepository(context), mapper);
-            this.mapper = mapper;
-        }
-
-        public LogisticsPartnerApiController(IMapper mapper, ILogisticsPartnerLogic logisticsPartnerLogic)
-        {
+            this.logger = logger;
             this.logisticsPartnerLogic = logisticsPartnerLogic;
             this.mapper = mapper;
         }
@@ -67,33 +62,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             [FromRoute] [Required] [RegularExpression(@"^[A-Z0-9]{9}$")]
             string trackingId)
         {
-            // if (body.Weight <= 0)
-            // {
-            //     return StatusCode(400, new Error
-            //     {
-            //         ErrorMessage = "Invalid Weight"
-            //     });
-            // }
-            //
-            // //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(200, default(NewParcelInfo));
-            //
-            // //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // // return StatusCode(400, default(Error));
-            // string exampleJson = null;
-            // exampleJson = "{\n  \"trackingId\" : \"PYJRB4HZ6\"\n}";
-            //
-            // var example = exampleJson != null
-            //     ? JsonConvert.DeserializeObject<NewParcelInfo>(exampleJson)
-            //     : default(NewParcelInfo); //TODO: Change the data returned
-            // return new OkObjectResult(example);
-
-            // Pass parameter (here trackingId) to AutoMapper
-            // See: https://stackoverflow.com/a/34419562/12347616
-            // One could also call `blParcel.TrackingIDd=tracking` after mapper invocation.
+            logger.LogInformation($"Transition Parcel with ID {trackingId}");
             var blParcel = mapper.Map<BlParcel>(body,
                 opt => opt.AfterMap((_, dest) => dest.TrackingId = trackingId));
-
+            logger.LogDebug($"Mapping Svc/Bl {body} => {blParcel}");
+            
             BlParcel blResult;
             try
             {
@@ -115,6 +88,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             }
 
             var svcResult = mapper.Map<NewParcelInfo>(blResult);
+            logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
             return new ObjectResult(svcResult);
         }
     }

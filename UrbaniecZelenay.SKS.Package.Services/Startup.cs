@@ -108,21 +108,21 @@ namespace UrbaniecZelenay.SKS.Package.Services
                     c.OperationFilter<GeneratePathParamsValidationFilter>();
                 });
 
-            // Configure database
+            // Configure database & Dependency Injection
             // See: https://codewithmukesh.com/blog/repository-pattern-in-aspnet-core/
             // And: https://stackoverflow.com/a/60399887/12347616
             services.AddDbContext<ParcelLogisticsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ParcelLogisticsContext")));
             // Register the service and implementation for the database context
-            services.AddScoped<IParcelLogisticsContext>(provider => provider.GetService<ParcelLogisticsContext>());
+            // See: https://www.jerriepelser.com/blog/resolve-dbcontext-as-interface-in-aspnet5-ioc-container/
+            services.AddScoped<IParcelLogisticsContext>(provider => provider.GetService<ParcelLogisticsContext>()!);
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
             services.AddScoped<IParcelRepository, ParcelRepository>();
-            services.AddScoped<IWarehouseManagementLogic, WarehouseManagementLogic>();
-            services.AddScoped<IStaffLogic, StaffLogic>();
-            services.AddScoped<ISenderLogic, SenderLogic>();
-            services.AddScoped<IRecipientLogic, RecipientLogic>();
-            services.AddScoped<ILogisticsPartnerLogic, LogisticsPartnerLogic>();
-            // services.AddScoped<ILogisticsPartnerLogic, LogisticsPartnerLogic>();
+            services.AddTransient<IWarehouseManagementLogic, WarehouseManagementLogic>();
+            services.AddTransient<IStaffLogic, StaffLogic>();
+            services.AddTransient<ISenderLogic, SenderLogic>();
+            services.AddTransient<IRecipientLogic, RecipientLogic>();
+            services.AddTransient<ILogisticsPartnerLogic, LogisticsPartnerLogic>();
         }
 
         /// <summary>

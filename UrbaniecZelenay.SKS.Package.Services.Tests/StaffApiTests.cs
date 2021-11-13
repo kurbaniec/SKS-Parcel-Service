@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
@@ -24,11 +25,11 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         {
             var trackingId = "PYJRB4HZ6";
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
-
+            var mockLogger = new Mock<ILogger<StaffApiController>>();
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelDelivery(It.IsAny<string>()));
-
-            var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
+            var controller =
+                new StaffApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockStaffLogic.Object);
             // var controller = new StaffApiController(mapperConfig.CreateMapper());
 
             var result = controller.ReportParcelDelivery(trackingId);
@@ -43,11 +44,13 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         {
             string trackingId = null;
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<StaffApiController>>();
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelDelivery(It.Is<string>(s => s == null)))
                 .Throws(new ArgumentNullException("Error Tracking id must not be null!"));
 
-            var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
+            var controller =
+                new StaffApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockStaffLogic.Object);
             // var controller = new StaffApiController(mapperConfig.CreateMapper());
             var result = controller.ReportParcelDelivery(trackingId);
 
@@ -63,12 +66,13 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         {
             var trackingId = "PYJRB4HZ6";
             var hopCode = "AAAA1234";
-
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<StaffApiController>>();
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelHop(It.IsAny<string>(), It.IsAny<string>()));
 
-            var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
+            var controller =
+                new StaffApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockStaffLogic.Object);
             // var controller = new StaffApiController(mapperConfig.CreateMapper());
             var result = controller.ReportParcelHop(trackingId, hopCode);
 
@@ -82,13 +86,14 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         {
             var trackingId = "PYJRB4HZ6";
             string hopCode = null;
-
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<StaffApiController>>();
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelHop(It.IsAny<string>(), It.Is<string>(s => s == null)))
                 .Throws(new ArgumentNullException("Error Tracking id must not be null!"));
 
-            var controller = new StaffApiController(mapperConfig.CreateMapper(), mockStaffLogic.Object);
+            var controller =
+                new StaffApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockStaffLogic.Object);
             // var controller = new StaffApiController(mapperConfig.CreateMapper());
 
             var result = controller.ReportParcelHop(trackingId, hopCode);
