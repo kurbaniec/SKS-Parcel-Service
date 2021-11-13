@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
@@ -11,14 +12,17 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
     {
         private readonly IParcelLogisticsContext context;
         public bool UseTransactions { get; set; } = true;
+        private readonly ILogger<ParcelRepository> logger;
 
-        public ParcelRepository(IParcelLogisticsContext context)
+        public ParcelRepository(ILogger<ParcelRepository> logger, IParcelLogisticsContext context)
         {
+            this.logger = logger;
             this.context = context;
         }
 
         public Parcel Create(Parcel parcel)
         {
+            logger.LogInformation($"Create Parcel {parcel}");
             // Working with transactions
             // See: https://docs.microsoft.com/en-us/ef/ef6/saving/transactions
             using IDbContextTransaction transaction = context.Database.BeginTransaction();
@@ -36,6 +40,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public Parcel Update(Parcel parcel)
         {
+            logger.LogInformation($"Update Parcel {parcel}");
             context.Parcels.Update(parcel);
             context.SaveChanges();
             return parcel;
@@ -43,12 +48,14 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public void Delete(Parcel parcel)
         {
+            logger.LogInformation($"Delete Parcel with Tracking Id {parcel}");
             context.Parcels.Remove(parcel);
             context.SaveChanges();
         }
 
         public Parcel? GetByTrackingId(string trackingId)
         {
+            logger.LogInformation($"Return Parcel with Tracking Id {trackingId}");
             return context.Parcels
                 .Include(p => p.VisitedHops)
                 .Include(p => p.FutureHops)
