@@ -24,6 +24,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package.DataAccess.Tests", "UrbaniecZelenay.SKS.Package.DataAccess.Tests\UrbaniecZelenay.SKS.Package.DataAccess.Tests.csproj", "{F49256F5-AD83-4245-875F-4455F5B3950E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.ServiceAgents", "UrbaniecZelenay.SKS.ServiceAgents\UrbaniecZelenay.SKS.ServiceAgents.csproj", "{C887B44B-576E-4A4B-B8C3-E19BCE974752}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.ServiceAgents.Interfaces", "UrbaniecZelenay.SKS.ServiceAgents.Interfaces\UrbaniecZelenay.SKS.ServiceAgents.Interfaces.csproj", "{6F7BF66A-E74A-449D-94D8-6B7DF9BE7E65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.ServiceAgents.Tests", "UrbaniecZelenay.SKS.ServiceAgents.Tests\UrbaniecZelenay.SKS.ServiceAgents.Tests.csproj", "{01CDB22D-321E-4D54-9154-4D6210FED12E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +84,17 @@ Global
 		{F49256F5-AD83-4245-875F-4455F5B3950E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F49256F5-AD83-4245-875F-4455F5B3950E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F49256F5-AD83-4245-875F-4455F5B3950E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C887B44B-576E-4A4B-B8C3-E19BCE974752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C887B44B-576E-4A4B-B8C3-E19BCE974752}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C887B44B-576E-4A4B-B8C3-E19BCE974752}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C887B44B-576E-4A4B-B8C3-E19BCE974752}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F7BF66A-E74A-449D-94D8-6B7DF9BE7E65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F7BF66A-E74A-449D-94D8-6B7DF9BE7E65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F7BF66A-E74A-449D-94D8-6B7DF9BE7E65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F7BF66A-E74A-449D-94D8-6B7DF9BE7E65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01CDB22D-321E-4D54-9154-4D6210FED12E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01CDB22D-321E-4D54-9154-4D6210FED12E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01CDB22D-321E-4D54-9154-4D6210FED12E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01CDB22D-321E-4D54-9154-4D6210FED12E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
