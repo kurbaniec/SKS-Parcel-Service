@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
@@ -68,11 +69,37 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             {
                 blResult = warehouseManagementLogic.ExportWarehouses();
             }
-            catch (InvalidOperationException)
+            catch (BlArgumentException ex)
             {
+                logger.LogError(ex, "Error occured while exporting warehouses.");
                 return StatusCode(400, new Error
                 {
-                    ErrorMessage = "The operation failed due to an error."
+                    // For security purposes only the last error message in the stack is shown to the end user!
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlValidationException ex)
+            {
+                logger.LogError(ex, "Error occured while exporting warehouses.");
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlDataNotFoundException ex)
+            {
+                logger.LogError(ex, "Error occured while exporting warehouses.");
+                return StatusCode(404, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlRepositoryException ex)
+            {
+                logger.LogError(ex, "Error occured while exporting warehouses.");
+                return StatusCode(500, new Error
+                {
+                    ErrorMessage = ex.Message
                 });
             }
 
@@ -101,15 +128,39 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             {
                 blResult = warehouseManagementLogic.GetWarehouse(code);
             }
-            catch (ArgumentNullException)
+            catch (BlArgumentException ex)
             {
+                logger.LogError(ex, $"Error occured while retrieving warehouses by code ({code}).");
                 return StatusCode(400, new Error
                 {
-                    ErrorMessage = "Code must not be null."
+                    // For security purposes only the last error message in the stack is shown to the end user!
+                    ErrorMessage = ex.Message
                 });
             }
-
-            if (blResult == null) return StatusCode(404);
+            catch (BlValidationException ex)
+            {
+                logger.LogError(ex, $"Error occured while retrieving warehouses by code ({code}).");
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlDataNotFoundException ex)
+            {
+                logger.LogError(ex, $"Error occured while retrieving warehouses by code ({code}).");
+                return StatusCode(404, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlRepositoryException ex)
+            {
+                logger.LogError(ex, $"Error occured while retrieving warehouses by code ({code}).");
+                return StatusCode(500, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
 
             var svcResult = mapper.Map<Warehouse>(blResult);
             logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
@@ -136,14 +187,39 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             {
                 warehouseManagementLogic.ImportWarehouses(blWarehouse);
             }
-            catch (ArgumentNullException)
+            catch (BlArgumentException ex)
             {
+                logger.LogError(ex, $"Error occured while importing warehouse ({body}).");
                 return StatusCode(400, new Error
                 {
-                    ErrorMessage = "Warehouse body must not be null."
+                    // For security purposes only the last error message in the stack is shown to the end user!
+                    ErrorMessage = ex.Message
                 });
             }
-
+            catch (BlValidationException ex)
+            {
+                logger.LogError(ex, $"Error occured while importing warehouse ({body}).");
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlDataNotFoundException ex)
+            {
+                logger.LogError(ex, $"Error occured while importing warehouse ({body}).");
+                return StatusCode(404, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlRepositoryException ex)
+            {
+                logger.LogError(ex, $"Error occured while importing warehouse ({body}).");
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
             return StatusCode(200);
         }
     }

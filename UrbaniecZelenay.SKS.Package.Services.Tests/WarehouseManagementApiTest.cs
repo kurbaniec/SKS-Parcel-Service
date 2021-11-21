@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.Services.Controllers;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
@@ -63,7 +64,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         public void ExportWarehouse_InternalError_ErrorReturned()
         {
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
-            mockWarehouseManagementLogic.Setup(m => m.ExportWarehouses()).Throws(new InvalidOperationException());
+            mockWarehouseManagementLogic.Setup(m => m.ExportWarehouses()).Throws(new BlArgumentException("unit test error"));
             var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             var controller =
@@ -116,7 +117,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             string code = null;
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
             mockWarehouseManagementLogic.Setup(m => m.GetWarehouse(It.Is<string>(s => s == null)))
-                .Throws(new ArgumentNullException());
+                .Throws(new BlArgumentException("value must not be null"));
             var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
@@ -166,7 +167,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             Warehouse validWarehouse = null;
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
             mockWarehouseManagementLogic.Setup(m => m.ImportWarehouses(It.Is<BlWarehouse>(w => w == null)))
-                .Throws(new ArgumentNullException());
+                .Throws(new BlArgumentException("Warehouse must not be null."));
             var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());

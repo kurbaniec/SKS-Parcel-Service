@@ -16,6 +16,7 @@ using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
@@ -65,16 +66,35 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             {
                 blResult = senderLogic.SubmitParcel(blParcel);
             }
-            catch (ArgumentNullException)
+            catch (BlArgumentException ex)
             {
+                logger.LogError(ex, "Error occured while submitting parcel.");
                 return StatusCode(400, new Error
                 {
-                    ErrorMessage = "Invalid Payload"
+                    // For security purposes only the last error message in the stack is shown to the end user!
+                    ErrorMessage = ex.Message
                 });
             }
-            catch (ArgumentException ex)
+            catch (BlValidationException ex)
             {
+                logger.LogError(ex, "Error occured while submitting parcel.");
                 return StatusCode(400, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlDataNotFoundException ex)
+            {
+                logger.LogError(ex, "Error occured while submitting parcel.");
+                return StatusCode(404, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlRepositoryException ex)
+            {
+                logger.LogError(ex, "Error occured while submitting parcel.");
+                return StatusCode(500, new Error
                 {
                     ErrorMessage = ex.Message
                 });

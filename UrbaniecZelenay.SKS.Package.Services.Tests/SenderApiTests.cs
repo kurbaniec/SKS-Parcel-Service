@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.Services.Controllers;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
@@ -98,7 +99,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var mockLogger = new Mock<ILogger<SenderApiController>>();
             Mock<ISenderLogic> mockSenderLogic = new Mock<ISenderLogic>();
             mockSenderLogic.Setup(m => m.SubmitParcel(It.Is<BlParcel>(p => p == null)))
-                .Throws(new ArgumentNullException("Error Parcel must not be null!"));
+                .Throws(new BlArgumentException("Error Parcel must not be null!"));
             var controller = new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
             // var controller = new SenderApiController(mapperConfig.CreateMapper());
 

@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
@@ -71,11 +72,37 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
             {
                 blResult = recipientLogic.TrackParcel(trackingId);
             }
-            catch (ArgumentException ex)
+            catch (BlArgumentException ex)
             {
+                logger.LogError(ex, "Error occured while tracking parcel.");
                 return StatusCode(400, new Error
                 {
-                    ErrorMessage = "No tracking ID given"
+                    // For security purposes only the last error message in the stack is shown to the end user!
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlValidationException ex)
+            {
+                logger.LogError(ex, "Error occured while tracking parcel.");
+                return StatusCode(400, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlDataNotFoundException ex)
+            {
+                logger.LogError(ex, "Error occured while tracking parcel.");
+                return StatusCode(404, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlRepositoryException ex)
+            {
+                logger.LogError(ex, "Error occured while tracking parcel.");
+                return StatusCode(500, new Error
+                {
+                    ErrorMessage = ex.Message
                 });
             }
 

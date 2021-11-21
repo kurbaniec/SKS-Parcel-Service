@@ -4,8 +4,10 @@ using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
 
@@ -29,22 +31,34 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             logger.LogInformation($"Submit Parcel {body}");
             if (body == null)
             {
-                logger.LogError("Parcel is null");
-                throw new ArgumentNullException(nameof(body));
+                BlArgumentException e = new BlArgumentException("parcel must not be null.");
+                logger.LogError(e, "parcel is null");
+                throw e;
+
             }
             IValidator<Parcel> parcelValidator = new ParcelValidator();
             var validationResult = parcelValidator.Validate(body);
             if (!validationResult.IsValid)
             {
                 string validationErrors = string.Join(Environment.NewLine, validationResult.Errors);
-                logger.LogError($"Validation Errors: {validationErrors}");
-                throw new ArgumentException(validationErrors);
+                BlException e = new BlValidationException(validationErrors);
+                logger.LogError(e, $"Error validating parcel");
+                throw e;
             }
 
             var dalParcel = mapper.Map<DalParcel>(body);
             logger.LogDebug($"Mapping Bl/Dal {body} => {dalParcel}");
-            dalParcel = parcelRepository.Create(dalParcel);
-            
+            try
+            {
+                dalParcel = parcelRepository.Create(dalParcel);
+            }
+            catch (DalException e)
+            {
+                logger.LogError(e, $"Error creating parcel ({dalParcel}).");
+                throw new BlRepositoryException($"Error creating parcel ({dalParcel}).", e);
+            }
+
+
             // return new Parcel
             // {
             //     TrackingId = "PYJRB4HZ6",

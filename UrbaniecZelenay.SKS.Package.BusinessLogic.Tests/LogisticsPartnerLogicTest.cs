@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
@@ -81,7 +82,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
             ILogisticsPartnerLogic logisticsPartnerLogic =
                 new LogisticsPartnerLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
-            Assert.Throws<ArgumentException>(() => logisticsPartnerLogic.TransitionParcel(invalidParcel));
+            Assert.Throws<BlValidationException>(() => logisticsPartnerLogic.TransitionParcel(invalidParcel));
         }
 
         [Test]
@@ -117,7 +118,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
             ILogisticsPartnerLogic logisticsPartnerLogic =
                 new LogisticsPartnerLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
-            Assert.Throws<ArgumentNullException>(() => logisticsPartnerLogic.TransitionParcel(invalidParcel));
+            Assert.Throws<BlArgumentException>(() => logisticsPartnerLogic.TransitionParcel(invalidParcel));
         }
 
         [Test]

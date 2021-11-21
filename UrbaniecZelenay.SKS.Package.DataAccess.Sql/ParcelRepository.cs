@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
@@ -22,19 +24,33 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public Parcel Create(Parcel parcel)
         {
-            logger.LogInformation($"Create Parcel {parcel}");
-            // Working with transactions
-            // See: https://docs.microsoft.com/en-us/ef/ef6/saving/transactions
-            using IDbContextTransaction transaction = context.Database.BeginTransaction();
-            // ParcelLogisticsContext c = new ParcelLogisticsContext();
-            // c.Database.BeginTransaction();
-            var trackingId = context.Parcels.Max(p => p.TrackingId) ?? "000000000";
-            // See: https://stackoverflow.com/a/5418361/12347616
-            var newTrackingId = $"{int.Parse(trackingId) + 1:D9}";
-            parcel.TrackingId = newTrackingId;
-            context.Parcels.Add(parcel);
-            context.SaveChanges();
-            transaction.Commit();
+            try
+            {
+                logger.LogInformation($"Create Parcel {parcel}");
+                // Working with transactions
+                // See: https://docs.microsoft.com/en-us/ef/ef6/saving/transactions
+                using IDbContextTransaction transaction = context.Database.BeginTransaction();
+                // ParcelLogisticsContext c = new ParcelLogisticsContext();
+                // c.Database.BeginTransaction();
+                var trackingId = context.Parcels.Max(p => p.TrackingId) ?? "000000000";
+                // See: https://stackoverflow.com/a/5418361/12347616
+                var newTrackingId = $"{int.Parse(trackingId) + 1:D9}";
+                parcel.TrackingId = newTrackingId;
+                context.Parcels.Add(parcel);
+                context.SaveChanges();
+                transaction.Commit();
+            }
+            catch (SqlException e)
+            {
+                logger.LogError(e, "Error occured when creating a Parcel.");
+                throw new DalSaveException("Error occured when creating a parcel", e);
+            }
+            catch (DbUpdateException e)
+            {
+                logger.LogError(e, "Error occured when creating a Parcel.");
+                throw new DalSaveException("Error occured when creating a parcel", e);
+            }
+
             return parcel;
         }
 

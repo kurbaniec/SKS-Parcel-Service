@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
@@ -98,7 +99,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileBlDal()); });
 
             IRecipientLogic recipientLogic = new RecipientLogic(mockLogger.Object, mockParcelRepo.Object, mapperConfig.CreateMapper());
-            Assert.Throws<ArgumentNullException>(() => recipientLogic.TrackParcel(trackingId));
+            Assert.Throws<BlArgumentException>(() => recipientLogic.TrackParcel(trackingId));
         }
     }
 }

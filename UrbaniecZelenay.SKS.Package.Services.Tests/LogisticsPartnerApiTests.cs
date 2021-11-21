@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.Services.Controllers;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
@@ -126,7 +127,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var mockLogger = new Mock<ILogger<LogisticsPartnerApiController>>();
             Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
             mockLogisticsPartnerLogic.Setup(m => m.TransitionParcel(It.Is<BlParcel>(p => p.Weight < 0)))
-                .Throws(new ArgumentException("Weight must be >= 0"));
+                .Throws(new BlArgumentException("Weight must be >= 0"));
 
             var controller = new LogisticsPartnerApiController(mockLogger.Object, mapperConfig.CreateMapper(),
                 mockLogisticsPartnerLogic.Object);

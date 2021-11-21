@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
@@ -23,15 +25,32 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         {
             logger.LogInformation($"Create Warehouse {warehouse}");
             // TODO Detect already existing warehouses?
-            var check = context.Warehouses.SingleOrDefault(w => w.Code == warehouse.Code);
-            if (check != null)
+            try
             {
-                // TODO throw error?
-                logger.LogWarning("Root Warehouse already exists");
-                return check;
+                var check = context.Warehouses.SingleOrDefault(w => w.Code == warehouse.Code);
+                if (check != null)
+                {
+                    DalException e = new DalDuplicateEntryException($"Error warehouse already exists (Code: " +
+                                                                    $"{check.Code}.");
+                    logger.LogError(e, "Root Warehouse already exists");
+                    throw e;
+                    // return check;
+                }
+
+                context.Warehouses.Add(warehouse);
+                context.SaveChanges();
             }
-            context.Warehouses.Add(warehouse);
-            context.SaveChanges();
+            catch (DbUpdateException e)
+            {
+                logger.LogError(e, "Error updating Warehouse");
+                throw new DalSaveException("Error occured while creating a warehouse.", e);
+            }
+            catch (SqlException e)
+            {
+                logger.LogError(e, "Error updating ");
+                throw new DalConnectionException("Error occured while creating a warehouse.", e);
+            }
+
             return warehouse;
         }
 
@@ -41,28 +60,81 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             // Source: Max
             // Load everything from DB (using AsEnumerable) and filter at the end
             // (with SingleOrDefault) for the root warehouse
-            return context.Hops
-                .OfType<Warehouse>()
-                .Include(hop => hop.NextHops)
-                .ThenInclude(nextHop => nextHop.Hop)
-                .AsEnumerable()
-                .SingleOrDefault(hop => hop.Level == 0);
+            Warehouse? hops = null;
+            try
+            {
+                // TODO Check if this is indeed correct
+                hops = context.Hops
+                    .OfType<Warehouse>()
+                    .Include(hop => hop.LocationCoordinates)
+                    .Include(hop => hop.NextHops)
+                    .ThenInclude(nextHop => nextHop.Hop)
+                    .ThenInclude(nextHop => nextHop.LocationCoordinates)
+                    .AsEnumerable()
+                    .SingleOrDefault(hop => hop.Level == 0);
+            }
+            catch (SqlException e)
+            {
+                logger.LogError(e, "Error Getting All Warehouses.");
+                throw new DalConnectionException("Error occured while retrieving all warehouses.", e);
+            }
+            catch (InvalidOperationException e)
+            {
+                logger.LogError(e, "Error Getting All Warehouses.");
+                throw new DalConnectionException("Error occured while retrieving all warehouses.", e);
+            }
+
+            return hops;
         }
 
         public Hop? GetHopByCode(string code)
         {
             logger.LogInformation($"Get Hop with Code {code}");
-            return context.Hops.SingleOrDefault(w => w.Code == code);
+            Hop? hop = null;
+            try
+            {
+                hop = context.Hops.SingleOrDefault(w => w.Code == code);
+            }
+            catch (SqlException e)
+            {
+                logger.LogError(e, $"Error getting Hop by code ({code}).");
+                throw new DalConnectionException($"Error occured while getting hop by Code ({code}).", e);
+            }
+            catch (InvalidOperationException e)
+            {
+                logger.LogError(e, $"Error getting Hop by code ({code}).");
+                throw new DalConnectionException($"Error occured while getting hop by Code ({code}).", e);
+            }
+
+            return hop;
         }
 
         public Warehouse? GetWarehouseByCode(string code)
         {
             logger.LogInformation($"Get Warehouse with Code {code}");
-            return context.Hops
-                .OfType<Warehouse>()
-                .Include(hop => hop.NextHops)
-                .ThenInclude(nextHop => nextHop.Hop)
-                .AsEnumerable().SingleOrDefault(w => w.Code == code);
+            Warehouse? warehouse = null;
+            try
+            {
+                warehouse = context.Hops
+                    .OfType<Warehouse>()
+                    .Include(hop => hop.LocationCoordinates)
+                    .Include(hop => hop.NextHops)
+                    .ThenInclude(nextHop => nextHop.Hop)
+                    .ThenInclude(nextHop => nextHop.LocationCoordinates)
+                    .AsEnumerable().SingleOrDefault(w => w.Code == code);
+            }
+            catch (SqlException e)
+            {
+                logger.LogError(e, $"Error getting warehouse by code ({code}).");
+                throw new DalConnectionException($"Error occured while getting warehouse by Code ({code}).", e);
+            }
+            catch (InvalidOperationException e)
+            {
+                logger.LogError(e, $"Error getting Hop by code ({code}).");
+                throw new DalConnectionException($"Error occured while getting warehouse by Code ({code}).", e);
+            }
+
+            return warehouse;
         }
     }
 }
