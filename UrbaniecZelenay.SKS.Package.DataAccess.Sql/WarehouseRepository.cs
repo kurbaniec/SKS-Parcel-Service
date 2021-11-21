@@ -63,10 +63,13 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             Warehouse? hops = null;
             try
             {
+                // TODO Check if this is indeed correct
                 hops = context.Hops
                     .OfType<Warehouse>()
+                    .Include(hop => hop.LocationCoordinates)
                     .Include(hop => hop.NextHops)
                     .ThenInclude(nextHop => nextHop.Hop)
+                    .ThenInclude(nextHop => nextHop.LocationCoordinates)
                     .AsEnumerable()
                     .SingleOrDefault(hop => hop.Level == 0);
             }
@@ -94,8 +97,13 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             }
             catch (SqlException e)
             {
-                logger.LogError(e, "Error getting Hop by code.");
-                throw new DalConnectionException("Error occured while getting hop by Code.", e);
+                logger.LogError(e, $"Error getting Hop by code ({code}).");
+                throw new DalConnectionException($"Error occured while getting hop by Code ({code}).", e);
+            }
+            catch (InvalidOperationException e)
+            {
+                logger.LogError(e, $"Error getting Hop by code ({code}).");
+                throw new DalConnectionException($"Error occured while getting hop by Code ({code}).", e);
             }
 
             return hop;
@@ -107,16 +115,23 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             Warehouse? warehouse = null;
             try
             {
-                warehouse =  context.Hops
+                warehouse = context.Hops
                     .OfType<Warehouse>()
+                    .Include(hop => hop.LocationCoordinates)
                     .Include(hop => hop.NextHops)
                     .ThenInclude(nextHop => nextHop.Hop)
+                    .ThenInclude(nextHop => nextHop.LocationCoordinates)
                     .AsEnumerable().SingleOrDefault(w => w.Code == code);
             }
             catch (SqlException e)
             {
-                logger.LogError(e, "Error getting warehouse by code.");
-                throw new DalConnectionException("Error occured while getting warehouse by code.", e);
+                logger.LogError(e, $"Error getting warehouse by code ({code}).");
+                throw new DalConnectionException($"Error occured while getting warehouse by Code ({code}).", e);
+            }
+            catch (InvalidOperationException e)
+            {
+                logger.LogError(e, $"Error getting Hop by code ({code}).");
+                throw new DalConnectionException($"Error occured while getting warehouse by Code ({code}).", e);
             }
 
             return warehouse;
