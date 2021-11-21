@@ -51,11 +51,11 @@ namespace UrbaniecZelenay.SKS.ServiceAgents
                 {
                     if (e is HttpRequestException)
                     {
-                        logger.LogError($"Error requesting {url}.", e);
+                        logger.LogError(e, $"Error requesting {url}.");
                         return null;
                     }
 
-                    logger.LogError("Error unhandled Exception!", e);
+                    logger.LogError(e, "Error unhandled Exception!");
                 }
 
                 return null;

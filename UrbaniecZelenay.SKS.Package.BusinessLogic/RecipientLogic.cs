@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
+using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
@@ -26,8 +29,9 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             logger.LogInformation($"Track Parcel with ID {trackingId}");
             if (trackingId == null)
             {
-                logger.LogError("ID is null");
-                throw new ArgumentNullException(nameof(trackingId));
+                BlArgumentException e = new BlArgumentException("trackingId must not be null.");
+                logger.LogError(e, "ID is null");
+                throw e;
             }
 
             // return new Parcel
@@ -54,8 +58,25 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             //     VisitedHops = new List<HopArrival>(),
             //     FutureHops = new List<HopArrival>()
             // };
-            var dalResult = parcelRepository.GetByTrackingId(trackingId);
-            if (dalResult == null) return null;
+            DalParcel? dalResult = null;
+            try
+            {
+                dalResult = parcelRepository.GetByTrackingId(trackingId);
+            }
+            catch (DalException e)
+            {
+                logger.LogError(e, $"Error retrieving parcel by Id ({trackingId}).");
+                throw new BlRepositoryException($"Error retrieving parcel by Id ({trackingId}).", e);
+            }
+
+            if (dalResult == null)
+            {
+                BlDataNotFoundException e =
+                    new BlDataNotFoundException($"Error parcel with tracking id ({trackingId}) not found");
+                logger.LogError(e, "Error parcel with tracking id ({trackingId}) not found");
+                throw e;
+            }
+
             var blResult = mapper.Map<Parcel>(dalResult);
             logger.LogDebug($"Mapping Dal/Bl {dalResult} => {blResult}");
             return blResult;

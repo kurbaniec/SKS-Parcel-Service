@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.Services.Controllers;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
@@ -47,7 +48,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var mockLogger = new Mock<ILogger<StaffApiController>>();
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelDelivery(It.Is<string>(s => s == null)))
-                .Throws(new ArgumentNullException("Error Tracking id must not be null!"));
+                .Throws(new BlArgumentException("Error Tracking id must not be null!"));
 
             var controller =
                 new StaffApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockStaffLogic.Object);
@@ -90,7 +91,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var mockLogger = new Mock<ILogger<StaffApiController>>();
             Mock<IStaffLogic> mockStaffLogic = new Mock<IStaffLogic>();
             mockStaffLogic.Setup(m => m.ReportParcelHop(It.IsAny<string>(), It.Is<string>(s => s == null)))
-                .Throws(new ArgumentNullException("Error Tracking id must not be null!"));
+                .Throws(new BlArgumentException("Error Tracking id must not be null!"));
 
             var controller =
                 new StaffApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockStaffLogic.Object);

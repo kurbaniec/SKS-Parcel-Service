@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -46,7 +47,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             IWarehouseManagementLogic warehouseManagementLogic =
                 new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
             warehouseManagementLogic.TriggerExportWarehouseException = true;
-            Assert.Throws<InvalidOperationException>(() => warehouseManagementLogic.ExportWarehouses());
+            Assert.Throws<BlArgumentException>(() => warehouseManagementLogic.ExportWarehouses());
         }
 
         [Test]
@@ -125,7 +126,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
 
             IWarehouseManagementLogic warehouseManagementLogic =
                 new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
-            Assert.Throws<ArgumentNullException>(() => warehouseManagementLogic.GetWarehouse(code));
+            Assert.Throws<BlArgumentException>(() => warehouseManagementLogic.GetWarehouse(code));
         }
 
         [Test]
@@ -172,7 +173,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Level = 0,
                 NextHops = null
             };
-            Assert.Throws<ArgumentException>(() => warehouseManagementLogic.ImportWarehouses(invalidWarehouse));
+            Assert.Throws<BlValidationException>(() => warehouseManagementLogic.ImportWarehouses(invalidWarehouse));
             Assert.True(true);
         }
 
@@ -186,7 +187,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             IWarehouseManagementLogic warehouseManagementLogic =
                 new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
             Warehouse invalidWarehouse = null;
-            Assert.Throws<ArgumentNullException>(() => warehouseManagementLogic.ImportWarehouses(invalidWarehouse));
+            Assert.Throws<BlArgumentException>(() => warehouseManagementLogic.ImportWarehouses(invalidWarehouse));
             Assert.True(true);
         }
     }

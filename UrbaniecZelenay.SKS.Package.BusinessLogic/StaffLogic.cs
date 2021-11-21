@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Data.Common;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
+using DalHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Hop;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
@@ -30,17 +34,43 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             logger.LogInformation($"Report Parcel Delivery for ID {trackingId}");
             if (trackingId == null)
             {
-                logger.LogError("Tracking ID is null");
-                throw new ArgumentNullException(nameof(trackingId));
+                BlArgumentException e = new BlArgumentException("trackingId must not be null.");
+                logger.LogError(e, "ID is null");
+                throw e;
             }
 
-            var dalParcel = parcelRepository.GetByTrackingId(trackingId);
-            if (dalParcel == null) return;
+            DalParcel? dalParcel = null;
+            try
+            {
+                dalParcel = parcelRepository.GetByTrackingId(trackingId);
+            }
+            catch (DalException e)
+            {
+                logger.LogError(e, $"Error retrieving parcel by Id ({trackingId}).");
+                throw new BlRepositoryException($"Error retrieving parcel by Id ({trackingId}).", e);
+            }
+
+            if (dalParcel == null)
+            {
+                BlDataNotFoundException e =
+                    new BlDataNotFoundException($"Error parcel with trackingId ({trackingId}) not found");
+                logger.LogError(e, "Parcel by trackingId not found");
+                throw e;
+            }
+
             var blParcel = mapper.Map<Parcel>(dalParcel);
             blParcel.State = Parcel.StateEnum.DeliveredEnum;
             dalParcel = mapper.Map<DalParcel>(blParcel);
             logger.LogDebug($"Mapping Bl/Dal {blParcel} => {dalParcel}");
-            parcelRepository.Update(dalParcel);
+            try
+            {
+                parcelRepository.Update(dalParcel);
+            }
+            catch (DalException e)
+            {
+                logger.LogError(e, $"Error updating parcel by ({dalParcel}).");
+                throw new BlRepositoryException($"Error updating parcel by ({dalParcel}).", e);
+            }
         }
 
         public void ReportParcelHop(string? trackingId, string? code)
@@ -48,14 +78,16 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             logger.LogInformation($"Report Parcel Hop for Parcel with ID {trackingId}");
             if (trackingId == null)
             {
-                logger.LogError("Tracking ID is null");
-                throw new ArgumentNullException(nameof(trackingId));
+                BlArgumentException e = new BlArgumentException("trackingId must not be null.");
+                logger.LogError(e, "ID is null");
+                throw e;
             }
 
             if (code == null)
             {
-                logger.LogError("Warehouse Code is null");
-                throw new ArgumentNullException(nameof(code));
+                BlArgumentException e = new BlArgumentException("code must not be null.");
+                logger.LogError(e, "code is null");
+                throw e;
             }
 
             // TODO test this with database
@@ -67,10 +99,43 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             // Add HopArrival to parcel
             // Convert to DAL
 
-            var dalParcel = parcelRepository.GetByTrackingId(trackingId);
-            if (dalParcel == null) return;
-            var dalHop = warehouseRepository.GetHopByCode(code);
-            if (dalHop == null) return;
+            DalParcel? dalParcel = null;
+            try
+            {
+                dalParcel = parcelRepository.GetByTrackingId(trackingId);
+            }
+            catch (DalException e)
+            {
+                logger.LogError(e, $"Error retrieving parcel by Id ({trackingId}).");
+                throw new BlRepositoryException($"Error retrieving parcel by Id ({trackingId}).", e);
+            }
+
+            if (dalParcel == null)
+            {
+                BlDataNotFoundException e =
+                    new BlDataNotFoundException($"Error parcel with trackingId ({trackingId}) not found");
+                logger.LogError(e, "Parcel by trackingId not found");
+                throw e;
+            }
+
+            DalHop? dalHop = null;
+            try
+            {
+                dalHop = warehouseRepository.GetHopByCode(code);
+            }
+            catch (DalException e)
+            {
+                logger.LogError(e, $"Error retrieving hop by code ({code}).");
+                throw new BlRepositoryException($"Error retrieving hop by code ({code}).", e);
+            }
+
+            if (dalHop == null)
+            {
+                BlDataNotFoundException e =
+                    new BlDataNotFoundException($"Error hop with code ({code}) not found");
+                logger.LogError(e, "Hop by code not found");
+                throw e;
+            }
 
             var blParcel = mapper.Map<Parcel>(dalParcel);
             var blHop = mapper.Map<Hop>(dalHop);
@@ -85,7 +150,15 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 
             dalParcel = mapper.Map<DalParcel>(blParcel);
             logger.LogDebug($"Mapping Bl/Dal {blParcel} => {dalParcel}");
-            parcelRepository.Update(dalParcel);
+            try
+            {
+                parcelRepository.Update(dalParcel);
+            }
+            catch (DalException e)
+            {
+                logger.LogError(e, $"Error updating parcel ({dalParcel}).");
+                throw new BlRepositoryException($"Error updating parcel ({dalParcel}).", e);
+            }
         }
     }
 }

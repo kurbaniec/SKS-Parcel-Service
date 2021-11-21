@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.Services.Controllers;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
@@ -80,7 +81,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var mockLogger = new Mock<ILogger<RecipientApiController>>();
             Mock<IRecipientLogic> mockRecipientLogic = new Mock<IRecipientLogic>();
             mockRecipientLogic.Setup(m => m.TrackParcel(It.Is<string>(s => s == null)))
-                .Throws(new ArgumentNullException("tracking Id mustnot be null!"));
+                .Throws(new BlArgumentException("tracking Id mustnot be null!"));
             var controller = new RecipientApiController(mockLogger.Object, mapperConfig.CreateMapper(),
                 mockRecipientLogic.Object);
             // var controller = new RecipientApiController(mapperConfig.CreateMapper());
