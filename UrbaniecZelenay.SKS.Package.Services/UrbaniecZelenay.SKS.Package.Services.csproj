@@ -27,5 +27,7 @@
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Sql\UrbaniecZelenay.SKS.Package.DataAccess.Sql.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.DTOs\UrbaniecZelenay.SKS.Package.Services.DTOs.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.Interfaces\UrbaniecZelenay.SKS.Package.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.ServiceAgents.Interfaces\UrbaniecZelenay.SKS.ServiceAgents.Interfaces.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.ServiceAgents\UrbaniecZelenay.SKS.ServiceAgents.csproj" />
   </ItemGroup>
 </Project>

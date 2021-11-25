@@ -29,6 +29,8 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Filters;
+using UrbaniecZelenay.SKS.ServiceAgents;
+using UrbaniecZelenay.SKS.ServiceAgents.Interfaces;
 
 
 namespace UrbaniecZelenay.SKS.Package.Services
@@ -121,6 +123,7 @@ namespace UrbaniecZelenay.SKS.Package.Services
             services.AddScoped<IParcelLogisticsContext>(provider => provider.GetService<ParcelLogisticsContext>()!);
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
             services.AddScoped<IParcelRepository, ParcelRepository>();
+            services.AddScoped<IGeoEncodingAgent, OpenStreetMapEncodingAgent>();
             services.AddTransient<IWarehouseManagementLogic, WarehouseManagementLogic>();
             services.AddTransient<IStaffLogic, StaffLogic>();
             services.AddTransient<ISenderLogic, SenderLogic>();

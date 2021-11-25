@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using NetTopologySuite.Geometries;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
 {
@@ -40,5 +41,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         /// <value>Country</value>
         [Required]
         public string Country { get; set; }
+        
+        public Point? GeoLocation { get; set; }
     }
 }

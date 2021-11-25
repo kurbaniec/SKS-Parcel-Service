@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace UrbaniecZelenay.SKS.Package.IntegrationTests
@@ -41,11 +42,33 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
         }
 
         [Test]
-        public void SubmitNewParcelToTheLogisticsService()
+        public async Task SubmitNewParcelToTheLogisticsService()
         {
-            Console.WriteLine("Baum");
-            //client.PostAsync($"{serverUrl}/")
+            var body = @"
+            {
+                ""weight"": 2,
+                ""recipient"": {
+                    ""name"": ""Max Mustermann"",
+                    ""street"": ""Höchstädtplatz 6"",
+                    ""postalCode"": ""1200"",
+                    ""city"": ""Vienna"",
+                    ""country"": ""Austria""
+                },
+                ""sender"": {
+                    ""name"": ""Maxine Mustermann"",
+                    ""street"": ""Urban-Loritz-Platz 2A"",
+                    ""postalCode"": ""1070"",
+                    ""city"": ""Vienna"",
+                    ""country"": ""Austria""
+                }
+            }";
+            var response = await client.PostAsync($"{serverUrl}/parcel", new StringContent(
+                body, Encoding.UTF8, "application/json"
+            ));
             
+            Assert.IsTrue(response.IsSuccessStatusCode);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseBody);
         }
     }
 }

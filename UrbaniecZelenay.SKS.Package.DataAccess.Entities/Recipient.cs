@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using NetTopologySuite.Geometries;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
 {
@@ -37,5 +39,8 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// </summary>
         /// <value>Country</value>
         public string Country { get; set; }
+        
+        [Column(TypeName = "Geometry")]
+        public Point GeoLocation { get; set; }
     }
 }

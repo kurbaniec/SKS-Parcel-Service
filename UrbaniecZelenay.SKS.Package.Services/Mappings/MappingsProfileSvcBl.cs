@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
+using NetTopologySuite.Geometries;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 using BlParcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
 using BlRecipient = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Recipient;
@@ -44,7 +45,15 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
             // See: https://docs.automapper.org/en/stable/Mapping-inheritance.html
             // IncludeAllDerived needs to be called on base and reversed mapping
             // See: https://stackoverflow.com/a/62085857/12347616
-            CreateMap<Hop, BlHop>().IncludeAllDerived().ReverseMap().IncludeAllDerived();
+            CreateMap<Hop, BlHop>().IncludeAllDerived().ForMember(blHop => blHop.LocationCoordinates,
+                    opt => opt.MapFrom(x
+                        => new Point(x.LocationCoordinates.Lon, x.LocationCoordinates.Lat) { SRID = 4326 }))
+                .ReverseMap().IncludeAllDerived().ForMember(svcHop => svcHop.LocationCoordinates, opt =>
+                    opt.MapFrom(x => new BlGeoCoordinate()
+                    {
+                        Lon = x.LocationCoordinates.X,
+                        Lat = x.LocationCoordinates.Y
+                    }));
             CreateMap<Warehouse, BlWarehouse>().ReverseMap();
             CreateMap<WarehouseNextHops, BlWarehouseNextHops>().ReverseMap();
             CreateMap<Truck, BlTruck>().ReverseMap();

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using NetTopologySuite.Geometries;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
 {
@@ -45,7 +46,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         /// Gets or Sets LocationCoordinates
         /// </summary>
         [Required]
-        public GeoCoordinate LocationCoordinates { get; set; }
+        public Point LocationCoordinates { get; set; }
 
     }
 }

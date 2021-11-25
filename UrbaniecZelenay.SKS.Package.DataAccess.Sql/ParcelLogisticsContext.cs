@@ -23,7 +23,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         // Create properties
         // See: https://docs.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli#create-the-model
-        public DbSet<GeoCoordinate> GeoCoordinates { get; set; }
+        //public DbSet<GeoCoordinate> GeoCoordinates { get; set; }
         public DbSet<Hop> Hops { get; set; }
         public DbSet<HopArrival> HopArrivals { get; set; }
         public DbSet<Parcel> Parcels { get; set; }
