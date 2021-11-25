@@ -19,6 +19,11 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // modelBuilder.Entity<Hop>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
+            // modelBuilder.Entity<Warehouse>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
+            // modelBuilder.Entity<Truck>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
+            // modelBuilder.Entity<Transferwarehouse>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
+            // modelBuilder.Entity<Recipient>().Property(r => r.GeoLocation).HasColumnType("geometry (point)");
         }
 
         // Create properties

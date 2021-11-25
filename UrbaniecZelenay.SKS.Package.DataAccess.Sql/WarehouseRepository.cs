@@ -72,13 +72,10 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             Warehouse? hops = null;
             try
             {
-                // TODO Check if this is indeed correct
                 hops = context.Hops
                     .OfType<Warehouse>()
-                    .Include(hop => hop.LocationCoordinates)
                     .Include(hop => hop.NextHops)
                     .ThenInclude(nextHop => nextHop.Hop)
-                    .ThenInclude(nextHop => nextHop.LocationCoordinates)
                     .AsEnumerable()
                     .SingleOrDefault(hop => hop.Level == 0);
             }
