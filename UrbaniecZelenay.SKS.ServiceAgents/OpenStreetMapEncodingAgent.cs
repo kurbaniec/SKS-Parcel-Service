@@ -65,25 +65,27 @@ namespace UrbaniecZelenay.SKS.ServiceAgents
                 return null;
             }
 
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = response.Content;
+            if (!response.IsSuccessStatusCode) return geoCoordinate;
+            var responseContent = response.Content;
 
-                // by calling .Result you are synchronously reading the result
-                string responseString = responseContent.ReadAsStringAsync().Result;
-                JArray parsedResult = JArray.Parse(responseString);
-                double? lat = parsedResult[0]?["lat"]?.Value<double>();
-                double? lon = parsedResult[0]?["lon"]?.Value<double>();
-                string? displayName = parsedResult[0]?["display_name"]?.Value<string>();
-                // TODO Check if display name matches address??
-                // issue how? because request language does not always match result language e.g. Wien - Vienna
-                if (lat != null && lon != null && displayName != null)
+            // by calling .Result you are synchronously reading the result
+            string responseString = responseContent.ReadAsStringAsync().Result;
+                
+            // TODO: Error handling, throws exception on invalid address
+                
+            JArray parsedResult = JArray.Parse(responseString);
+            if (parsedResult.Count <= 0) return geoCoordinate;
+            var lat = parsedResult[0]["lat"]?.Value<double>();
+            var lon = parsedResult[0]["lon"]?.Value<double>();
+            var displayName = parsedResult[0]["display_name"]?.Value<string>();
+            // TODO Check if display name matches address??
+            // issue how? because request language does not always match result language e.g. Wien - Vienna
+            if (lat != null && lon != null && displayName != null)
+            {
+                geoCoordinate = new Point((double)lon, (double)lat)
                 {
-                    geoCoordinate = new Point((double)lon, (double)lat)
-                    {
-                        SRID = 4326
-                    };
-                }
+                    SRID = 4326
+                };
             }
 
 
