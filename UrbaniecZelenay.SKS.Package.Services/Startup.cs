@@ -112,7 +112,10 @@ namespace UrbaniecZelenay.SKS.Package.Services
             // See: https://codewithmukesh.com/blog/repository-pattern-in-aspnet-core/
             // And: https://stackoverflow.com/a/60399887/12347616
             services.AddDbContext<ParcelLogisticsContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ParcelLogisticsContext")));
+                // Add Spatial Data support
+                // See: https://docs.microsoft.com/en-us/ef/core/modeling/spatial
+                options.UseSqlServer(Configuration.GetConnectionString("ParcelLogisticsContext"), dbOpt => 
+                    dbOpt.UseNetTopologySuite()));
             // Register the service and implementation for the database context
             // See: https://www.jerriepelser.com/blog/resolve-dbcontext-as-interface-in-aspnet5-ioc-container/
             services.AddScoped<IParcelLogisticsContext>(provider => provider.GetService<ParcelLogisticsContext>()!);

@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.ServiceAgents.Tests", "UrbaniecZelenay.SKS.ServiceAgents.Tests\UrbaniecZelenay.SKS.ServiceAgents.Tests.csproj", "{01CDB22D-321E-4D54-9154-4D6210FED12E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package.IntegrationTests", "UrbaniecZelenay.SKS.Package.IntegrationTests\UrbaniecZelenay.SKS.Package.IntegrationTests.csproj", "{164C2F2E-4E6C-45F0-B1FC-A6223F07595F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,5 +98,9 @@ Global
 		{01CDB22D-321E-4D54-9154-4D6210FED12E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01CDB22D-321E-4D54-9154-4D6210FED12E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01CDB22D-321E-4D54-9154-4D6210FED12E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{164C2F2E-4E6C-45F0-B1FC-A6223F07595F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{164C2F2E-4E6C-45F0-B1FC-A6223F07595F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{164C2F2E-4E6C-45F0-B1FC-A6223F07595F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{164C2F2E-4E6C-45F0-B1FC-A6223F07595F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
