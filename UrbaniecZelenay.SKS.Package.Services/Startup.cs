@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NetTopologySuite.IO.Converters;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
@@ -79,6 +80,7 @@ namespace UrbaniecZelenay.SKS.Package.Services
                 {
                     opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     opts.SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
+                    opts.SerializerSettings.Converters.Add(new GeometryConverter());
                 })
                 .AddXmlSerializerFormatters();
 

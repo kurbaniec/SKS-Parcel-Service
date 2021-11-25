@@ -45,7 +45,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// </summary>
         
         //public GeoCoordinate LocationCoordinates { get; set; }
-        [Column(TypeName = "geometry (point)")]
+        [Column(TypeName = "geometry")]
         public Point LocationCoordinates { get; set; }
 
     }

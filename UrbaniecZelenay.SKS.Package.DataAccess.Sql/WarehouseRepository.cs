@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using NetTopologySuite.Geometries;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -123,7 +124,6 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             {
                 warehouse = context.Hops
                     .OfType<Warehouse>()
-                    .Include(hop => hop.LocationCoordinates)
                     .Include(hop => hop.NextHops)
                     .ThenInclude(nextHop => nextHop.Hop)
                     .ThenInclude(nextHop => nextHop.LocationCoordinates)
@@ -131,16 +131,40 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             }
             catch (SqlException e)
             {
-                logger.LogError(e, $"Error getting warehouse by code ({code}).");
-                throw new DalConnectionException($"Error occured while getting warehouse by Code ({code}).", e);
+                logger.LogError(e, $"Error getting Warehouse by code ({code}).");
+                throw new DalConnectionException($"Error occured while getting Warehouse by Code ({code}).", e);
             }
             catch (InvalidOperationException e)
             {
                 logger.LogError(e, $"Error getting Hop by code ({code}).");
-                throw new DalConnectionException($"Error occured while getting warehouse by Code ({code}).", e);
+                throw new DalConnectionException($"Error occured while getting Warehouse by Code ({code}).", e);
             }
 
             return warehouse;
+        }
+
+        public Truck? GetTruckByPoint(Point point)
+        {
+            logger.LogInformation($"Get Truck which Region includes {point}");
+            Truck? truck;
+            try
+            {
+                truck = context.Hops
+                    .OfType<Truck>()
+                    .SingleOrDefault(t => t.Region.Contains(point));
+            }
+            catch (SqlException e)
+            {
+                logger.LogError(e, $"Error getting Truck by point ({point}).");
+                throw new DalConnectionException($"Error getting Truck by point ({point}).", e);
+            }
+            catch (InvalidOperationException e)
+            {
+                logger.LogError(e, $"Error getting Truck by point ({point}).");
+                throw new DalConnectionException($"Error getting Truck by point ({point}).", e);
+            }
+
+            return truck;
         }
     }
 }
