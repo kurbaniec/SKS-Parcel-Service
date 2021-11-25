@@ -24,19 +24,28 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         public Warehouse Create(Warehouse warehouse)
         {
             logger.LogInformation($"Create Warehouse {warehouse}");
-            // TODO Detect already existing warehouses?
+            // Detect already existing warehouses?
+            // try
+            // {
+            //     var check = context.Warehouses.SingleOrDefault(w => w.Code == warehouse.Code);
+            //     if (check != null)
+            //     {
+            //         DalException e = new DalDuplicateEntryException($"Error warehouse already exists (Code: " +
+            //                                                         $"{check.Code}.");
+            //         logger.LogError(e, "Root Warehouse already exists");
+            //         throw e;
+            //         // return check;
+            //     }
+            //
+            //     context.Warehouses.Add(warehouse);
+            //     context.SaveChanges();
+            // }
             try
             {
-                var check = context.Warehouses.SingleOrDefault(w => w.Code == warehouse.Code);
-                if (check != null)
-                {
-                    DalException e = new DalDuplicateEntryException($"Error warehouse already exists (Code: " +
-                                                                    $"{check.Code}.");
-                    logger.LogError(e, "Root Warehouse already exists");
-                    throw e;
-                    // return check;
-                }
-
+                // Delete database and rebuild it
+                // See: https://docs.microsoft.com/en-us/ef/core/managing-schemas/ensure-created
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
                 context.Warehouses.Add(warehouse);
                 context.SaveChanges();
             }
