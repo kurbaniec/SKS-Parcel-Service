@@ -16,7 +16,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [RegularExpression(@"^[A-Z0-9]{9}$")]
-        public string TrackingId { get; set; }
+        public string? TrackingId { get; set; }
 
         /// <summary>
         /// Gets or Sets Weight

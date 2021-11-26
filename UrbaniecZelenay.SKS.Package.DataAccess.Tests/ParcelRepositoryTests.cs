@@ -206,6 +206,48 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
             var myDbMoq = new Mock<IParcelLogisticsContext>();
             var validParcel = new Parcel
             {
+                TrackingId = null,
+                Weight = 1,
+                Recipient = new Recipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                Sender = new Recipient
+                {
+                    Name = "Max Mustermann",
+                    Street = "A Street",
+                    PostalCode = "1200",
+                    City = "Vienna",
+                    Country = "Austria"
+                },
+                State = Parcel.StateEnum.TransferredEnum,
+                VisitedHops = new List<HopArrival>(),
+                FutureHops = new List<HopArrival>()
+            };
+            // myDbMoq.Setup(m => m.Hops).Returns(ParcelLogisticsContextMock.GetQueryableMockDbSet<Hop>(new List<Hop>()));
+            myDbMoq.Setup(m => m.Parcels)
+                .Returns(ParcelLogisticsContextMock.GetQueryableMockDbSet<Parcel>(new List<Parcel>()));
+            // 
+            Mock<DatabaseFacade> dbFacadeMock =
+                new Mock<DatabaseFacade>(MockBehavior.Strict, new Mock<DbContext>().Object);
+            Mock<IDbContextTransaction> dbTransactionMock = new Mock<IDbContextTransaction>();
+            dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
+            myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
+            var mockLogger = new Mock<ILogger<ParcelRepository>>();
+            IParcelRepository parcelRepository = new ParcelRepository(mockLogger.Object, myDbMoq.Object);
+            parcelRepository.Create(validParcel, false);
+        }
+        
+        [Test]
+        public void Create_ValidParcelWithExistingTrackingId_NoException()
+        {
+            var myDbMoq = new Mock<IParcelLogisticsContext>();
+            var validParcel = new Parcel
+            {
                 TrackingId = "PYJRB4HZ6",
                 Weight = 1,
                 Recipient = new Recipient
@@ -239,7 +281,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
             myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
             var mockLogger = new Mock<ILogger<ParcelRepository>>();
             IParcelRepository parcelRepository = new ParcelRepository(mockLogger.Object, myDbMoq.Object);
-            parcelRepository.Create(validParcel);
+            parcelRepository.Create(validParcel, true);
         }
     }
 }

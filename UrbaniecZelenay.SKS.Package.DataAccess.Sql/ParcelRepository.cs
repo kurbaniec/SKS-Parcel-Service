@@ -13,7 +13,6 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
     public class ParcelRepository : IParcelRepository
     {
         private readonly IParcelLogisticsContext context;
-        public bool UseTransactions { get; set; } = true;
         private readonly ILogger<ParcelRepository> logger;
 
         public ParcelRepository(ILogger<ParcelRepository> logger, IParcelLogisticsContext context)
