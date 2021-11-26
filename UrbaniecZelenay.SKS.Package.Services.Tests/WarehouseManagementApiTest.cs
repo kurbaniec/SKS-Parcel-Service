@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
@@ -40,7 +41,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new BlGeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<BlWarehouseNextHops>()
             });
@@ -93,7 +94,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new BlGeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<BlWarehouseNextHops>()
             });

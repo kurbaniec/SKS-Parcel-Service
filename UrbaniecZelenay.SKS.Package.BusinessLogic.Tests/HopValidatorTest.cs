@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
@@ -22,7 +23,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Code = "AAAA111",
                 Description = "Description",
                 HopType = "Warehouse",
-                LocationCoordinates = new GeoCoordinate { Lat = 48.210033, Lon = 16.363449 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 LocationName = "Vienna",
                 ProcessingDelayMins = 10
             };
@@ -39,7 +40,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Code = "",
                 Description = "Description",
                 HopType = "Warehouse",
-                LocationCoordinates = new GeoCoordinate { Lat = 48.210033, Lon = 16.363449 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 LocationName = "Vienna",
                 ProcessingDelayMins = 10
             };
@@ -56,7 +57,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Code = "1",
                 Description = "Description",
                 HopType = "Warehouse",
-                LocationCoordinates = new GeoCoordinate { Lat = 48.210033, Lon = 16.363449 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 LocationName = "Vienna",
                 ProcessingDelayMins = 10
             };
@@ -90,7 +91,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Code = "AAAA111",
                 Description = "#desc!",
                 HopType = "Warehouse",
-                LocationCoordinates = new GeoCoordinate { Lat = 48.210033, Lon = 16.363449 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 LocationName = "Vienna",
                 ProcessingDelayMins = 10
             };
@@ -107,7 +108,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Code = "AAAA111",
                 Description = "",
                 HopType = "Warehouse",
-                LocationCoordinates = new GeoCoordinate { Lat = 48.210033, Lon = 16.363449 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 LocationName = "Vienna",
                 ProcessingDelayMins = 10
             };

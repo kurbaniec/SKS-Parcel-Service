@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
@@ -28,7 +29,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
             };
@@ -37,7 +38,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                     ()));
             // 
             Mock<DatabaseFacade> dbFacadeMock =
-                new Mock<DatabaseFacade>(MockBehavior.Strict, new Mock<DbContext>().Object);
+                new Mock<DatabaseFacade>(new Mock<DbContext>().Object);
             Mock<IDbContextTransaction> dbTransactionMock = new Mock<IDbContextTransaction>();
             dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
             myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
@@ -49,7 +50,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
         }
 
         [Test]
-        public void Create_DuplicateWarehouse_ExceptionThrown()
+        public void Create_RecreateWarehouse_WarehouseReturned()
         {
             var myDbMoq = new Mock<IParcelLogisticsContext>();
             string code = "AUTA05";
@@ -60,7 +61,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
             };
@@ -69,7 +70,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                     { validWarehouse }));
             // 
             Mock<DatabaseFacade> dbFacadeMock =
-                new Mock<DatabaseFacade>(MockBehavior.Strict, new Mock<DbContext>().Object);
+                new Mock<DatabaseFacade>(new Mock<DbContext>().Object);
             Mock<IDbContextTransaction> dbTransactionMock = new Mock<IDbContextTransaction>();
             dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
             myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
@@ -77,7 +78,10 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
 
 
             IWarehouseRepository warehouseRepository = new WarehouseRepository(mockLogger.Object, myDbMoq.Object);
-            Assert.Throws<DalDuplicateEntryException>(() => warehouseRepository.Create(validWarehouse));
+            //Assert.Throws<DalDuplicateEntryException>(() => warehouseRepository.Create(validWarehouse));
+            var w = warehouseRepository.Create(validWarehouse);
+            Assert.NotNull(w);
+            Assert.AreEqual(w.Code, code);
             // Warehouse? w = warehouseRepository.Create(validWarehouse);
             // Assert.NotNull(w);
             // Assert.AreEqual(w.Code, code);
@@ -95,7 +99,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
             } as Hop;
@@ -127,7 +131,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
             };
@@ -158,7 +162,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
             };
@@ -188,7 +192,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
             } as Hop;
@@ -218,7 +222,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
             } as Hop;
