@@ -151,6 +151,9 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             {
                 truck = context.Hops
                     .OfType<Truck>()
+                    .Include(t => t.PreviousHop)
+                    .ThenInclude(t => t!.PreviousHop)
+                    .AsEnumerable()
                     .SingleOrDefault(t => t.Region.Contains(point));
             }
             catch (SqlException e)
@@ -170,11 +173,14 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         public Transferwarehouse? GetTransferwarehouseByPoint(Point point)
         {
             logger.LogInformation($"Get Transferwarehouse which Region includes {point}");
-            Transferwarehouse? tw;
+            Transferwarehouse? transferwarehouse;
             try
             {
-                tw = context.Hops
+                transferwarehouse = context.Hops
                     .OfType<Transferwarehouse>()
+                    .Include(tw => tw.PreviousHop)
+                    .ThenInclude(tw => tw!.PreviousHop)
+                    .AsEnumerable()
                     .SingleOrDefault(t => t.Region.Contains(point));
             }
             catch (SqlException e)
@@ -188,7 +194,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 throw new DalConnectionException($"Error getting Transferwarehouse by point ({point}).", e);
             }
 
-            return tw;
+            return transferwarehouse;
         }
     }
 }

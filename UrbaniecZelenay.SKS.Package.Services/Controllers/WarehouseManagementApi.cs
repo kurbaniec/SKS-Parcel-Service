@@ -181,16 +181,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         public virtual IActionResult ImportWarehouses([FromBody] Warehouse body)
         {
             logger.LogInformation($"Import warehouses with hierarchy {body?.ToJson()}");
-            BlWarehouse blWarehouse = null;
-            try
-            {
-                var kek = mapper.Map<BlWarehouse>(body);
-                blWarehouse = kek;
-            }
-            catch (Exception e)
-            {
-                
-            }
+            BlWarehouse blWarehouse = mapper.Map<BlWarehouse>(body);
 
             logger.LogDebug($"Mapping Svc/Bl {body} => {blWarehouse}");
             try
