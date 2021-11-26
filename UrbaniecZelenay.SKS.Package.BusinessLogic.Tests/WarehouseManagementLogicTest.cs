@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
@@ -35,7 +36,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Code = "AUTA01",
                 Description = "Root Warehouse - Österreich",
                 HopType = "Warehouse",
-                LocationCoordinates = new DataAccess.Entities.GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 LocationName = "Root",
                 ProcessingDelayMins = 186,
                 Level = 0,
@@ -60,7 +61,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Code = "AUTA01",
                 Description = "Root Warehouse - Österreich",
                 HopType = "Warehouse",
-                LocationCoordinates = new DataAccess.Entities.GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 LocationName = "Root",
                 ProcessingDelayMins = 186,
                 Level = 0,
@@ -88,7 +89,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                     Code = "AUTA01",
                     Description = "Root Warehouse - Österreich",
                     HopType = "Warehouse",
-                    LocationCoordinates = new DataAccess.Entities.GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                    LocationCoordinates = new Point(13.884382, 47.247829),
                     LocationName = "Root",
                     ProcessingDelayMins = 186,
                     Level = 0,
@@ -115,7 +116,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                     Code = "AUTA01",
                     Description = "Root Warehouse - Österreich",
                     HopType = "Warehouse",
-                    LocationCoordinates = new DataAccess.Entities.GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                    LocationCoordinates = new Point(13.884382, 47.247829),
                     LocationName = "Root",
                     ProcessingDelayMins = 186,
                     Level = 0,
@@ -139,7 +140,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<WarehouseNextHops>()
             };
@@ -169,7 +170,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new GeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = null
             };
