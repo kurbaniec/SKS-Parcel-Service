@@ -166,5 +166,29 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
             return truck;
         }
+
+        public Transferwarehouse? GetTransferwarehouseByPoint(Point point)
+        {
+            logger.LogInformation($"Get Transferwarehouse which Region includes {point}");
+            Transferwarehouse? tw;
+            try
+            {
+                tw = context.Hops
+                    .OfType<Transferwarehouse>()
+                    .SingleOrDefault(t => t.Region.Contains(point));
+            }
+            catch (SqlException e)
+            {
+                logger.LogError(e, $"Error getting Transferwarehouse by point ({point}).");
+                throw new DalConnectionException($"Error getting Transferwarehouse by point ({point}).", e);
+            }
+            catch (InvalidOperationException e)
+            {
+                logger.LogError(e, $"Error getting Transferwarehouse by point ({point}).");
+                throw new DalConnectionException($"Error getting Transferwarehouse by point ({point}).", e);
+            }
+
+            return tw;
+        }
     }
 }

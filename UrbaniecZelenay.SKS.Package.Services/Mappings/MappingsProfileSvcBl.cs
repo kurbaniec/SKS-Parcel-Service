@@ -70,7 +70,10 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
                     opt => opt.MapFrom(x => DeserializeTruckRegion(x.RegionGeoJson)))
                 .ReverseMap().ForMember(svcTruck => svcTruck.RegionGeoJson,
                     opt => opt.MapFrom(x => SerializeTruckRegion(x.Region)));
-            CreateMap<Transferwarehouse, BlTransferwarehouse>().ReverseMap();
+            CreateMap<Transferwarehouse, BlTransferwarehouse>().ForMember(blTw => blTw.Region,
+                    opt => opt.MapFrom(x => DeserializeTruckRegion(x.RegionGeoJson)))
+                .ReverseMap().ForMember(svcTw => svcTw.RegionGeoJson,
+                    opt => opt.MapFrom(x => SerializeTruckRegion(x.Region)));
             CreateMap<GeoCoordinate, BlGeoCoordinate>().ReverseMap();
         }
 

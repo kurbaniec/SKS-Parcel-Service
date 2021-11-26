@@ -1,4 +1,5 @@
-﻿using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
+﻿using NetTopologySuite.Geometries;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
 {
@@ -8,5 +9,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
         Warehouse? GetAll();
         Hop? GetHopByCode(string code);
         Warehouse? GetWarehouseByCode(string code);
+        Truck? GetTruckByPoint(Point point);
+        Transferwarehouse? GetTransferwarehouseByPoint(Point point);
     }
 }

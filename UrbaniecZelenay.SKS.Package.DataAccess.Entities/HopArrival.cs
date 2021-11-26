@@ -10,13 +10,13 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
     {
         [Key] public int Id { get; set; }
         
-        public Hop Hop { get; private set; }
+        public Hop Hop { get; set; }
         
         /// <summary>
         /// The date/time the parcel arrived at the hop.
         /// </summary>
         /// <value>The date/time the parcel arrived at the hop.</value>
-        public DateTime DateTime { get; set; }
+        public DateTime? DateTime { get; set; }
 
         /// <summary>
         /// Unique CODE of the hop.
