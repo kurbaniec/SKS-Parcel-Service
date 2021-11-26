@@ -4,7 +4,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
 {
     public interface IParcelRepository
     {
-        Parcel Create(Parcel parcel);
+        Parcel Create(Parcel parcel, bool useExistingId = false);
         Parcel Update(Parcel parcel);
         void Delete(Parcel parcel);
 

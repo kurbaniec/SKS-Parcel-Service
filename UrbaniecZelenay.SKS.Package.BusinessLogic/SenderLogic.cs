@@ -28,7 +28,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
         private readonly ILogger<SenderLogic> logger;
 
         public SenderLogic(
-            ILogger<SenderLogic> logger, IParcelRepository parcelRepository, IWarehouseRepository warehouseRepository,
+            ILogger<SenderLogic> logger, IParcelRepository parcelRepository, 
+            IWarehouseRepository warehouseRepository,
             IGeoEncodingAgent geoEncodingAgent, IMapper mapper
         )
         {
@@ -39,10 +40,10 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             this.mapper = mapper;
         }
 
-        public Parcel SubmitParcel(Parcel? body)
+        public Parcel SubmitParcel(Parcel? parcel)
         {
-            logger.LogInformation($"Submit Parcel {body}");
-            if (body == null)
+            logger.LogInformation($"Submit Parcel {parcel}");
+            if (parcel == null)
             {
                 BlArgumentException e = new BlArgumentException("parcel must not be null.");
                 logger.LogError(e, "parcel is null");
@@ -50,7 +51,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             }
 
             IValidator<Parcel> parcelValidator = new ParcelValidator();
-            var validationResult = parcelValidator.Validate(body);
+            var validationResult = parcelValidator.Validate(parcel);
             if (!validationResult.IsValid)
             {
                 string validationErrors = string.Join(Environment.NewLine, validationResult.Errors);
@@ -60,7 +61,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             }
 
             // Get GeoSpatial Data for Recipients
-            var recipient = body.Recipient;
+            var recipient = parcel.Recipient;
             var recipientGeoLocation = geoEncodingAgent.EncodeAddress(recipient.Street, recipient.PostalCode,
                 recipient.City, recipient.Country);
             if (recipientGeoLocation == null)
@@ -71,7 +72,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw e;
             }
 
-            var sender = body.Sender;
+            var sender = parcel.Sender;
             var senderGeoLocation = geoEncodingAgent.EncodeAddress(sender.Street, sender.PostalCode,
                 sender.City, sender.Country);
             if (senderGeoLocation == null)
@@ -82,8 +83,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw e;
             }
 
-            body.Recipient.GeoLocation = recipientGeoLocation;
-            body.Sender.GeoLocation = senderGeoLocation;
+            parcel.Recipient.GeoLocation = recipientGeoLocation;
+            parcel.Sender.GeoLocation = senderGeoLocation;
 
             // Predict future Hops
             // Get recipient Hop
@@ -121,13 +122,13 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             }
 
             // Set parcel state to "Pickup"
-            body.State = Parcel.StateEnum.PickupEnum;
+            parcel.State = Parcel.StateEnum.PickupEnum;
 
             // Convert to DAL DAO and add future Hops
-            var dalParcel = mapper.Map<DalParcel>(body);
+            var dalParcel = mapper.Map<DalParcel>(parcel);
             dalParcel.FutureHops = futureHops;
 
-            logger.LogDebug($"Mapping Bl/Dal {body} => {dalParcel}");
+            logger.LogDebug($"Mapping Bl/Dal {parcel} => {dalParcel}");
             try
             {
                 dalParcel = parcelRepository.Create(dalParcel);

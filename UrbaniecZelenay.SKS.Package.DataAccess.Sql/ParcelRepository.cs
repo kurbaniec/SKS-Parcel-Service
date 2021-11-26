@@ -22,23 +22,31 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             this.context = context;
         }
 
-        public Parcel Create(Parcel parcel)
+        public Parcel Create(Parcel parcel, bool useExistingId)
         {
             try
             {
-                logger.LogInformation($"Create Parcel {parcel}");
-                // Working with transactions
-                // See: https://docs.microsoft.com/en-us/ef/ef6/saving/transactions
-                using IDbContextTransaction transaction = context.Database.BeginTransaction();
-                // ParcelLogisticsContext c = new ParcelLogisticsContext();
-                // c.Database.BeginTransaction();
-                var trackingId = context.Parcels.Max(p => p.TrackingId) ?? "000000000";
-                // See: https://stackoverflow.com/a/5418361/12347616
-                var newTrackingId = $"{int.Parse(trackingId) + 1:D9}";
-                parcel.TrackingId = newTrackingId;
-                context.Parcels.Add(parcel);
-                context.SaveChanges();
-                transaction.Commit();
+                if (!useExistingId)
+                {
+                    logger.LogInformation($"Create Parcel {parcel}");
+                    // Working with transactions
+                    // See: https://docs.microsoft.com/en-us/ef/ef6/saving/transactions
+                    using IDbContextTransaction transaction = context.Database.BeginTransaction();
+                    // ParcelLogisticsContext c = new ParcelLogisticsContext();
+                    // c.Database.BeginTransaction();
+                    var trackingId = context.Parcels.Max(p => p.TrackingId) ?? "000000000";
+                    // See: https://stackoverflow.com/a/5418361/12347616
+                    var newTrackingId = $"{int.Parse(trackingId) + 1:D9}";
+                    parcel.TrackingId = newTrackingId;
+                    context.Parcels.Add(parcel);
+                    context.SaveChanges();
+                    transaction.Commit();
+                }
+                else
+                {
+                    context.Parcels.Add(parcel);
+                    context.SaveChanges();
+                }
             }
             catch (SqlException e)
             {

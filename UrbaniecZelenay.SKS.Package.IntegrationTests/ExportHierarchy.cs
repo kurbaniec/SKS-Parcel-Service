@@ -12,7 +12,7 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
     // See: https://stackoverflow.com/a/1217089/12347616
     //[TestFixture, Ignore("Integration Tests")]
     [ExcludeFromCodeCoverage]
-    public class SubmitParcel
+    public class ExportHierarchy
     {
         private const string ServerUrl = "http://localhost:5000";
         private readonly HttpClient client = new();
@@ -44,32 +44,16 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
         [Test]
         public async Task SubmitNewParcelToTheLogisticsService()
         {
-            const string body = @"
-            {
-                ""weight"": 2,
-                ""recipient"": {
-                    ""name"": ""Max Mustermann"",
-                    ""street"": ""Höchstädtplatz 6"",
-                    ""postalCode"": ""1200"",
-                    ""city"": ""Vienna"",
-                    ""country"": ""Austria""
-                },
-                ""sender"": {
-                    ""name"": ""Maxine Mustermann"",
-                    ""street"": ""Urban-Loritz-Platz 2A"",
-                    ""postalCode"": ""1070"",
-                    ""city"": ""Vienna"",
-                    ""country"": ""Austria""
-                }
-            }";
-            var response = await client.PostAsync($"{ServerUrl}/parcel", new StringContent(
-                body, Encoding.UTF8, "application/json"
-            ));
+            var response = await client.GetAsync($"{ServerUrl}/warehouse");
             
             Assert.IsTrue(response.IsSuccessStatusCode);
-            var responseBody = await response.Content.ReadAsStringAsync();
-            var json = responseBody.Replace(" ", "");
-            Assert.IsTrue(json.Contains("{\"trackingId\":\"000000001\"}"));
+            var json = await response.Content.ReadAsStringAsync();
+            
+            Assert.IsTrue(json.Contains("Truck in Siebenhirten"));
+            Assert.IsTrue(json.Contains("W-795293"));
+            Assert.IsTrue(json.Contains("Neustift am Walde"));
+            Assert.IsTrue(json.Contains("Truck in Sechshaus"));
+            Assert.IsTrue(json.Contains("Root Warehouse - Österreich"));
         }
     }
 }

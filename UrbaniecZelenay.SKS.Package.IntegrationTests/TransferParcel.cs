@@ -12,7 +12,7 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
     // See: https://stackoverflow.com/a/1217089/12347616
     //[TestFixture, Ignore("Integration Tests")]
     [ExcludeFromCodeCoverage]
-    public class SubmitParcel
+    public class TransferParcel
     {
         private const string ServerUrl = "http://localhost:5000";
         private readonly HttpClient client = new();
@@ -42,8 +42,9 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
         }
 
         [Test]
-        public async Task SubmitNewParcelToTheLogisticsService()
+        public async Task TransferAnExistingParcelFromTheServiceOfALogisticsPartner()
         {
+            const string trackingId = "PYJRB4HZ6";
             const string body = @"
             {
                 ""weight"": 2,
@@ -62,14 +63,14 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
                     ""country"": ""Austria""
                 }
             }";
-            var response = await client.PostAsync($"{ServerUrl}/parcel", new StringContent(
+            var response = await client.PostAsync($"{ServerUrl}/parcel/{trackingId}", new StringContent(
                 body, Encoding.UTF8, "application/json"
             ));
-            
+
             Assert.IsTrue(response.IsSuccessStatusCode);
             var responseBody = await response.Content.ReadAsStringAsync();
             var json = responseBody.Replace(" ", "");
-            Assert.IsTrue(json.Contains("{\"trackingId\":\"000000001\"}"));
+            Assert.IsTrue(json.Contains("{\"trackingId\":\"PYJRB4HZ6\"}"));
         }
     }
 }
