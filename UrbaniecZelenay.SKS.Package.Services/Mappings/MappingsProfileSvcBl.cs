@@ -77,25 +77,16 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
         // Deserialize RegionGeoJson to Truck Geometry Multipolygon.
         // Note: RegionGeoJSON is delivered as a "Feature" which contains a "Geometry"
         // Usage: https://github.com/NetTopologySuite/NetTopologySuite.IO.GeoJSON
-        private Geometry? DeserializeTruckRegion(string regionGeoJson)
+        private Geometry? DeserializeTruckRegion(string? regionGeoJson)
         {
-            // TODO: Better Exception Handling
+            if (string.IsNullOrEmpty(regionGeoJson)) return null;
             Geometry? geometry = null;
-            try
-            {
-                using var stringReader = new StringReader(regionGeoJson);
-                using var jsonReader = new JsonTextReader(stringReader);
-                var feature = geoJsonConverter.Deserialize<Feature>(jsonReader);
-                if (feature != null)
-                    geometry = feature.Geometry;
-                
-            }
-            catch (Exception e)
-            {
-                // TODO: Inject Logger
-                // See: https://stackoverflow.com/questions/44877379/how-inject-service-in-automapper-profile-class
-                //logger.LogWarning($"Could not deserialize {regionGeoJson}");
-            }
+
+            using var stringReader = new StringReader(regionGeoJson);
+            using var jsonReader = new JsonTextReader(stringReader);
+            var feature = geoJsonConverter.Deserialize<Feature>(jsonReader);
+            if (feature != null)
+                geometry = feature.Geometry;
 
             return geometry;
         }
@@ -104,21 +95,15 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
         {
             if (geometry == null) return null;
             string? regionGeoJson = null;
-            try
+
+            Feature feature = new()
             {
-                Feature feature = new Feature
-                {
-                    Geometry = geometry
-                };
-                using var stringWriter = new StringWriter();
-                using var jsonWriter = new JsonTextWriter(stringWriter);
-                geoJsonConverter.Serialize(jsonWriter, feature);
-                regionGeoJson = stringWriter.ToString();
-            }
-            catch (Exception e)
-            {
-                //logger.LogWarning($"Could not serialize {geometry}");
-            }
+                Geometry = geometry
+            };
+            using var stringWriter = new StringWriter();
+            using var jsonWriter = new JsonTextWriter(stringWriter);
+            geoJsonConverter.Serialize(jsonWriter, feature);
+            regionGeoJson = stringWriter.ToString();
 
             return regionGeoJson;
         }

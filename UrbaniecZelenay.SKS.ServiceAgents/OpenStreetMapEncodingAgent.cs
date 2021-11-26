@@ -70,9 +70,7 @@ namespace UrbaniecZelenay.SKS.ServiceAgents
 
             // by calling .Result you are synchronously reading the result
             string responseString = responseContent.ReadAsStringAsync().Result;
-                
-            // TODO: Error handling, throws exception on invalid address
-                
+
             JArray parsedResult = JArray.Parse(responseString);
             if (parsedResult.Count <= 0) return geoCoordinate;
             var lat = parsedResult[0]["lat"]?.Value<double>();

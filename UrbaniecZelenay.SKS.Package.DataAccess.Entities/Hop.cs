@@ -48,5 +48,8 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         [Column(TypeName = "geometry")]
         public Point LocationCoordinates { get; set; }
 
+                
+        [Required]
+        public Hop? PreviousHop { get; set; }
     }
 }

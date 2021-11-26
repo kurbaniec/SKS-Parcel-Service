@@ -11,6 +11,7 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using DalWarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Warehouse;
+//using Truck = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Truck;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
@@ -140,6 +141,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 logger.LogError(e, $"Error validating warehouse");
                 throw e;
             }
+            
+            LinkPreviousHops(body, null);
 
             var dalWarehouse = mapper.Map<DalWarehouse>(body);
             logger.LogDebug($"Mapping Bl/Dal {body} => {dalWarehouse}");
@@ -151,6 +154,16 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             {
                 logger.LogError(e, $"Error creating warehouse ({dalWarehouse}).");
                 throw new BlRepositoryException($"Error creating warehouse ({dalWarehouse}).", e);
+            }
+        }
+
+        private static void LinkPreviousHops(Hop currentHop, Hop? parentHop)
+        {
+            currentHop.PreviousHop = parentHop;
+            if (currentHop is not Warehouse w) return;
+            foreach (var nextHop in w.NextHops)
+            {
+                LinkPreviousHops(nextHop.Hop, w);
             }
         }
     }
