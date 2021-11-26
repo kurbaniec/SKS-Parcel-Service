@@ -149,6 +149,9 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             Truck? truck;
             try
             {
+                // Even though "ThenInclude" says t can be nullable (which is true)
+                // EF Core will still be map it correctly and not throw any errors
+                // See: https://github.com/dotnet/efcore/issues/17212
                 truck = context.Hops
                     .OfType<Truck>()
                     .Include(t => t.PreviousHop)

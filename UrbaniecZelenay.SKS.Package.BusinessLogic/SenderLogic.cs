@@ -86,8 +86,6 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             body.Sender.GeoLocation = senderGeoLocation;
 
             // Predict future Hops
-            var recipientFutureHops = new List<DalHopArrival>();
-            var senderFutureHops = new List<DalHopArrival>();
             // Get recipient Hop
             // Can be a Truck or Transferwarehouse
             DalHop? currentRecipientHop = warehouseRepository.GetTruckByPoint(recipientGeoLocation);
@@ -102,17 +100,6 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                     throw e;
                 }
             }
-            // If recipient is a Truck add one previous Hop to the current sender Hop
-            // Why? Hop hierarchy is a balanced tree and trucks are one hierarchy level lower than
-            // Transferwarehouses (which belong to the same level as normal Warehouses which have trucks)
-            if (currentRecipientHop is DalTruck)
-            {
-                recipientFutureHops.Add(new DalHopArrival
-                {
-                    Hop = currentRecipientHop
-                });
-                currentRecipientHop = currentRecipientHop.PreviousHop;
-            }
             // Get sender Hop
             // Can only be a Truck
             DalHop? currentSenderHop = warehouseRepository.GetTruckByPoint(senderGeoLocation);
@@ -123,51 +110,22 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 logger.LogWarning(e, "Cannot find GeoLocation");
                 throw e;
             }
-            senderFutureHops.Add(new DalHopArrival
-            {
-                Hop = currentSenderHop
-            });
-            currentSenderHop = currentSenderHop.PreviousHop;
-            
-            
-            // Build Future Hops hierarchy
-            while (currentRecipientHop != currentSenderHop &&
-                   currentSenderHop != null && currentRecipientHop != null)
-            {
-                recipientFutureHops.Add(new DalHopArrival
-                {
-                    Hop = currentRecipientHop
-                });
-                currentRecipientHop = currentRecipientHop.PreviousHop;
-                senderFutureHops.Add(new DalHopArrival
-                {
-                    Hop = currentSenderHop
-                });
-                currentSenderHop = currentSenderHop.PreviousHop;
-            }
+            var futureHops = SharedLogic.PredictFutureHops(currentRecipientHop, currentSenderHop);
             // Check if Route was found
-            if (currentSenderHop == null || currentRecipientHop == null)
+            if (futureHops == null)
             {
                 BlDataNotFoundException e = new(
                     $"Could not find future Hops Route with Sender {senderGeoLocation} and Recipient {recipientGeoLocation}");
                 logger.LogWarning(e, "Cannot find future Hops");
                 throw e;
             }
-            // Build one List
-            // Note: senderFutureHops will contain afterwards the full Future Hops List
-            senderFutureHops.Add(new DalHopArrival
-            {
-                Hop = currentSenderHop
-            });
-            recipientFutureHops.Reverse();
-            senderFutureHops.AddRange(recipientFutureHops);
-            
+
             // Set parcel state to "Pickup"
             body.State = Parcel.StateEnum.PickupEnum;
-            
+
             // Convert to DAL DAO and add future Hops
             var dalParcel = mapper.Map<DalParcel>(body);
-            dalParcel.FutureHops = senderFutureHops;
+            dalParcel.FutureHops = futureHops;
 
             logger.LogDebug($"Mapping Bl/Dal {body} => {dalParcel}");
             try
@@ -179,7 +137,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 logger.LogError(e, $"Error creating parcel ({dalParcel}).");
                 throw new BlRepositoryException($"Error creating parcel ({dalParcel}).", e);
             }
-            
+
             var blResult = mapper.Map<Parcel>(dalParcel);
             logger.LogDebug($"Mapping Dal/Bl {dalParcel} => {blResult}");
             return blResult;
