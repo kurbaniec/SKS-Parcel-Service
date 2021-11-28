@@ -35,7 +35,8 @@ steps:
   inputs:
     SourceFolder: '$(Agent.TempDirectory)'
     #Contents: '**/coverage.cobertura.xml'
-    Contents: '**/*'
+    Contents: '*'
+    RemoveSourceFolder: true
 
 - task: DotNetCoreCLI@2
   displayName: 'test'
