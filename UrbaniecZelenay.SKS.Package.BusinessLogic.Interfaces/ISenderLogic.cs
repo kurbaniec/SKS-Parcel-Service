@@ -7,8 +7,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces
         /// <summary>
         /// Submit a new parcel to the logistics service. 
         /// </summary>
-        /// <param name="body"></param>
+        /// <param name="parcel"></param>
         /// <returns></returns>
-        public Parcel SubmitParcel(Parcel? body);
+        public Parcel SubmitParcel(Parcel? parcel);
     }
 }

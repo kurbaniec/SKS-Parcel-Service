@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -127,13 +128,142 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             var mockLogger = new Mock<ILogger<LogisticsPartnerApiController>>();
             Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
             mockLogisticsPartnerLogic.Setup(m => m.TransitionParcel(It.Is<BlParcel>(p => p.Weight < 0)))
-                .Throws(new BlArgumentException("Weight must be >= 0"));
+                .Throws(new BlValidationException("Weight must be >= 0"));
 
             var controller = new LogisticsPartnerApiController(mockLogger.Object, mapperConfig.CreateMapper(),
                 mockLogisticsPartnerLogic.Object);
             // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
 
             var result = controller.TransitionParcel(validParcel, trackingId);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+        
+        [Test]
+        public void TransitionParcel_BlArgumentExceptionThrown_ErrorReturned()
+        {
+            var invalidParcel = new Parcel
+            {
+                Weight = -1,
+                Sender = new Recipient
+                {
+                    City = "Wien",
+                    Country = "Austria",
+                    Name = "Max Mustermann",
+                    PostalCode = "1200",
+                    Street = "Teststrasse"
+                },
+                Recipient = new Recipient
+                {
+                    City = "Wien",
+                    Country = "Austria",
+                    Name = "Maxine Mustermann",
+                    PostalCode = "1210",
+                    Street = "Teststrasse 2"
+                },
+            };
+            var trackingId = "PYJRB4HZ6";
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<LogisticsPartnerApiController>>();
+            Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
+            mockLogisticsPartnerLogic.Setup(m => m.TransitionParcel(It.Is<BlParcel>(p => p.Weight < 0)))
+                .Throws(new BlArgumentException("Error"));
+
+            var controller = new LogisticsPartnerApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockLogisticsPartnerLogic.Object);
+            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
+
+            var result = controller.TransitionParcel(invalidParcel, trackingId);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+        
+        [Test]
+        public void TransitionParcel_BlDataNotFoundExceptionThrown_ErrorReturned()
+        {
+            var invalidParcel = new Parcel
+            {
+                Weight = -1,
+                Sender = new Recipient
+                {
+                    City = "Wien",
+                    Country = "Austria",
+                    Name = "Max Mustermann",
+                    PostalCode = "1200",
+                    Street = "Teststrasse"
+                },
+                Recipient = new Recipient
+                {
+                    City = "Wien",
+                    Country = "Austria",
+                    Name = "Maxine Mustermann",
+                    PostalCode = "1210",
+                    Street = "Teststrasse 2"
+                },
+            };
+            var trackingId = "PYJRB4HZ6";
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<LogisticsPartnerApiController>>();
+            Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
+            mockLogisticsPartnerLogic.Setup(m => m.TransitionParcel(It.Is<BlParcel>(p => p.Weight < 0)))
+                .Throws(new BlDataNotFoundException("Error"));
+
+            var controller = new LogisticsPartnerApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockLogisticsPartnerLogic.Object);
+            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
+
+            var result = controller.TransitionParcel(invalidParcel, trackingId);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+        
+        [Test]
+        public void TransitionParcel_BlRepositoryExceptionThrown_ErrorReturned()
+        {
+            var invalidParcel = new Parcel
+            {
+                Weight = -1,
+                Sender = new Recipient
+                {
+                    City = "Wien",
+                    Country = "Austria",
+                    Name = "Max Mustermann",
+                    PostalCode = "1200",
+                    Street = "Teststrasse"
+                },
+                Recipient = new Recipient
+                {
+                    City = "Wien",
+                    Country = "Austria",
+                    Name = "Maxine Mustermann",
+                    PostalCode = "1210",
+                    Street = "Teststrasse 2"
+                },
+            };
+            var trackingId = "PYJRB4HZ6";
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<LogisticsPartnerApiController>>();
+            Mock<ILogisticsPartnerLogic> mockLogisticsPartnerLogic = new Mock<ILogisticsPartnerLogic>();
+            mockLogisticsPartnerLogic.Setup(m => m.TransitionParcel(It.Is<BlParcel>(p => p.Weight < 0)))
+                .Throws(new BlRepositoryException("Error"));
+
+            var controller = new LogisticsPartnerApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockLogisticsPartnerLogic.Object);
+            // var controller = new LogisticsPartnerApiController(mapperConfig.CreateMapper()); 
+
+            var result = controller.TransitionParcel(invalidParcel, trackingId);
 
             var objectResult = result as ObjectResult;
             Assert.NotNull(objectResult);

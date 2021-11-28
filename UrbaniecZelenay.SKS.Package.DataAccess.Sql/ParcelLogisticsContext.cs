@@ -19,11 +19,16 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // modelBuilder.Entity<Hop>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
+            // modelBuilder.Entity<Warehouse>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
+            // modelBuilder.Entity<Truck>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
+            // modelBuilder.Entity<Transferwarehouse>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
+            // modelBuilder.Entity<Recipient>().Property(r => r.GeoLocation).HasColumnType("geometry (point)");
         }
 
         // Create properties
         // See: https://docs.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli#create-the-model
-        public DbSet<GeoCoordinate> GeoCoordinates { get; set; }
+        //public DbSet<GeoCoordinate> GeoCoordinates { get; set; }
         public DbSet<Hop> Hops { get; set; }
         public DbSet<HopArrival> HopArrivals { get; set; }
         public DbSet<Parcel> Parcels { get; set; }

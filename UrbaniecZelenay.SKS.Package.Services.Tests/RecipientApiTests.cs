@@ -94,5 +94,71 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             Assert.NotNull(error);
             Assert.NotNull(error.ErrorMessage);
         }
+        
+        [Test]
+        public void TrackParcel_BlValidationExceptionThrown_ErrorReturned()
+        {
+            string trackingId = null;
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<RecipientApiController>>();
+            Mock<IRecipientLogic> mockRecipientLogic = new Mock<IRecipientLogic>();
+            mockRecipientLogic.Setup(m => m.TrackParcel(It.Is<string>(s => s == null)))
+                .Throws(new BlValidationException("Error!"));
+            var controller = new RecipientApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockRecipientLogic.Object);
+            // var controller = new RecipientApiController(mapperConfig.CreateMapper());
+
+            var result = controller.TrackParcel(trackingId);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+                
+        [Test]
+        public void TrackParcel_BlDataNotFoundExceptionThrown_ErrorReturned()
+        {
+            string trackingId = null;
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<RecipientApiController>>();
+            Mock<IRecipientLogic> mockRecipientLogic = new Mock<IRecipientLogic>();
+            mockRecipientLogic.Setup(m => m.TrackParcel(It.Is<string>(s => s == null)))
+                .Throws(new BlDataNotFoundException("Error!"));
+            var controller = new RecipientApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockRecipientLogic.Object);
+            // var controller = new RecipientApiController(mapperConfig.CreateMapper());
+
+            var result = controller.TrackParcel(trackingId);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+                        
+        [Test]
+        public void TrackParcel_BlRepositoryExceptionThrown_ErrorReturned()
+        {
+            string trackingId = null;
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<RecipientApiController>>();
+            Mock<IRecipientLogic> mockRecipientLogic = new Mock<IRecipientLogic>();
+            mockRecipientLogic.Setup(m => m.TrackParcel(It.Is<string>(s => s == null)))
+                .Throws(new BlRepositoryException("Error!"));
+            var controller = new RecipientApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockRecipientLogic.Object);
+            // var controller = new RecipientApiController(mapperConfig.CreateMapper());
+
+            var result = controller.TrackParcel(trackingId);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
     }
 }

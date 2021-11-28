@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
@@ -40,7 +41,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new BlGeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<BlWarehouseNextHops>()
             });
@@ -64,7 +65,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         public void ExportWarehouse_InternalError_ErrorReturned()
         {
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
-            mockWarehouseManagementLogic.Setup(m => m.ExportWarehouses()).Throws(new BlArgumentException("unit test error"));
+            mockWarehouseManagementLogic.Setup(m => m.ExportWarehouses())
+                .Throws(new BlArgumentException("unit test error"));
             var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             var controller =
@@ -82,6 +84,74 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
         }
 
         [Test]
+        public void ExportWarehouse_BlValidationExceptionThrown_ErrorReturned()
+        {
+            Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
+            mockWarehouseManagementLogic.Setup(m => m.ExportWarehouses())
+                .Throws(new BlValidationException("unit test error"));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var controller =
+                new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                    mockWarehouseManagementLogic.Object);
+            // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
+
+            var result = controller.ExportWarehouses();
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+
+        [Test]
+        public void ExportWarehouse_BlDataNotFoundExceptionThrown_ErrorReturned()
+        {
+            Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
+            mockWarehouseManagementLogic.Setup(m => m.ExportWarehouses())
+                .Throws(new BlDataNotFoundException("unit test error"));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var controller =
+                new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                    mockWarehouseManagementLogic.Object);
+            // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
+
+            var result = controller.ExportWarehouses();
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+
+
+        [Test]
+        public void ExportWarehouse_BlRepositoryExceptionThrown_ErrorReturned()
+        {
+            Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
+            mockWarehouseManagementLogic.Setup(m => m.ExportWarehouses())
+                .Throws(new BlRepositoryException("unit test error"));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var controller =
+                new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                    mockWarehouseManagementLogic.Object);
+            // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
+
+            var result = controller.ExportWarehouses();
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+
+
+        [Test]
         public void GetWarehouse_ValidCode_WarehouseReturned()
         {
             var code = "AUTA05";
@@ -93,7 +163,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                 Description = "Root Warehouse - Österreich",
                 ProcessingDelayMins = 186,
                 LocationName = "Root",
-                LocationCoordinates = new BlGeoCoordinate { Lat = 47.247829, Lon = 13.884382 },
+                LocationCoordinates = new Point(13.884382, 47.247829),
                 Level = 0,
                 NextHops = new List<BlWarehouseNextHops>()
             });
@@ -118,6 +188,69 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
             mockWarehouseManagementLogic.Setup(m => m.GetWarehouse(It.Is<string>(s => s == null)))
                 .Throws(new BlArgumentException("value must not be null"));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
+            var controller = new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockWarehouseManagementLogic.Object);
+            var result = controller.GetWarehouse(code);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+
+        [Test]
+        public void GetWarehouse_BlValidationExceptionThrown_ErrorReturned()
+        {
+            string code = null;
+            Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
+            mockWarehouseManagementLogic.Setup(m => m.GetWarehouse(It.Is<string>(s => s == null)))
+                .Throws(new BlValidationException("Error"));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
+            var controller = new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockWarehouseManagementLogic.Object);
+            var result = controller.GetWarehouse(code);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+
+        [Test]
+        public void GetWarehouse_BlDataNotFoundExceptionThrown_ErrorReturned()
+        {
+            string code = null;
+            Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
+            mockWarehouseManagementLogic.Setup(m => m.GetWarehouse(It.Is<string>(s => s == null)))
+                .Throws(new BlDataNotFoundException("Error"));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
+            var controller = new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockWarehouseManagementLogic.Object);
+            var result = controller.GetWarehouse(code);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+
+        [Test]
+        public void GetWarehouse_BlRepositoryExceptionThrown_ErrorReturned()
+        {
+            string code = null;
+            Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
+            mockWarehouseManagementLogic.Setup(m => m.GetWarehouse(It.Is<string>(s => s == null)))
+                .Throws(new BlRepositoryException("Error"));
             var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
@@ -168,6 +301,77 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
             mockWarehouseManagementLogic.Setup(m => m.ImportWarehouses(It.Is<BlWarehouse>(w => w == null)))
                 .Throws(new BlArgumentException("Warehouse must not be null."));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
+            var controller = new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockWarehouseManagementLogic.Object);
+
+            var result = controller.ImportWarehouses(validWarehouse);
+
+            var statusCode = result as StatusCodeResult;
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+        
+        [Test]
+        public void ImportWarehouses_BlValidationExceptionThrown_ErrorReturned()
+        {
+            Warehouse validWarehouse = null;
+            Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
+            mockWarehouseManagementLogic.Setup(m => m.ImportWarehouses(It.Is<BlWarehouse>(w => w == null)))
+                .Throws(new BlValidationException("Error"));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
+            var controller = new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockWarehouseManagementLogic.Object);
+
+            var result = controller.ImportWarehouses(validWarehouse);
+
+            var statusCode = result as StatusCodeResult;
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+        
+        [Test]
+        public void ImportWarehouses_BlDataNotFoundExceptionThrown_ErrorReturned()
+        {
+            Warehouse validWarehouse = null;
+            Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
+            mockWarehouseManagementLogic.Setup(m => m.ImportWarehouses(It.Is<BlWarehouse>(w => w == null)))
+                .Throws(new BlDataNotFoundException("Error"));
+            var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());
+            var controller = new WarehouseManagementApiController(mockLogger.Object, mapperConfig.CreateMapper(),
+                mockWarehouseManagementLogic.Object);
+
+            var result = controller.ImportWarehouses(validWarehouse);
+
+            var statusCode = result as StatusCodeResult;
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+        [Test]
+        public void ImportWarehouses_BlRepositoryExceptionThrown_ErrorReturned()
+        {
+            Warehouse validWarehouse = null;
+            Mock<IWarehouseManagementLogic> mockWarehouseManagementLogic = new Mock<IWarehouseManagementLogic>();
+            mockWarehouseManagementLogic.Setup(m => m.ImportWarehouses(It.Is<BlWarehouse>(w => w == null)))
+                .Throws(new BlRepositoryException("Error"));
             var mockLogger = new Mock<ILogger<WarehouseManagementApiController>>();
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
             // var controller = new WarehouseManagementApiController(mapperConfig.CreateMapper());

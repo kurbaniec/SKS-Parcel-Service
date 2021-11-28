@@ -30,7 +30,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         [Required]
 
         [DataMember(Name="lat")]
-        public double? Lat { get; set; }
+        public double Lat { get; set; }
 
         /// <summary>
         /// Longitude of the coordinate.
@@ -39,7 +39,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.DTOs
         [Required]
 
         [DataMember(Name="lon")]
-        public double? Lon { get; set; }
+        public double Lon { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

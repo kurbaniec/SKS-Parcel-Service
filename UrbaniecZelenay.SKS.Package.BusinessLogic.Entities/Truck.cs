@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using NetTopologySuite.Geometries;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
 {
@@ -11,7 +12,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         /// </summary>
         /// <value>GeoJSON of the are covered by the truck.</value>
         [Required]
-        public string RegionGeoJson { get; set; }
+        public Geometry Region { get; set; }
 
         /// <summary>
         /// The truck&#x27;s number plate.

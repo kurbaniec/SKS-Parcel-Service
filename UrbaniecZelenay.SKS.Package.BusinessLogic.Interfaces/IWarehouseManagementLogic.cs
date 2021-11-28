@@ -18,7 +18,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        public Warehouse? GetWarehouse(string code);
+        public Hop? GetWarehouse(string code);
 
         /// <summary>
         /// Imports a hierarchy of Warehouse and Truck objects. 

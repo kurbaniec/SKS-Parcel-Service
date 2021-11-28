@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using NetTopologySuite.Geometries;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
 {
@@ -42,7 +43,13 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// <summary>
         /// Gets or Sets LocationCoordinates
         /// </summary>
-        public GeoCoordinate LocationCoordinates { get; set; }
+        
+        //public GeoCoordinate LocationCoordinates { get; set; }
+        [Column(TypeName = "geometry")]
+        public Point LocationCoordinates { get; set; }
 
+                
+        [Required]
+        public Hop? PreviousHop { get; set; }
     }
 }

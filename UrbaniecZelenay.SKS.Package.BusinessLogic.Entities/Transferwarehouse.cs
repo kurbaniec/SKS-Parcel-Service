@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using NetTopologySuite.Geometries;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
 {
@@ -11,7 +13,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         /// </summary>
         /// <value>GeoJSON of the are covered by the logistics partner.</value>
         [Required]
-        public string RegionGeoJson { get; set; }
+        [Column(TypeName = "geometry")]
+        public Geometry Region { get; set; }
 
         /// <summary>
         /// Name of the logistics partner.

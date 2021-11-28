@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NetTopologySuite.IO.Converters;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using UrbaniecZelenay.SKS.Package.BusinessLogic;
@@ -29,6 +30,8 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Filters;
+using UrbaniecZelenay.SKS.ServiceAgents;
+using UrbaniecZelenay.SKS.ServiceAgents.Interfaces;
 
 
 namespace UrbaniecZelenay.SKS.Package.Services
@@ -77,6 +80,7 @@ namespace UrbaniecZelenay.SKS.Package.Services
                 {
                     opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     opts.SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
+                    opts.SerializerSettings.Converters.Add(new GeometryConverter());
                 })
                 .AddXmlSerializerFormatters();
 
@@ -112,12 +116,17 @@ namespace UrbaniecZelenay.SKS.Package.Services
             // See: https://codewithmukesh.com/blog/repository-pattern-in-aspnet-core/
             // And: https://stackoverflow.com/a/60399887/12347616
             services.AddDbContext<ParcelLogisticsContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ParcelLogisticsContext")));
+                // Add Spatial Data support
+                // See: https://docs.microsoft.com/en-us/ef/core/modeling/spatial
+                options.UseSqlServer(Configuration.GetConnectionString("ParcelLogisticsContext"), dbOpt => 
+                    dbOpt.UseNetTopologySuite()));
             // Register the service and implementation for the database context
             // See: https://www.jerriepelser.com/blog/resolve-dbcontext-as-interface-in-aspnet5-ioc-container/
             services.AddScoped<IParcelLogisticsContext>(provider => provider.GetService<ParcelLogisticsContext>()!);
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
             services.AddScoped<IParcelRepository, ParcelRepository>();
+            services.AddScoped<IGeoEncodingAgent, OpenStreetMapEncodingAgent>();
+            services.AddScoped<ITransferWarehouseAgent, RestTransferWarehouseAgent>();
             services.AddTransient<IWarehouseManagementLogic, WarehouseManagementLogic>();
             services.AddTransient<IStaffLogic, StaffLogic>();
             services.AddTransient<ISenderLogic, SenderLogic>();

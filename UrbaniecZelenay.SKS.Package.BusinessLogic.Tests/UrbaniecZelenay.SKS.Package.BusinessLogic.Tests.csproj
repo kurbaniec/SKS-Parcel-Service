@@ -20,6 +20,7 @@
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Entities\UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic\UrbaniecZelenay.SKS.Package.BusinessLogic.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.ServiceAgents\UrbaniecZelenay.SKS.ServiceAgents.csproj" />
     </ItemGroup>
 
 </Project>

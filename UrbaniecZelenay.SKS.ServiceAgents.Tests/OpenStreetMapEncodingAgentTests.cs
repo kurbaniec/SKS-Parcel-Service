@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using UrbaniecZelenay.SKS.ServiceAgents.Interfaces;
 using BlGeoCoordinate = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.GeoCoordinate;
@@ -51,10 +52,10 @@ namespace UrbaniecZelenay.SKS.ServiceAgents.Tests
             var httpClient = new HttpClient(handlerMock.Object);
             var geoEncodingAgent = new OpenStreetMapEncodingAgent(httpClient, mockLogger.Object);
 
-            BlGeoCoordinate geoCoordinate =
+            var geoCoordinate =
                 geoEncodingAgent.EncodeAddress("Brückenstraße 6", "2100", "Korneuburg", "Austria");
-            Assert.AreEqual(lon, geoCoordinate.Lon);
-            Assert.AreEqual(lat, geoCoordinate.Lat);
+            Assert.AreEqual(lon, geoCoordinate.X);
+            Assert.AreEqual(lat, geoCoordinate.Y);
             handlerMock.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
@@ -92,7 +93,7 @@ namespace UrbaniecZelenay.SKS.ServiceAgents.Tests
             var httpClient = new HttpClient(handlerMock.Object);
             var geoEncodingAgent = new OpenStreetMapEncodingAgent(httpClient, mockLogger.Object);
 
-            BlGeoCoordinate geoCoordinate =
+            var geoCoordinate =
                 geoEncodingAgent.EncodeAddress("Brückenstraße 6", "2100", "Korneuburg", "Austria");
             Assert.IsNull(geoCoordinate);
             handlerMock.Protected().Verify(
@@ -117,7 +118,7 @@ namespace UrbaniecZelenay.SKS.ServiceAgents.Tests
             var httpClient = new HttpClient(handlerMock.Object);
             var geoEncodingAgent = new OpenStreetMapEncodingAgent(httpClient, mockLogger.Object);
 
-            BlGeoCoordinate geoCoordinate =
+            var geoCoordinate =
                 geoEncodingAgent.EncodeAddress("Brückenstraße 6", "2100", "Korneuburg", "Austria");
             Assert.IsNull(geoCoordinate);
             handlerMock.Protected().Verify(

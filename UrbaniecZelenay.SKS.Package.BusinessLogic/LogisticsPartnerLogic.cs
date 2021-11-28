@@ -10,23 +10,34 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
+using UrbaniecZelenay.SKS.ServiceAgents.Interfaces;
 using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
+using DalHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Hop;
+using DalTruck = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Truck;
+using DalTransferwarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Transferwarehouse;
+using DalHopArrival = UrbaniecZelenay.SKS.Package.DataAccess.Entities.HopArrival;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
     public class LogisticsPartnerLogic : ILogisticsPartnerLogic
     {
         private readonly IParcelRepository parcelRepository;
+        private readonly IWarehouseRepository warehouseRepository;
+        private readonly IGeoEncodingAgent geoEncodingAgent;
         private readonly IMapper mapper;
         private readonly ILogger<LogisticsPartnerLogic> logger;
 
-        public LogisticsPartnerLogic(ILogger<LogisticsPartnerLogic> logger, IParcelRepository parcelRepository, IMapper mapper)
+        public LogisticsPartnerLogic(ILogger<LogisticsPartnerLogic> logger, IParcelRepository parcelRepository,
+            IWarehouseRepository warehouseRepository,
+            IGeoEncodingAgent geoEncodingAgent, IMapper mapper)
         {
             this.logger = logger;
             this.parcelRepository = parcelRepository;
+            this.warehouseRepository = warehouseRepository;
+            this.geoEncodingAgent = geoEncodingAgent;
             this.mapper = mapper;
         }
-        
+
         public Parcel TransitionParcel(Parcel? parcel)
         {
             logger.LogInformation($"Transition Parcel with ID {parcel?.TrackingId}");
@@ -34,6 +45,13 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             {
                 BlException e = new BlArgumentException("Parcel must not be null.");
                 logger.LogError(e, "Error Parcel is null");
+                throw e;
+            }
+
+            if (parcel.TrackingId == null)
+            {
+                BlException e = new BlArgumentException("Parcel TrackingId must not be null.");
+                logger.LogError(e, "Error Parcel TrackingId is null");
                 throw e;
             }
 
@@ -47,11 +65,80 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw e;
             }
 
+            // Get GeoSpatial Data for Recipients
+            var recipient = parcel.Recipient;
+            var recipientGeoLocation = geoEncodingAgent.EncodeAddress(recipient.Street, recipient.PostalCode,
+                recipient.City, recipient.Country);
+            if (recipientGeoLocation == null)
+            {
+                BlDataNotFoundException e =
+                    new BlDataNotFoundException($"Cannot find GeoLocation for Recipient with Address {recipient}");
+                logger.LogWarning(e, "Cannot find GeoLocation");
+                throw e;
+            }
+
+            var sender = parcel.Sender;
+            var senderGeoLocation = geoEncodingAgent.EncodeAddress(sender.Street, sender.PostalCode,
+                sender.City, sender.Country);
+            if (senderGeoLocation == null)
+            {
+                BlDataNotFoundException e =
+                    new BlDataNotFoundException($"Cannot find GeoLocation for Sender with Address {recipient}");
+                logger.LogWarning(e, "Cannot find GeoLocation");
+                throw e;
+            }
+
+            parcel.Recipient.GeoLocation = recipientGeoLocation;
+            parcel.Sender.GeoLocation = senderGeoLocation;
+
+            // Predict future Hops
+            // Get recipient Hop
+            // Can be a Truck or Transferwarehouse
+            DalHop? currentRecipientHop = warehouseRepository.GetTruckByPoint(recipientGeoLocation);
+            if (currentRecipientHop == null)
+            {
+                currentRecipientHop = warehouseRepository.GetTransferwarehouseByPoint(recipientGeoLocation);
+                if (currentRecipientHop == null)
+                {
+                    BlDataNotFoundException e = new(
+                        $"Cannot find Truck or Transferwarehouse for Recipient with GeoLocation {recipientGeoLocation}");
+                    logger.LogWarning(e, "Cannot find GeoLocation");
+                    throw e;
+                }
+            }
+
+            // Get sender Hop
+            // Can only be a Truck
+            DalHop? currentSenderHop = warehouseRepository.GetTruckByPoint(senderGeoLocation);
+            if (currentSenderHop == null)
+            {
+                BlDataNotFoundException e = new(
+                    $"Cannot find Truck or Transferwarehouse for Sender with GeoLocation {senderGeoLocation}");
+                logger.LogWarning(e, "Cannot find GeoLocation");
+                throw e;
+            }
+
+            var futureHops = SharedLogic.PredictFutureHops(currentRecipientHop, currentSenderHop);
+            // Check if Route was found
+            if (futureHops == null)
+            {
+                BlDataNotFoundException e = new(
+                    $"Could not find future Hops Route with Sender {senderGeoLocation} and Recipient {recipientGeoLocation}");
+                logger.LogWarning(e, "Cannot find future Hops");
+                throw e;
+            }
+
+            // Set parcel state to "Pickup"
+            parcel.State = Parcel.StateEnum.PickupEnum;
+
+            // Convert to DAL DAO and add future Hops
             var dalParcel = mapper.Map<DalParcel>(parcel);
+            dalParcel.FutureHops = futureHops;
+
             logger.LogDebug($"Mapping Bl/Dal {parcel} => {dalParcel}");
             try
             {
-                dalParcel = parcelRepository.Create(dalParcel);
+                dalParcel = parcelRepository.Create(dalParcel, true);
             }
             catch (DalException e)
             {
@@ -59,31 +146,6 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw new BlRepositoryException("Error creating parcel.", e);
             }
 
-            // return new Parcel
-            // {
-            //     TrackingId = parcel.TrackingId,
-            //     Weight = 1,
-            //     Recipient = new Recipient
-            //     {
-            //         Name = "Max Mustermann",
-            //         Street = "A Street",
-            //         PostalCode = "1200",
-            //         City = "Vienna",
-            //         Country = "Austria"
-            //     },
-            //     Sender = new Recipient
-            //     {
-            //         Name = "Max Mustermann",
-            //         Street = "A Street",
-            //         PostalCode = "1200",
-            //         City = "Vienna",
-            //         Country = "Austria"
-            //     },
-            //     State = Parcel.StateEnum.TransferredEnum,
-            //     VisitedHops = new List<HopArrival>(),
-            //     FutureHops = new List<HopArrival>()
-            // };
-            
             var blResult = mapper.Map<Parcel>(dalParcel);
             logger.LogDebug($"Mapping Dal/Bl {dalParcel} => {blResult}");
             return blResult;

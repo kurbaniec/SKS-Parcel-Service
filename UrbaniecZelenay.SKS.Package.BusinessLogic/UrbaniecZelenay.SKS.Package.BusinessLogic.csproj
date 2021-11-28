@@ -9,11 +9,13 @@
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces\UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Entities\UrbaniecZelenay.SKS.Package.DataAccess.Entities.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.ServiceAgents.Interfaces\UrbaniecZelenay.SKS.ServiceAgents.Interfaces.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
+      <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="2.0.4" />
     </ItemGroup>
 
 </Project>

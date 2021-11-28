@@ -27,6 +27,10 @@ using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 using BlWarehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Warehouse;
+using BlTransferWarehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Transferwarehouse;
+using BlTruck = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Truck;
+using BlHop = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Hop;
+
 
 namespace UrbaniecZelenay.SKS.Package.Services.Controllers
 {
@@ -118,12 +122,12 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [Route("/warehouse/{code}")]
         [ValidateModelState]
         [SwaggerOperation("GetWarehouse")]
-        [SwaggerResponse(statusCode: 200, type: typeof(Warehouse), description: "Successful response")]
+        [SwaggerResponse(statusCode: 200, type: typeof(Hop), description: "Successful response")]
         [SwaggerResponse(statusCode: 400, type: typeof(Error), description: "An error occurred loading.")]
         public virtual IActionResult GetWarehouse([FromRoute] [Required] string code)
         {
             logger.LogInformation($"Get Warehouse with Code {code}");
-            BlWarehouse? blResult;
+            BlHop? blResult;
             try
             {
                 blResult = warehouseManagementLogic.GetWarehouse(code);
@@ -162,9 +166,30 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
                 });
             }
 
-            var svcResult = mapper.Map<Warehouse>(blResult);
-            logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
-            return new ObjectResult(svcResult);
+            if (blResult is BlWarehouse)
+            {
+                var svcResult = mapper.Map<Warehouse>(blResult);
+                logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
+                return new ObjectResult(svcResult);
+            }
+            else if (blResult is BlTransferWarehouse)
+            {
+                var svcResult = mapper.Map<Transferwarehouse>(blResult);
+                logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
+                return new ObjectResult(svcResult); 
+            }
+            else if (blResult is BlTruck)
+            {
+                var svcResult = mapper.Map<Truck>(blResult);
+                logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
+                return new ObjectResult(svcResult); 
+            }
+            else
+            {
+                var svcResult = mapper.Map<Truck>(blResult);
+                logger.LogDebug($"Mapping Bl/Svc {blResult} => {svcResult}");
+                return new ObjectResult(svcResult); 
+            }
         }
 
         /// <summary>
@@ -181,7 +206,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         public virtual IActionResult ImportWarehouses([FromBody] Warehouse body)
         {
             logger.LogInformation($"Import warehouses with hierarchy {body?.ToJson()}");
-            var blWarehouse = mapper.Map<BlWarehouse>(body);
+            BlWarehouse blWarehouse = mapper.Map<BlWarehouse>(body);
+
             logger.LogDebug($"Mapping Svc/Bl {body} => {blWarehouse}");
             try
             {
@@ -220,6 +246,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
                     ErrorMessage = ex.Message
                 });
             }
+
             return StatusCode(200);
         }
     }

@@ -10,6 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="5.0.12" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="2.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.2.1" />
@@ -26,5 +28,7 @@
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Sql\UrbaniecZelenay.SKS.Package.DataAccess.Sql.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.DTOs\UrbaniecZelenay.SKS.Package.Services.DTOs.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.Interfaces\UrbaniecZelenay.SKS.Package.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.ServiceAgents.Interfaces\UrbaniecZelenay.SKS.ServiceAgents.Interfaces.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.ServiceAgents\UrbaniecZelenay.SKS.ServiceAgents.csproj" />
   </ItemGroup>
 </Project>

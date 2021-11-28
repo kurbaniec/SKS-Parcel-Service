@@ -13,7 +13,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         /// </summary>
         /// <value>The tracking ID of the parcel. </value>
         [RegularExpression(@"^[A-Z0-9]{9}$")]
-        public string TrackingId { get; set; }
+        public string? TrackingId { get; set; }
 
         /// <summary>
         /// Gets or Sets Weight

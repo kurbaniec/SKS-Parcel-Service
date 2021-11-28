@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using System.Linq;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
@@ -7,6 +8,7 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
+using UrbaniecZelenay.SKS.ServiceAgents.Interfaces;
 using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
 using DalHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Hop;
 
@@ -16,16 +18,18 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
     {
         private readonly IParcelRepository parcelRepository;
         private readonly IWarehouseRepository warehouseRepository;
+        private readonly ITransferWarehouseAgent transferWarehouseAgent;
         private readonly IMapper mapper;
         private readonly ILogger<StaffLogic> logger;
 
         public StaffLogic(ILogger<StaffLogic> logger, IParcelRepository parcelRepository,
-            IWarehouseRepository warehouseRepository, IMapper mapper)
+            IWarehouseRepository warehouseRepository, IMapper mapper, ITransferWarehouseAgent transferWarehouseAgent)
         {
             this.logger = logger;
             this.parcelRepository = parcelRepository;
             this.warehouseRepository = warehouseRepository;
             this.mapper = mapper;
+            this.transferWarehouseAgent = transferWarehouseAgent;
         }
 
         // TODO create NotFoundException
@@ -59,12 +63,23 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             }
 
             var blParcel = mapper.Map<Parcel>(dalParcel);
-            blParcel.State = Parcel.StateEnum.DeliveredEnum;
+            if (blParcel.FutureHops.Count != 0)
+            {
+                BlDataNotFoundException e =
+                    new BlDataNotFoundException($"Error cannot deliver Parcel ({blParcel}) with future hops.");
+                logger.LogError(e, "Cannot deliver parcel which has future hops");
+                throw e;
+            }
+
+            // blParcel.State = Parcel.StateEnum.DeliveredEnum;
+
             dalParcel = mapper.Map<DalParcel>(blParcel);
             logger.LogDebug($"Mapping Bl/Dal {blParcel} => {dalParcel}");
             try
             {
-                parcelRepository.Update(dalParcel);
+                // parcelRepository.Update(dalParcel);
+                parcelRepository.ChangeParcelState(dalParcel.TrackingId, DalParcel.StateEnum.DeliveredEnum);
+                
             }
             catch (DalException e)
             {
@@ -139,6 +154,14 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 
             var blParcel = mapper.Map<Parcel>(dalParcel);
             var blHop = mapper.Map<Hop>(dalHop);
+            if (blParcel.FutureHops.Count > 0 && blHop.Code != blParcel.FutureHops[0].Code)
+            {
+                BlDataNotFoundException e =
+                    new BlDataNotFoundException(
+                        $"Error hop with code ({code}) is not the next Hop of Parcel ({blParcel})");
+                logger.LogError(e, "Hop is not future Hop.");
+                throw e;
+            }
 
             var hopArrival = new HopArrival()
             {
@@ -146,18 +169,68 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 DateTime = DateTime.Now,
                 Description = blHop.Description
             };
-            blParcel.VisitedHops.Add(hopArrival);
+
+            // var visitedHop = blParcel.FutureHops[0];
+            // visitedHop.DateTime = DateTime.UtcNow;
+            // logger.LogDebug($"Adding Current Hop to future hops.");
+            // blParcel.FutureHops.RemoveAt(0);
+            // blParcel.VisitedHops.Add(visitedHop);
+
+            try
+            {
+                if (blHop is Warehouse)
+                {
+                    parcelRepository.ChangeParcelState(blParcel.TrackingId, DalParcel.StateEnum.InTransportEnum);
+                    // blParcel.State = Parcel.StateEnum.InTransportEnum;
+                }
+                else if (blHop is Truck)
+                {
+                    parcelRepository.ChangeParcelState(blParcel.TrackingId, DalParcel.StateEnum.InTruckDeliveryEnum);
+                    // blParcel.State = Parcel.StateEnum.InTruckDeliveryEnum;
+                }
+                else if (blHop is Transferwarehouse blTransferwarhouse)
+                {
+                    // blParcel.State = Parcel.StateEnum.TransferredEnum;
+
+                    bool hasSucceeded = transferWarehouseAgent.TransferParcel(
+                        baseUrl: blTransferwarhouse.LogisticsPartnerUrl, trackingId: trackingId, weight: blParcel.Weight,
+                        recipientName: blParcel.Recipient.Name, recipientStreet: blParcel.Recipient.Street,
+                        recipientPostalCode: blParcel.Recipient.PostalCode, recipientCity: blParcel.Recipient.City,
+                        recipientCountry: blParcel.Recipient.Country,
+                        senderName: blParcel.Sender.Name, senderStreet: blParcel.Sender.Street,
+                        senderPostalCode: blParcel.Sender.PostalCode, senderCity: blParcel.Sender.City,
+                        senderCountry: blParcel.Sender.Country);
+                    if (!hasSucceeded)
+                    {
+                        BlArgumentException e = new BlArgumentException(
+                            $"Error occured while transferring parcel: {blParcel} to transfer warehouse: {blTransferwarhouse}.");
+                        logger.LogError(e, "code is null");
+                        throw e;
+                    }
+
+                    parcelRepository.ChangeParcelState(blParcel.TrackingId, DalParcel.StateEnum.TransferredEnum);
+                }
+            }
+            catch (DalException e)
+            {
+                logger.LogError(e, $"Error updating parcel's state ({dalParcel}).");
+                throw new BlRepositoryException($"Error updating parcel's state ({dalParcel}).", e);
+            }
+
+            logger.LogDebug($"Adding Current Hop to future hops.");
 
             dalParcel = mapper.Map<DalParcel>(blParcel);
             logger.LogDebug($"Mapping Bl/Dal {blParcel} => {dalParcel}");
             try
             {
-                parcelRepository.Update(dalParcel);
+                parcelRepository.AddFutureHopToVisited(blParcel.TrackingId, DateTime.UtcNow);
+
+                // parcelRepository.Update(dalParcel);
             }
             catch (DalException e)
             {
-                logger.LogError(e, $"Error updating parcel ({dalParcel}).");
-                throw new BlRepositoryException($"Error updating parcel ({dalParcel}).", e);
+                logger.LogError(e, $"Error updating parcel's state ({dalParcel}).");
+                throw new BlRepositoryException($"Error updating parcel's state ({dalParcel}).", e); 
             }
         }
     }

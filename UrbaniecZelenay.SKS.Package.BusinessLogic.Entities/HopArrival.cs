@@ -26,7 +26,6 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         /// The date/time the parcel arrived at the hop.
         /// </summary>
         /// <value>The date/time the parcel arrived at the hop.</value>
-        [Required]
-        public DateTime DateTime { get; set; }
+        public DateTime? DateTime { get; set; }
     }
 }

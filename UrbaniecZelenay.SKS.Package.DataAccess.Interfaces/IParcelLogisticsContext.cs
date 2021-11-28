@@ -8,7 +8,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
     {
         int SaveChanges();
         DatabaseFacade Database { get; }
-        DbSet<GeoCoordinate> GeoCoordinates { get; set; }
+        //DbSet<GeoCoordinate> GeoCoordinates { get; set; }
         DbSet<Hop> Hops { get; set; }
         DbSet<HopArrival> HopArrivals { get; set; }
         DbSet<Parcel> Parcels { get; set; }
