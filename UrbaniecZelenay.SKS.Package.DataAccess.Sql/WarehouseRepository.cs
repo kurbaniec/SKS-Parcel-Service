@@ -100,7 +100,13 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             Hop? hop = null;
             try
             {
-                hop = context.Hops.SingleOrDefault(w => w.Code == code);
+                // If code is warehouse return warehouses else return
+                hop = GetWarehouseByCode(code);
+                if (hop == null)
+                {
+                    hop = context.Hops.SingleOrDefault(w => w.Code == code);
+                }
+                // Hop? test = from h in context.Hops select  
             }
             catch (SqlException e)
             {
@@ -115,6 +121,8 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
             return hop;
         }
+        
+        
 
         public Warehouse? GetWarehouseByCode(string code)
         {
@@ -126,7 +134,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                     .OfType<Warehouse>()
                     .Include(hop => hop.NextHops)
                     .ThenInclude(nextHop => nextHop.Hop)
-                    .ThenInclude(nextHop => nextHop.LocationCoordinates)
+                    // .ThenInclude(nextHop => nextHop.LocationCoordinates)
                     .AsEnumerable().SingleOrDefault(w => w.Code == code);
             }
             catch (SqlException e)

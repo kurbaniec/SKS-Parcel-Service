@@ -17,6 +17,7 @@ using BlHop = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Hop;
 using BlGeoCoordinate = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.GeoCoordinate;
 using BlTruck = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Truck;
 using BlTransferwarehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Transferwarehouse;
+using BlHopArrival = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.HopArrival;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Mappings
 {
@@ -46,6 +47,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
                 // Need to check if the if InTransport State is correct!
                 .ForMember(blParcel => blParcel.State, opt => opt.MapFrom(x => BlParcel.StateEnum.InTransportEnum))
                 .ReverseMap();
+            CreateMap<BlHopArrival, HopArrival>();
             CreateMap<BlParcel, TrackingInformation>();
             CreateMap<BlParcel, NewParcelInfo>();
             CreateMap<Recipient, BlRecipient>().ReverseMap();

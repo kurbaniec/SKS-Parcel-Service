@@ -126,6 +126,7 @@ namespace UrbaniecZelenay.SKS.Package.Services
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
             services.AddScoped<IParcelRepository, ParcelRepository>();
             services.AddScoped<IGeoEncodingAgent, OpenStreetMapEncodingAgent>();
+            services.AddScoped<ITransferWarehouseAgent, RestTransferWarehouseAgent>();
             services.AddTransient<IWarehouseManagementLogic, WarehouseManagementLogic>();
             services.AddTransient<IStaffLogic, StaffLogic>();
             services.AddTransient<ISenderLogic, SenderLogic>();

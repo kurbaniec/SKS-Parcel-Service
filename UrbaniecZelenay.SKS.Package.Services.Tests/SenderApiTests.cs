@@ -80,7 +80,8 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
                     VisitedHops = new List<BlHopArrival>(),
                     FutureHops = new List<BlHopArrival>()
                 });
-            var controller = new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
+            var controller =
+                new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
             // var controller = new SenderApiController(mapperConfig.CreateMapper());
 
             var result = controller.SubmitParcel(validParcel);
@@ -100,7 +101,79 @@ namespace UrbaniecZelenay.SKS.Package.Services.Tests
             Mock<ISenderLogic> mockSenderLogic = new Mock<ISenderLogic>();
             mockSenderLogic.Setup(m => m.SubmitParcel(It.Is<BlParcel>(p => p == null)))
                 .Throws(new BlArgumentException("Error Parcel must not be null!"));
-            var controller = new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
+            var controller =
+                new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
+            // var controller = new SenderApiController(mapperConfig.CreateMapper());
+
+            var result = controller.SubmitParcel(nullParcel);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+
+        [Test]
+        public void SubmitParcel_BlValidationExceptionThrown_ErrorReturned()
+        {
+            var validParcel = new Parcel
+            {
+                Weight = -1,
+                Sender = null,
+                Recipient = null
+            };
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<SenderApiController>>();
+            Mock<ISenderLogic> mockSenderLogic = new Mock<ISenderLogic>();
+            mockSenderLogic.Setup(m => m.SubmitParcel(It.IsAny<BlParcel>()))
+                .Throws(new BlValidationException("Error Parcel must not be null!"));
+            var controller =
+                new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
+            // var controller = new SenderApiController(mapperConfig.CreateMapper());
+
+            var result = controller.SubmitParcel(validParcel);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+
+        [Test]
+        public void SubmitParcel_BlDataNotFoundExceptionThrown_ErrorReturned()
+        {
+            Parcel nullParcel = null;
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<SenderApiController>>();
+            Mock<ISenderLogic> mockSenderLogic = new Mock<ISenderLogic>();
+            mockSenderLogic.Setup(m => m.SubmitParcel(It.Is<BlParcel>(p => p == null)))
+                .Throws(new BlDataNotFoundException("Error Parcel must not be null!"));
+            var controller =
+                new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
+            // var controller = new SenderApiController(mapperConfig.CreateMapper());
+
+            var result = controller.SubmitParcel(nullParcel);
+
+            var objectResult = result as ObjectResult;
+            Assert.NotNull(objectResult);
+            var error = objectResult.Value as Error;
+            Assert.NotNull(error);
+            Assert.NotNull(error.ErrorMessage);
+        }
+
+        [Test]
+        public void SubmitParcel_BlRepositoryExceptionThrown_ErrorReturned()
+        {
+            Parcel nullParcel = null;
+            var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingsProfileSvcBl()); });
+            var mockLogger = new Mock<ILogger<SenderApiController>>();
+            Mock<ISenderLogic> mockSenderLogic = new Mock<ISenderLogic>();
+            mockSenderLogic.Setup(m => m.SubmitParcel(It.Is<BlParcel>(p => p == null)))
+                .Throws(new BlRepositoryException("Error Parcel must not be null!"));
+            var controller =
+                new SenderApiController(mockLogger.Object, mapperConfig.CreateMapper(), mockSenderLogic.Object);
             // var controller = new SenderApiController(mapperConfig.CreateMapper());
 
             var result = controller.SubmitParcel(nullParcel);

@@ -69,6 +69,39 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             return parcel;
         }
 
+        public Parcel AddFutureHopToVisited(string trackingId, DateTime dateTime)
+        {
+            logger.LogInformation($"Return Parcel with Tracking Id {trackingId}");
+            Parcel? p = null;
+            p = context.Parcels
+                .Include(p => p.VisitedHops)
+                .ThenInclude(visitedHop => visitedHop.Hop)
+                .Include(p => p.FutureHops)
+                .ThenInclude(visitedHop => visitedHop.Hop)
+                .Include(p => p.Sender)
+                .Include(p => p.Recipient)
+                .AsEnumerable()
+                .FirstOrDefault(p => p.TrackingId == trackingId);
+            var visitedHop = p.FutureHops[0];
+            p.FutureHops.RemoveAt(0);
+            visitedHop.DateTime = dateTime;
+            p.VisitedHops.Add(visitedHop);
+            context.SaveChanges();
+            return p;
+        }
+
+        public Parcel ChangeParcelState(string trackingId, Parcel.StateEnum parcelState)
+        {
+            logger.LogInformation($"Return Parcel with Tracking Id {trackingId}");
+            Parcel? p = null;
+            p = context.Parcels
+                .FirstOrDefault(p => p.TrackingId == trackingId);
+            p.State = parcelState;
+
+            context.SaveChanges();
+            return p;
+        }
+
         public void Delete(Parcel parcel)
         {
             logger.LogInformation($"Delete Parcel with Tracking Id {parcel}");
@@ -79,10 +112,17 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         public Parcel? GetByTrackingId(string trackingId)
         {
             logger.LogInformation($"Return Parcel with Tracking Id {trackingId}");
-            return context.Parcels
+            Parcel? p = null;
+            p = context.Parcels
                 .Include(p => p.VisitedHops)
+                .ThenInclude(visitedHop => visitedHop.Hop)
                 .Include(p => p.FutureHops)
+                .ThenInclude(visitedHop => visitedHop.Hop)
+                .Include(p => p.Sender)
+                .Include(p => p.Recipient)
+                .AsEnumerable()
                 .FirstOrDefault(p => p.TrackingId == trackingId);
+            return p;
         }
     }
 }

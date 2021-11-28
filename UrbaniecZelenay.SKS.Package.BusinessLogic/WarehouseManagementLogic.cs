@@ -11,6 +11,7 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using DalWarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Warehouse;
+using DalHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Hop;
 //using Truck = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Truck;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
@@ -77,7 +78,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             return blWarehouse;
         }
 
-        public Warehouse? GetWarehouse(string code)
+        public Hop? GetWarehouse(string code)
         {
             logger.LogInformation($"Get Warehouse with Code {code}");
             if (code == null)
@@ -98,10 +99,10 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             //     Level = 0,
             //     NextHops = new List<WarehouseNextHops>()
             // };
-            DalWarehouse? dalWarehouse = null;
+            DalHop? dalHop = null;
             try
             {
-                dalWarehouse = warehouseRepository.GetWarehouseByCode(code);
+                dalHop = warehouseRepository.GetHopByCode(code);
             }
             catch (DalException e)
             {
@@ -109,7 +110,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw new BlRepositoryException($"Error retrieving warehouse by code ({code}).", e);
             }
 
-            if (dalWarehouse == null)
+            if (dalHop == null)
             {
                 BlDataNotFoundException e =
                     new BlDataNotFoundException($"Error warehouse with code ({code}) not found");
@@ -117,8 +118,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw e;
             }
 
-            var blWarehouse = mapper.Map<Warehouse>(dalWarehouse);
-            logger.LogDebug($"Mapping Dal/Bl {dalWarehouse} => {blWarehouse}");
+            var blWarehouse = mapper.Map<Hop>(dalHop);
+            logger.LogDebug($"Mapping Dal/Bl {dalHop} => {blWarehouse}");
             return blWarehouse;
         }
 

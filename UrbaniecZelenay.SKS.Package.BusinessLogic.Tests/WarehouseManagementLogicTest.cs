@@ -83,10 +83,10 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             string code = "AUTA05";
             var mockLogger = new Mock<ILogger<WarehouseManagementLogic>>();
             Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
-            mockWarehouseRepo.Setup(m => m.GetWarehouseByCode(It.IsAny<string>())).Returns(
+            mockWarehouseRepo.Setup(m => m.GetHopByCode(It.IsAny<string>())).Returns(
                 new DataAccess.Entities.Warehouse
                 {
-                    Code = "AUTA01",
+                    Code =  code,
                     Description = "Root Warehouse - Österreich",
                     HopType = "Warehouse",
                     LocationCoordinates = new Point(13.884382, 47.247829),
@@ -100,7 +100,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
 
             IWarehouseManagementLogic warehouseManagementLogic =
                 new WarehouseManagementLogic(mockLogger.Object, mockWarehouseRepo.Object, mapperConfig.CreateMapper());
-            Warehouse result = warehouseManagementLogic.GetWarehouse(code);
+            Hop result = warehouseManagementLogic.GetWarehouse(code);
             Assert.NotNull(result);
         }
 
