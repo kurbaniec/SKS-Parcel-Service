@@ -49,6 +49,6 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         public Point LocationCoordinates { get; set; }
         
         [Required]
-        public Hop? PreviousHop { get; set; }
+        public PreviousHop? PreviousHop { get; set; }
     }
 }

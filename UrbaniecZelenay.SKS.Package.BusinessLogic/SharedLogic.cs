@@ -40,12 +40,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 {
                     Hop = currentRecipientHop
                 });
-                currentRecipientHop = currentRecipientHop.PreviousHop;
+                currentRecipientHop = currentRecipientHop.PreviousHop?.Hop;
                 senderFutureHops.Add(new DalHopArrival
                 {
                     Hop = currentSenderHop
                 });
-                currentSenderHop = currentSenderHop.PreviousHop;
+                currentSenderHop = currentSenderHop.PreviousHop?.Hop;
             }
 
             // Check if Route was found

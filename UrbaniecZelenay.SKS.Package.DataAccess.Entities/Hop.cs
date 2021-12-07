@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using NetTopologySuite.Geometries;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
@@ -48,8 +50,9 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         [Column(TypeName = "geometry")]
         public Point LocationCoordinates { get; set; }
 
-                
-        [Required]
-        public Hop? PreviousHop { get; set; }
+        //[ForeignKey("PreviousHop")]
+        //public int? PreviousHopId;
+        //public int? OriginalHopId;
+        public PreviousHop? PreviousHop { get; set; }
     }
 }

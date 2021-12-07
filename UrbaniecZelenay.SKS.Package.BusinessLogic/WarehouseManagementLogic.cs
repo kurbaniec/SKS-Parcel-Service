@@ -143,28 +143,38 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw e;
             }
             
-            LinkPreviousHops(body, null);
-
             var dalWarehouse = mapper.Map<DalWarehouse>(body);
             logger.LogDebug($"Mapping Bl/Dal {body} => {dalWarehouse}");
             try
             {
-                warehouseRepository.Create(dalWarehouse);
+                var w = warehouseRepository.Create(dalWarehouse);
+                var blW = mapper.Map<Warehouse>(w);
+                LinkPreviousHops(blW, null, null);
+                dalWarehouse = mapper.Map<DalWarehouse>(blW);
+                warehouseRepository.Update(dalWarehouse);
             }
             catch (DalException e)
             {
                 logger.LogError(e, $"Error creating warehouse ({dalWarehouse}).");
                 throw new BlRepositoryException($"Error creating warehouse ({dalWarehouse}).", e);
             }
+            
+            
         }
 
-        private static void LinkPreviousHops(Hop currentHop, Hop? parentHop)
+        private static void LinkPreviousHops(Hop currentHop, Hop? parentHop, int? travelTime)
         {
-            currentHop.PreviousHop = parentHop;
+            if (parentHop != null)
+                currentHop.PreviousHop = new PreviousHop
+                {
+                    OriginalHop = currentHop,
+                    Hop = parentHop,
+                    TraveltimeMins = travelTime!.Value
+                };
             if (currentHop is not Warehouse w) return;
             foreach (var nextHop in w.NextHops)
             {
-                LinkPreviousHops(nextHop.Hop, w);
+                LinkPreviousHops(nextHop.Hop, currentHop, nextHop.TraveltimeMins);
             }
         }
     }

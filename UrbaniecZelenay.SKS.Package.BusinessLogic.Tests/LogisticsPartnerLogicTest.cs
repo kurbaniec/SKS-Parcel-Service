@@ -7,11 +7,11 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.ServiceAgents.Interfaces;
 using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
@@ -20,6 +20,9 @@ using DalHopArrival = UrbaniecZelenay.SKS.Package.DataAccess.Entities.HopArrival
 using DalTruck = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Truck;
 using DalWarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Warehouse;
 using DalWarehouseNextHops = UrbaniecZelenay.SKS.Package.DataAccess.Entities.WarehouseNextHops;
+using HopArrival = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.HopArrival;
+using Parcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
+using Recipient = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Recipient;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
 {
@@ -194,11 +197,11 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
             };
             var truckA = new DalTruck()
             {
-                PreviousHop = rootWarehouse
+                PreviousHop = new PreviousHop { Hop = rootWarehouse }
             };
             var truckB = new DalTruck()
             {
-                PreviousHop = rootWarehouse
+                PreviousHop = new PreviousHop { Hop = rootWarehouse }
             };
             mockWarehouseRepo.SetupSequence(m => m.GetTruckByPoint(It.IsAny<Point>())).Returns(truckA).Returns(truckB);
             var mockGeoAgent = new Mock<IGeoEncodingAgent>();

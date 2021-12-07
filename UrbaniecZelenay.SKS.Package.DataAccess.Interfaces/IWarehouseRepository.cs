@@ -6,6 +6,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
     public interface IWarehouseRepository
     {
         Warehouse Create(Warehouse warehouse);
+        Warehouse Update(Warehouse warehouse);
         Warehouse? GetAll();
         Hop? GetHopByCode(string code);
         Warehouse? GetWarehouseByCode(string code);

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -49,6 +51,60 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 context.Database.EnsureCreated();
                 context.Warehouses.Add(warehouse);
                 context.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                logger.LogError(e, "Error updating Warehouse");
+                throw new DalSaveException("Error occured while creating a warehouse.", e);
+            }
+            catch (SqlException e)
+            {
+                logger.LogError(e, "Error updating ");
+                throw new DalConnectionException("Error occured while creating a warehouse.", e);
+            }
+
+            return warehouse;
+        }
+
+        private void Extract(ICollection<PreviousHop> list, Hop hop)
+        {
+            // See: https://stackoverflow.com/a/20710670/12347616
+            //context.Hops.Attach(hop);
+            if (hop.PreviousHop != null)
+            {
+                hop.PreviousHop.Hop = null;
+                hop.PreviousHop.OriginalHop = null;
+                list.Add(hop.PreviousHop);
+            }
+
+            if (hop is not Warehouse w) return;
+            foreach (var nw in w.NextHops)
+            {
+                Extract(list, nw.Hop);
+            }
+        }
+        
+        public Warehouse Update(Warehouse warehouse)
+        {
+            logger.LogInformation($"Update Warehouse {warehouse}");
+            try
+            {
+                //context.Entry(warehouse).State = EntityState.Detached;
+                // See: https://stackoverflow.com/a/67598448/12347616
+                //context.ChangeTracker.Clear();
+                var list = new List<PreviousHop>();
+                Extract(list, warehouse);
+
+                foreach (var item in list)
+                {
+                    context.PreviousHops.Add(item);
+                    context.SaveChanges();
+                    //Thread.Sleep(1500);
+                }
+                
+                //context.PreviousHops.AddRange(list);
+                // context.Warehouses.Update(warehouse);
+                //context.SaveChanges();
             }
             catch (DbUpdateException e)
             {
@@ -163,7 +219,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 truck = context.Hops
                     .OfType<Truck>()
                     .Include(t => t.PreviousHop)
-                    .ThenInclude(t => t!.PreviousHop)
+                    .ThenInclude(t => t!.Hop)
                     .AsEnumerable()
                     .SingleOrDefault(t => t.Region.Contains(point));
             }
@@ -190,7 +246,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 transferwarehouse = context.Hops
                     .OfType<Transferwarehouse>()
                     .Include(tw => tw.PreviousHop)
-                    .ThenInclude(tw => tw!.PreviousHop)
+                    .ThenInclude(tw => tw!.Hop)
                     .AsEnumerable()
                     .SingleOrDefault(t => t.Region.Contains(point));
             }
