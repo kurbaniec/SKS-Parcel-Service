@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
@@ -18,6 +19,17 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
+            // Setup database properties for Azure
+            // But Breaks local development
+            // See: https://stackoverflow.com/a/61475516/12347616
+            // Environment Workaround
+            // See: https://stackoverflow.com/a/55620080/12347616
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development")
+            {
+                modelBuilder.HasDatabaseMaxSize("1 GB");
+                modelBuilder.HasServiceTier("Basic");
+            }
             base.OnModelCreating(modelBuilder);
             // modelBuilder.Entity<Hop>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
             // modelBuilder.Entity<Warehouse>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");

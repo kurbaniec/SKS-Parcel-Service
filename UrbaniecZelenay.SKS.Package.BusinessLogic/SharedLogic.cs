@@ -14,7 +14,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             var currentSenderHop = senderStartHop;
             var recipientFutureHops = new List<DalHopArrival>();
             var senderFutureHops = new List<DalHopArrival>();
-            // If recipient is a Truck add one previous Hop to the current sender Hop
+            // Note: Misconception, Trucks and Transferwarehouses are on the same level
+            /*// If recipient is a Truck add one previous Hop to the current sender Hop
             // Why? Hop hierarchy is a balanced tree and trucks are one hierarchy level lower than
             // Transferwarehouses (which belong to the same level as normal Warehouses which have trucks)
             if (currentRecipientHop is DalTruck)
@@ -30,7 +31,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             {
                 Hop = currentSenderHop
             });
-            currentSenderHop = currentSenderHop.PreviousHop;
+            currentSenderHop = currentSenderHop.PreviousHop;*/
             // Build Future Hops hierarchy
             while (currentRecipientHop != currentSenderHop &&
                    currentSenderHop != null && currentRecipientHop != null)
