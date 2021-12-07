@@ -143,15 +143,16 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw e;
             }
             
+            LinkPreviousHops(body, null, null);
             var dalWarehouse = mapper.Map<DalWarehouse>(body);
             logger.LogDebug($"Mapping Bl/Dal {body} => {dalWarehouse}");
             try
             {
                 var w = warehouseRepository.Create(dalWarehouse);
-                var blW = mapper.Map<Warehouse>(w);
-                LinkPreviousHops(blW, null, null);
-                dalWarehouse = mapper.Map<DalWarehouse>(blW);
-                warehouseRepository.Update(dalWarehouse);
+                // var blW = mapper.Map<Warehouse>(w);
+                // LinkPreviousHops(blW, null, null);
+                // dalWarehouse = mapper.Map<DalWarehouse>(blW);
+                // warehouseRepository.Update(dalWarehouse);
             }
             catch (DalException e)
             {

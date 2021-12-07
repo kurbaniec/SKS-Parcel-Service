@@ -21,6 +21,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Source: Max
             // Setup database properties for Azure
             // But Breaks local development
             // See: https://stackoverflow.com/a/61475516/12347616
@@ -31,31 +32,32 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 modelBuilder.HasDatabaseMaxSize("1 GB");
                 modelBuilder.HasServiceTier("Basic");
             }
-
-            /*modelBuilder.Entity<PreviousHop>()
-                .HasOne(h => h.Hop)
-                .WithOne()
-                .HasForeignKey<PreviousHop?>(h => h.HopCode)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired(false);*/
+            
+            // Map PreviousHop with fluent API because of data annotations limitations
+            // -----------------------------------------------------------------------
+            // This does not work, results in missing hop codes
+            // modelBuilder.Entity<PreviousHop>()
+            //     .HasOne(h => h.Hop)
+            //     .WithOne()
+            //     .HasForeignKey<PreviousHop?>(h => h.HopCode)
+            //     .OnDelete(DeleteBehavior.Restrict)
+            //     .IsRequired(false);
+            // (https://docs.microsoft.com/en-us/ef/core/modeling/relationships?tabs=fluent-api%2Cfluent-api-simple-key%2Csimple-key#manual-configuration)
+            // Docs say that withOne should work (no collection) but in praxis it does not
+            // Maybe because of HopCode of WarehouseNextHops?
             modelBuilder.Entity<PreviousHop>()
                 .HasOne(h => h.Hop)
                 .WithMany()
                 .HasForeignKey(h => h.HopCode)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired(false);
-
-            // modelBuilder.Entity<PreviousHop>()
-            //     .HasOne(h => h.OriginalHop)
-            //     .WithOne()
-            //     .HasForeignKey<PreviousHop>(h => h.OriginalHopCode)
-            //     .OnDelete(DeleteBehavior.Restrict);
-
+            
             modelBuilder.Entity<Hop>()
                 .HasOne(h => h.PreviousHop)
                 .WithOne(h => h.OriginalHop)
                 .HasForeignKey<PreviousHop>(h => h.OriginalHopCode);
-
+            
+            // Disable Unique constraint on generated indexes 
             modelBuilder.Entity<PreviousHop>()
                 .HasIndex(x => x.HopCode)
                 .IsUnique(false);
@@ -63,50 +65,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 .HasIndex(x => x.OriginalHopCode)
                 .IsUnique(false);
 
-
-            // modelBuilder.Entity<PreviousHop>()
-            //     .HasOne(p => p.OriginalHop)
-            //     .WithOne(p => p.PreviousHop!)
-            //     .HasForeignKey<Hop>(p => p.PreviousHopId)
-            //     .OnDelete(DeleteBehavior.Restrict);
-            //
-            // modelBuilder.Entity<PreviousHop>()
-            //     .HasOne(p => p.Hop)
-            //     .WithOne()
-            //     .OnDelete(DeleteBehavior.Restrict)
-
-
-            // modelBuilder.Entity<Hop>()
-            //     .HasOne(h => h.PreviousHop)
-            //     .WithOne(p => p.ChildHop)
-
-            // modelBuilder.Entity<Hop>()
-            //     .HasOne(h => h.PreviousHop)
-            //     .WithOne(p => p!.Hop)
-            //     .HasForeignKey<PreviousHop>(p => p.HopId)
-            //     .OnDelete(DeleteBehavior.Cascade);
-            //.HasForeignKey<PreviousHop>(h => h.HopId)
-            //.OnDelete(DeleteBehavior.Cascade);
-
-            // modelBuilder.Entity<PreviousHop>()
-            //     .HasOne(p => p.Hop)
-            //     .WithOne(p => p.PreviousHop!);
-
-            // modelBuilder.Entity<Warehouse>()
-            //     .HasMany(w => w.NextHops)
-            //     .WithOne();
-            // modelBuilder.Entity<PreviousHop>()
-            //     .HasOne(p => p.Hop)
-            //     .WithOne()
-            //     .HasForeignKey<Hop>(h => h.PreviousHopId)
-            //     .OnDelete(DeleteBehavior.Cascade);
-
             base.OnModelCreating(modelBuilder);
-            // modelBuilder.Entity<Hop>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
-            // modelBuilder.Entity<Warehouse>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
-            // modelBuilder.Entity<Truck>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
-            // modelBuilder.Entity<Transferwarehouse>().Property(h => h.LocationCoordinates).HasColumnType("geometry (point)");
-            // modelBuilder.Entity<Recipient>().Property(r => r.GeoLocation).HasColumnType("geometry (point)");
         }
 
         // Create properties

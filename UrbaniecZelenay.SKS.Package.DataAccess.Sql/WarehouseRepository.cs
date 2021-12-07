@@ -27,22 +27,6 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         public Warehouse Create(Warehouse warehouse)
         {
             logger.LogInformation($"Create Warehouse {warehouse}");
-            // Detect already existing warehouses?
-            // try
-            // {
-            //     var check = context.Warehouses.SingleOrDefault(w => w.Code == warehouse.Code);
-            //     if (check != null)
-            //     {
-            //         DalException e = new DalDuplicateEntryException($"Error warehouse already exists (Code: " +
-            //                                                         $"{check.Code}.");
-            //         logger.LogError(e, "Root Warehouse already exists");
-            //         throw e;
-            //         // return check;
-            //     }
-            //
-            //     context.Warehouses.Add(warehouse);
-            //     context.SaveChanges();
-            // }
             try
             {
                 // Delete database and rebuild it
@@ -51,60 +35,6 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 context.Database.EnsureCreated();
                 context.Warehouses.Add(warehouse);
                 context.SaveChanges();
-            }
-            catch (DbUpdateException e)
-            {
-                logger.LogError(e, "Error updating Warehouse");
-                throw new DalSaveException("Error occured while creating a warehouse.", e);
-            }
-            catch (SqlException e)
-            {
-                logger.LogError(e, "Error updating ");
-                throw new DalConnectionException("Error occured while creating a warehouse.", e);
-            }
-
-            return warehouse;
-        }
-
-        private void Extract(ICollection<PreviousHop> list, Hop hop)
-        {
-            // See: https://stackoverflow.com/a/20710670/12347616
-            //context.Hops.Attach(hop);
-            if (hop.PreviousHop != null)
-            {
-                hop.PreviousHop.Hop = null;
-                hop.PreviousHop.OriginalHop = null;
-                list.Add(hop.PreviousHop);
-            }
-
-            if (hop is not Warehouse w) return;
-            foreach (var nw in w.NextHops)
-            {
-                Extract(list, nw.Hop);
-            }
-        }
-        
-        public Warehouse Update(Warehouse warehouse)
-        {
-            logger.LogInformation($"Update Warehouse {warehouse}");
-            try
-            {
-                //context.Entry(warehouse).State = EntityState.Detached;
-                // See: https://stackoverflow.com/a/67598448/12347616
-                //context.ChangeTracker.Clear();
-                var list = new List<PreviousHop>();
-                Extract(list, warehouse);
-
-                foreach (var item in list)
-                {
-                    context.PreviousHops.Add(item);
-                    context.SaveChanges();
-                    //Thread.Sleep(1500);
-                }
-                
-                //context.PreviousHops.AddRange(list);
-                // context.Warehouses.Update(warehouse);
-                //context.SaveChanges();
             }
             catch (DbUpdateException e)
             {

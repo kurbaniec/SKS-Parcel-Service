@@ -8,17 +8,16 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
     public class PreviousHop
     {
         [Key] public int Id { get; set; }
-
-        //[ForeignKey("ChildHopCode")] 
-        //[ForeignKey("OriginalHopCode")]
-        //[InverseProperty("PreviousHop")]
+        
+        /// <summary>
+        /// Foreign Key for Hop this "PreviousHop" belongs to aka. the original Hop
+        /// </summary>
         public string OriginalHopCode { get; set; }
         public Hop OriginalHop { set; get; }
 
         /// <summary>
         /// Gets or Sets Hop
         /// </summary>
-        //public string HopCode;
         public string? HopCode { get; set; }
         public Hop Hop { get; set; }
 
