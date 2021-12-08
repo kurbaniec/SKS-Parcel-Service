@@ -2,11 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.Services.Attributes;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
+using BlWebhookResponse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.WebhookResponse;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Controllers
 { 
@@ -15,7 +20,19 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
     /// </summary>
     [ApiController]
     public class ParcelWebhookApiController : ControllerBase
-    { 
+    {
+        private readonly IParcelWebhookLogic webhookLogic;
+        private readonly IMapper mapper;
+        private readonly ILogger<ParcelWebhookApiController> logger;
+
+        public ParcelWebhookApiController(ILogger<ParcelWebhookApiController> logger, IMapper mapper,
+            IParcelWebhookLogic webhookLogic)
+        {
+            this.logger = logger;
+            this.mapper = mapper;
+            this.webhookLogic = webhookLogic;
+        }
+
         /// <summary>
         /// Get all registered subscriptions for the parcel webhook.
         /// </summary>
@@ -27,20 +44,34 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [ValidateModelState]
         [SwaggerOperation("ListParcelWebhooks")]
         [SwaggerResponse(statusCode: 200, type: typeof(IEnumerable<WebhookResponse>), description: "List of webooks for the &#x60;trackingId&#x60;")]
-        public virtual IActionResult ListParcelWebhooks([FromRoute][Required][RegularExpression("/^[A-Z0-9]{9}$/")]string trackingId)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(WebhookResponses));
-
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404);
-            string exampleJson = null;
-            exampleJson = "[ {\n  \"created_at\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"id\" : 0,\n  \"url\" : \"url\",\n  \"trackingId\" : \"trackingId\"\n}, {\n  \"created_at\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"id\" : 0,\n  \"url\" : \"url\",\n  \"trackingId\" : \"trackingId\"\n} ]";
+        public virtual IActionResult ListParcelWebhooks([FromRoute][Required][RegularExpression(@"^[A-Z0-9]{9}$")]string trackingId)
+        {
+            logger.LogInformation($"List Parcel Webhooks for parcel with ID {trackingId}");
+            IEnumerable<BlWebhookResponse> blWebhooks;
+            try
+            {
+                blWebhooks = webhookLogic.ListParcelWebhooks(trackingId);
+            }
+            catch (BlArgumentException ex)
+            {
+                logger.LogError(ex, "Error occured while listing webhooks.");
+                return StatusCode(404, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
+            catch (BlDataNotFoundException ex)
+            {
+                logger.LogError(ex, "Error occured while listing webhooks.");
+                return StatusCode(404, new Error
+                {
+                    ErrorMessage = ex.Message
+                });
+            }
             
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<IEnumerable<WebhookResponse>>(exampleJson)
-                        : default(IEnumerable<WebhookResponse>);            //TODO: Change the data returned
-            return new ObjectResult(example);
+            var webhooks = mapper.Map<IEnumerable<WebhookResponse>>(blWebhooks);
+            logger.LogDebug($"Mapping Bl/Svc {blWebhooks} => {webhooks}");
+            return new ObjectResult(webhooks);
         }
 
         /// <summary>
@@ -55,7 +86,7 @@ namespace UrbaniecZelenay.SKS.Package.Services.Controllers
         [ValidateModelState]
         [SwaggerOperation("SubscribeParcelWebhook")]
         [SwaggerResponse(statusCode: 200, type: typeof(WebhookResponse), description: "Successful response")]
-        public virtual IActionResult SubscribeParcelWebhook([FromRoute][Required][RegularExpression("/^[A-Z0-9]{9}$/")]string trackingId, [FromQuery][Required()]string url)
+        public virtual IActionResult SubscribeParcelWebhook([FromRoute][Required][RegularExpression(@"^[A-Z0-9]{9}$")]string trackingId, [FromQuery][Required()]string url)
         { 
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(WebhookResponse));

@@ -132,6 +132,7 @@ namespace UrbaniecZelenay.SKS.Package.Services
             services.AddTransient<ISenderLogic, SenderLogic>();
             services.AddTransient<IRecipientLogic, RecipientLogic>();
             services.AddTransient<ILogisticsPartnerLogic, LogisticsPartnerLogic>();
+            services.AddTransient<IParcelWebhookLogic, ParcelWebhookLogic>();
         }
 
         /// <summary>

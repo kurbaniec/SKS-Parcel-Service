@@ -18,6 +18,7 @@ using BlGeoCoordinate = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.GeoCo
 using BlTruck = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Truck;
 using BlTransferwarehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Transferwarehouse;
 using BlHopArrival = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.HopArrival;
+using BlWebhookResponse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.WebhookResponse;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Mappings
 {
@@ -84,6 +85,15 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
                 .ReverseMap().ForMember(svcTw => svcTw.RegionGeoJson,
                     opt => opt.MapFrom(x => SerializeTruckRegion(x.Region)));
             CreateMap<GeoCoordinate, BlGeoCoordinate>().ReverseMap();
+            // Webhooks
+            CreateMap<WebhookMessage, BlParcel>().ReverseMap();
+            CreateMap<WebhookResponse, BlWebhookResponse>().ForMember(blW => blW.Parcel,
+                opt => opt.MapFrom(x => new BlParcel
+                {
+                    TrackingId = x.TrackingId
+                })).ReverseMap().ForMember(svcW => svcW.TrackingId,
+                opt => opt.MapFrom(x => x.Parcel.TrackingId));
+            
         }
 
         // Deserialize RegionGeoJson to Truck Geometry Multipolygon.

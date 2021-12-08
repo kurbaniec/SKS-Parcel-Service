@@ -20,7 +20,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// Gets or Sets TrackingId
         /// </summary>
         [NotMapped]
-        public string TrackingId { get; set; } = null!;
+        public string? TrackingId => Parcel.TrackingId;
 
         /// <summary>
         /// Gets or Sets Url
