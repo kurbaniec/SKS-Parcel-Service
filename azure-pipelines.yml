@@ -46,6 +46,11 @@ steps:
     arguments: '--configuration $(buildConfiguration) --collect "XPlat Code Coverage"'
     testRunTitle: TestsResult
 
+- task: reportgenerator@5
+  inputs:
+    reports: '$(Build.SourcesDirectory)/**/*.cobertura.xml'
+    targetdir: '$(Build.SourcesDirectory)/CoverageResults'
+
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'Cobertura'
