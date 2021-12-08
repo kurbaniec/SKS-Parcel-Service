@@ -30,13 +30,13 @@ steps:
     arguments: '/p:IsWebConfigTransformDisabled=true'
     publishWebProjects: true
 
-- task: DeleteFiles@1
-  displayName: 'Delete past coverage reports'
-  inputs:
-    SourceFolder: '$(Agent.TempDirectory)'
+#- task: DeleteFiles@1
+#  displayName: 'Delete past coverage reports'
+#  inputs:
+    # SourceFolder: '$(Agent.TempDirectory)'
     #Contents: '**/coverage.cobertura.xml'
-    Contents: '*'
-    RemoveSourceFolder: true
+    # Contents: '*'
+    # RemoveSourceFolder: true
 
 - task: DotNetCoreCLI@2
   displayName: 'test'
@@ -48,13 +48,13 @@ steps:
 
 - task: reportgenerator@5
   inputs:
-    reports: '$(Build.SourcesDirectory)/**/*.cobertura.xml'
+    reports: '$(Agent.TempDirectory)/**/*.cobertura.xml'
     targetdir: '$(Build.SourcesDirectory)/CoverageResults'
 
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+    summaryFileLocation: '$(Build.SourcesDirectory)/CoverageResults/Cobertura.xml'
 
 - task: PublishPipelineArtifact@1
   inputs:
