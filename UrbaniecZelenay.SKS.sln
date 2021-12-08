@@ -32,6 +32,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.Package.IntegrationTests", "UrbaniecZelenay.SKS.Package.IntegrationTests\UrbaniecZelenay.SKS.Package.IntegrationTests.csproj", "{164C2F2E-4E6C-45F0-B1FC-A6223F07595F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.WebhookManager", "UrbaniecZelenay.SKS.WebhookManager\UrbaniecZelenay.SKS.WebhookManager.csproj", "{FF729155-B513-4A94-94E9-5BE3C6792A4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.WebhookManager.Interfaces", "UrbaniecZelenay.SKS.WebhookManager.Interfaces\UrbaniecZelenay.SKS.WebhookManager.Interfaces.csproj", "{CEC87C80-E3C7-499E-A374-456D6F1211FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbaniecZelenay.SKS.WebhookManager.Tests", "UrbaniecZelenay.SKS.WebhookManager.Tests\UrbaniecZelenay.SKS.WebhookManager.Tests.csproj", "{92E66C8D-023F-42DB-AF8F-7CEB7BFD760E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,5 +108,17 @@ Global
 		{164C2F2E-4E6C-45F0-B1FC-A6223F07595F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{164C2F2E-4E6C-45F0-B1FC-A6223F07595F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{164C2F2E-4E6C-45F0-B1FC-A6223F07595F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF729155-B513-4A94-94E9-5BE3C6792A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF729155-B513-4A94-94E9-5BE3C6792A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF729155-B513-4A94-94E9-5BE3C6792A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF729155-B513-4A94-94E9-5BE3C6792A4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEC87C80-E3C7-499E-A374-456D6F1211FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEC87C80-E3C7-499E-A374-456D6F1211FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEC87C80-E3C7-499E-A374-456D6F1211FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEC87C80-E3C7-499E-A374-456D6F1211FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92E66C8D-023F-42DB-AF8F-7CEB7BFD760E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92E66C8D-023F-42DB-AF8F-7CEB7BFD760E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92E66C8D-023F-42DB-AF8F-7CEB7BFD760E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92E66C8D-023F-42DB-AF8F-7CEB7BFD760E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

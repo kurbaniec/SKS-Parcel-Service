@@ -6,7 +6,7 @@
       "name" : "SKS",
       "url" : "http://www.technikum-wien.at/"
     },
-    "version" : "1.20.1"
+    "version" : "1.20.2"
   },
   "servers" : [ {
     "url" : "/"
@@ -157,6 +157,9 @@
                 }
               }
             }
+          },
+          "409" : {
+            "description" : "A parcel with the specified trackingID is already in the system."
           }
         }
       }
@@ -333,7 +336,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/warehouse"
+                  "$ref" : "#/components/schemas/hop"
                 }
               }
             }
@@ -349,7 +352,133 @@
             }
           },
           "404" : {
-            "description" : "Warehouse id not found"
+            "description" : "No hop with the specified id could be found."
+          }
+        }
+      }
+    },
+    "/parcel/{trackingId}/webhooks" : {
+      "get" : {
+        "tags" : [ "parcelWebhook" ],
+        "summary" : "Get all registered subscriptions for the parcel webhook.",
+        "operationId" : "listParcelWebhooks",
+        "parameters" : [ {
+          "name" : "trackingId",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "pattern" : "^[A-Z0-9]{9}$",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of webooks for the `trackingId`",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/webhookResponses"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "No parcel found with that tracking ID.",
+            "content" : { }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "parcelWebhook" ],
+        "summary" : "Subscribe to a webhook notification for the specific parcel.",
+        "operationId" : "subscribeParcelWebhook",
+        "parameters" : [ {
+          "name" : "trackingId",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "pattern" : "^[A-Z0-9]{9}$",
+            "type" : "string"
+          }
+        }, {
+          "name" : "url",
+          "in" : "query",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/webhookResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "No parcel found with that tracking ID.",
+            "content" : { }
+          }
+        },
+        "callbacks" : {
+          "myevent" : {
+            "{$request.query.url}?trackingId={$request.path.trackingId}" : {
+              "post" : {
+                "requestBody" : {
+                  "content" : {
+                    "application/json" : {
+                      "schema" : {
+                        "$ref" : "#/components/schemas/webhookMessage"
+                      }
+                    }
+                  }
+                },
+                "responses" : {
+                  "200" : {
+                    "description" : "OK",
+                    "content" : { }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parcel/webhooks/{id}" : {
+      "delete" : {
+        "tags" : [ "parcelWebhook" ],
+        "summary" : "Remove an existing webhook subscription.",
+        "operationId" : "unsubscribeParcelWebhook",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Subscription does not exist.",
+            "content" : { }
           }
         }
       }
@@ -451,6 +580,17 @@
             "$ref" : "#/components/schemas/geoCoordinate"
           }
         },
+        "example" : {
+          "code" : "code",
+          "locationName" : "locationName",
+          "processingDelayMins" : 0,
+          "hopType" : "hopType",
+          "description" : "description",
+          "locationCoordinates" : {
+            "lon" : 1.4658129805029452,
+            "lat" : 6.027456183070403
+          }
+        },
         "discriminator" : {
           "propertyName" : "hopType"
         }
@@ -484,7 +624,7 @@
           "properties" : {
             "regionGeoJson" : {
               "type" : "string",
-              "description" : "GeoJSON of the are covered by the logistics partner."
+              "description" : "GeoJSON (https://geojson.org/) of the area covered by the logistics partner."
             },
             "logisticsPartner" : {
               "type" : "string",
@@ -506,7 +646,7 @@
           "properties" : {
             "regionGeoJson" : {
               "type" : "string",
-              "description" : "GeoJSON of the are covered by the truck."
+              "description" : "GeoJSON (https://geojson.org/) of the area covered by the truck."
             },
             "numberPlate" : {
               "type" : "string",
@@ -616,7 +756,55 @@
             "description" : "Longitude of the coordinate.",
             "format" : "double"
           }
+        },
+        "example" : {
+          "lon" : 1.4658129805029452,
+          "lat" : 6.027456183070403
         }
+      },
+      "webhookResponse" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "trackingId" : {
+            "pattern" : "^[A-Z0-9]{9}$",
+            "type" : "string"
+          },
+          "url" : {
+            "type" : "string"
+          },
+          "created_at" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "example" : {
+          "created_at" : "2000-01-23T04:56:07.000+00:00",
+          "id" : 0,
+          "url" : "url",
+          "trackingId" : "trackingId"
+        }
+      },
+      "webhookResponses" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/webhookResponse"
+        }
+      },
+      "webhookMessage" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/trackingInformation"
+        }, {
+          "properties" : {
+            "trackingId" : {
+              "pattern" : "^[A-Z0-9]{9}$",
+              "type" : "string"
+            }
+          }
+        } ]
       },
       "warehouse_nextHops" : {
         "required" : [ "hop", "traveltimeMins" ],
