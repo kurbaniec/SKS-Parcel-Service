@@ -80,5 +80,6 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         public DbSet<Truck> Trucks { get; set; } = null!;
         public DbSet<Warehouse> Warehouses { get; set; } = null!;
         public DbSet<WarehouseNextHops> WarehouseNextHops { get; set; } = null!;
+        public DbSet<Webhook> Webhooks { get; set; } = null!;
     }
 }

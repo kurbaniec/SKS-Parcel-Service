@@ -21,5 +21,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
         DbSet<Truck> Trucks { get; set; }
         DbSet<Warehouse> Warehouses { get; set; }
         DbSet<WarehouseNextHops> WarehouseNextHops { get; set; }
+        
+        DbSet<Webhook> Webhooks { get; set; }
     }
 }

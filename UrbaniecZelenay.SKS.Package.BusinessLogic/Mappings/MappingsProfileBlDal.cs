@@ -11,6 +11,7 @@ using DalHopArrival = UrbaniecZelenay.SKS.Package.DataAccess.Entities.HopArrival
 using DalTruck = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Truck;
 using DalTransferwarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Transferwarehouse;
 using DalPreviousHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.PreviousHop;
+using DalWebhook = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Webhook;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings
 {
@@ -36,6 +37,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings
             CreateMap<GeoCoordinate, DalGeoCoordinate>().ReverseMap();
             CreateMap<PreviousHop, DalPreviousHop>().ReverseMap();
             CreateMap<HopArrival, DalHopArrival>().ReverseMap();
+            CreateMap<Webhook, DalWebhook>().ReverseMap();
         }
     }
 }

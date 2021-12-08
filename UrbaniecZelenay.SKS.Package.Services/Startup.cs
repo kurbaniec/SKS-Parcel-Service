@@ -32,6 +32,8 @@ using UrbaniecZelenay.SKS.Package.DataAccess.Sql;
 using UrbaniecZelenay.SKS.Package.Services.Filters;
 using UrbaniecZelenay.SKS.ServiceAgents;
 using UrbaniecZelenay.SKS.ServiceAgents.Interfaces;
+using UrbaniecZelenay.SKS.WebhookManager;
+using UrbaniecZelenay.SKS.WebhookManager.Interfaces;
 
 
 namespace UrbaniecZelenay.SKS.Package.Services
@@ -133,6 +135,8 @@ namespace UrbaniecZelenay.SKS.Package.Services
             services.AddTransient<IRecipientLogic, RecipientLogic>();
             services.AddTransient<ILogisticsPartnerLogic, LogisticsPartnerLogic>();
             services.AddTransient<IParcelWebhookLogic, ParcelWebhookLogic>();
+            services.AddScoped<IWebhookManager, WebhookManager.WebhookManager>();
+            services.AddScoped<IWebhookRepository, WebhookRepository>();
         }
 
         /// <summary>

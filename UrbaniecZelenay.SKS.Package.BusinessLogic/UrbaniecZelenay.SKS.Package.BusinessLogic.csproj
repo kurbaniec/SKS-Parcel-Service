@@ -10,6 +10,7 @@
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Entities\UrbaniecZelenay.SKS.Package.DataAccess.Entities.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.ServiceAgents.Interfaces\UrbaniecZelenay.SKS.ServiceAgents.Interfaces.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.WebhookManager.Interfaces\UrbaniecZelenay.SKS.WebhookManager.Interfaces.csproj" />
     </ItemGroup>
 
     <ItemGroup>
