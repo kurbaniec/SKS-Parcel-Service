@@ -54,7 +54,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             
             modelBuilder.Entity<Hop>()
                 .HasOne(h => h.PreviousHop)
-                .WithOne(h => h.OriginalHop)
+                .WithOne(h => h!.OriginalHop)
                 .HasForeignKey<PreviousHop>(h => h.OriginalHopCode);
             
             // Disable Unique constraint on generated indexes 
@@ -71,14 +71,14 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
         // Create properties
         // See: https://docs.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli#create-the-model
         //public DbSet<GeoCoordinate> GeoCoordinates { get; set; }
-        public DbSet<Hop> Hops { get; set; }
-        public DbSet<PreviousHop> PreviousHops { get; set; }
-        public DbSet<HopArrival> HopArrivals { get; set; }
-        public DbSet<Parcel> Parcels { get; set; }
-        public DbSet<Recipient> Recipients { get; set; }
-        public DbSet<Transferwarehouse> Transferwarehouses { get; set; }
-        public DbSet<Truck> Trucks { get; set; }
-        public DbSet<Warehouse> Warehouses { get; set; }
-        public DbSet<WarehouseNextHops> WarehouseNextHops { get; set; }
+        public DbSet<Hop> Hops { get; set; } = null!;
+        public DbSet<PreviousHop> PreviousHops { get; set; } = null!;
+        public DbSet<HopArrival> HopArrivals { get; set; } = null!;
+        public DbSet<Parcel> Parcels { get; set; } = null!;
+        public DbSet<Recipient> Recipients { get; set; } = null!;
+        public DbSet<Transferwarehouse> Transferwarehouses { get; set; } = null!;
+        public DbSet<Truck> Trucks { get; set; } = null!;
+        public DbSet<Warehouse> Warehouses { get; set; } = null!;
+        public DbSet<WarehouseNextHops> WarehouseNextHops { get; set; } = null!;
     }
 }

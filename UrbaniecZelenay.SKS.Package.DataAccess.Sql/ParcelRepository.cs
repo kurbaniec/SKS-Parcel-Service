@@ -93,7 +93,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 .Include(p => p.Recipient)
                 .AsEnumerable()
                 .FirstOrDefault(p => p.TrackingId == trackingId);
-            var visitedHop = p.FutureHops[0];
+            var visitedHop = p!.FutureHops[0];
             p.FutureHops.RemoveAt(0);
             visitedHop.DateTime = dateTime;
             p.VisitedHops.Add(visitedHop);
@@ -107,7 +107,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             Parcel? p = null;
             p = context.Parcels
                 .FirstOrDefault(p => p.TrackingId == trackingId);
-            p.State = parcelState;
+            p!.State = parcelState;
 
             context.SaveChanges();
             return p;

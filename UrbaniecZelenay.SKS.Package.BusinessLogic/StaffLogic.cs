@@ -78,7 +78,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             try
             {
                 // parcelRepository.Update(dalParcel);
-                parcelRepository.ChangeParcelState(dalParcel.TrackingId, DalParcel.StateEnum.DeliveredEnum);
+                parcelRepository.ChangeParcelState(dalParcel.TrackingId!, DalParcel.StateEnum.DeliveredEnum);
                 
             }
             catch (DalException e)
@@ -179,12 +179,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             {
                 if (blHop is Warehouse)
                 {
-                    parcelRepository.ChangeParcelState(blParcel.TrackingId, DalParcel.StateEnum.InTransportEnum);
+                    parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.InTransportEnum);
                     // blParcel.State = Parcel.StateEnum.InTransportEnum;
                 }
                 else if (blHop is Truck)
                 {
-                    parcelRepository.ChangeParcelState(blParcel.TrackingId, DalParcel.StateEnum.InTruckDeliveryEnum);
+                    parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.InTruckDeliveryEnum);
                     // blParcel.State = Parcel.StateEnum.InTruckDeliveryEnum;
                 }
                 else if (blHop is Transferwarehouse blTransferwarhouse)
@@ -207,7 +207,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                         throw e;
                     }
 
-                    parcelRepository.ChangeParcelState(blParcel.TrackingId, DalParcel.StateEnum.TransferredEnum);
+                    parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.TransferredEnum);
                 }
             }
             catch (DalException e)
@@ -222,7 +222,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             logger.LogDebug($"Mapping Bl/Dal {blParcel} => {dalParcel}");
             try
             {
-                parcelRepository.AddFutureHopToVisited(blParcel.TrackingId, DateTime.UtcNow);
+                parcelRepository.AddFutureHopToVisited(blParcel.TrackingId!, DateTime.UtcNow);
 
                 // parcelRepository.Update(dalParcel);
             }
