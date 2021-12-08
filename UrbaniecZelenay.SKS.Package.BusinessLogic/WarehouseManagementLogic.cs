@@ -143,16 +143,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 throw e;
             }
             
-            LinkPreviousHops(body, null, null);
+            // LinkPreviousHops(body, null, null);
             var dalWarehouse = mapper.Map<DalWarehouse>(body);
             logger.LogDebug($"Mapping Bl/Dal {body} => {dalWarehouse}");
             try
             {
-                var w = warehouseRepository.Create(dalWarehouse);
-                // var blW = mapper.Map<Warehouse>(w);
-                // LinkPreviousHops(blW, null, null);
-                // dalWarehouse = mapper.Map<DalWarehouse>(blW);
-                // warehouseRepository.Update(dalWarehouse);
+                warehouseRepository.Create(dalWarehouse);
             }
             catch (DalException e)
             {
@@ -163,20 +159,20 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             
         }
 
-        private static void LinkPreviousHops(Hop currentHop, Hop? parentHop, int? travelTime)
-        {
-            if (parentHop != null)
-                currentHop.PreviousHop = new PreviousHop
-                {
-                    OriginalHop = currentHop,
-                    Hop = parentHop,
-                    TraveltimeMins = travelTime!.Value
-                };
-            if (currentHop is not Warehouse w) return;
-            foreach (var nextHop in w.NextHops)
-            {
-                LinkPreviousHops(nextHop.Hop, currentHop, nextHop.TraveltimeMins);
-            }
-        }
+        // private static void LinkPreviousHops(Hop currentHop, Hop? parentHop, int? travelTime)
+        // {
+        //     if (parentHop != null)
+        //         currentHop.PreviousHop = new PreviousHop
+        //         {
+        //             OriginalHop = currentHop,
+        //             Hop = parentHop,
+        //             TraveltimeMins = travelTime!.Value
+        //         };
+        //     if (currentHop is not Warehouse w) return;
+        //     foreach (var nextHop in w.NextHops)
+        //     {
+        //         LinkPreviousHops(nextHop.Hop, currentHop, nextHop.TraveltimeMins);
+        //     }
+        // }
     }
 }

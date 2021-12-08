@@ -23,6 +23,17 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
         public Parcel Create(Parcel parcel, bool useExistingId)
         {
+            // Mitigate Entity Framework tracking problems
+            // Help the framework determine hop state
+            // See: https://stackoverflow.com/a/67386825/12347616
+            foreach (var hopArrival in parcel.FutureHops)
+            {
+                context.Entry(hopArrival.Hop).State = EntityState.Unchanged;
+            }
+            // foreach (var hopArrival in parcel.VisitedHops)
+            // {
+            //     context.Entry(hopArrival.Hop).State = EntityState.Unchanged;
+            // }
             try
             {
                 if (!useExistingId)

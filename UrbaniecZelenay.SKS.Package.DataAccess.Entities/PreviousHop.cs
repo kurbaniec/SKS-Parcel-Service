@@ -25,7 +25,5 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// Gets or Sets TraveltimeMins
         /// </summary>
         public int TraveltimeMins { get; set; }
-
-        
     }
 }

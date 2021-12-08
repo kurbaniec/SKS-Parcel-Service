@@ -94,11 +94,11 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             // Predict future Hops
             // Get recipient Hop
             // Can be a Truck or Transferwarehouse
-            DalHop? currentRecipientHop = warehouseRepository.GetTruckByPoint(recipientGeoLocation);
-            if (currentRecipientHop == null)
+            DalHop? dalCurrentRecipientHop = warehouseRepository.GetTruckByPoint(recipientGeoLocation);
+            if (dalCurrentRecipientHop == null)
             {
-                currentRecipientHop = warehouseRepository.GetTransferwarehouseByPoint(recipientGeoLocation);
-                if (currentRecipientHop == null)
+                dalCurrentRecipientHop = warehouseRepository.GetTransferwarehouseByPoint(recipientGeoLocation);
+                if (dalCurrentRecipientHop == null)
                 {
                     BlDataNotFoundException e = new(
                         $"Cannot find Truck or Transferwarehouse for Recipient with GeoLocation {recipientGeoLocation}");
@@ -106,17 +106,19 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                     throw e;
                 }
             }
+            var currentRecipientHop = mapper.Map<Hop>(dalCurrentRecipientHop);
 
             // Get sender Hop
             // Can only be a Truck
-            DalHop? currentSenderHop = warehouseRepository.GetTruckByPoint(senderGeoLocation);
-            if (currentSenderHop == null)
+            DalHop? dalCurrentSenderHop = warehouseRepository.GetTruckByPoint(senderGeoLocation);
+            if (dalCurrentSenderHop == null)
             {
                 BlDataNotFoundException e = new(
                     $"Cannot find Truck or Transferwarehouse for Sender with GeoLocation {senderGeoLocation}");
                 logger.LogWarning(e, "Cannot find GeoLocation");
                 throw e;
             }
+            var currentSenderHop = mapper.Map<Hop>(dalCurrentSenderHop);
 
             var futureHops = SharedLogic.PredictFutureHops(currentRecipientHop, currentSenderHop);
             // Check if Route was found
@@ -127,13 +129,14 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 logger.LogWarning(e, "Cannot find future Hops");
                 throw e;
             }
+            var dalFutureHops = mapper.Map<List<DalHopArrival>>(futureHops);
 
             // Set parcel state to "Pickup"
             parcel.State = Parcel.StateEnum.PickupEnum;
 
             // Convert to DAL DAO and add future Hops
             var dalParcel = mapper.Map<DalParcel>(parcel);
-            dalParcel.FutureHops = futureHops;
+            dalParcel.FutureHops = dalFutureHops;
 
             logger.LogDebug($"Mapping Bl/Dal {parcel} => {dalParcel}");
             try

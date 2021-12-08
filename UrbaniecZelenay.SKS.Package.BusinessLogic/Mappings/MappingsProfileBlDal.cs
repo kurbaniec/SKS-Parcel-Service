@@ -35,14 +35,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings
             CreateMap<Transferwarehouse, DalTransferwarehouse>().ReverseMap();
             CreateMap<GeoCoordinate, DalGeoCoordinate>().ReverseMap();
             CreateMap<PreviousHop, DalPreviousHop>().ReverseMap();
-            CreateMap<HopArrival, DalHopArrival>()
-                .ForMember(dalHopArrival => dalHopArrival.Hop,
-                    opt => opt.MapFrom(blHopArrival => new Hop()
-                    {
-                        Code = blHopArrival.Code,
-                        Description = blHopArrival.Description
-                    }))
-                .ReverseMap();
+            CreateMap<HopArrival, DalHopArrival>().ReverseMap();
         }
     }
 }

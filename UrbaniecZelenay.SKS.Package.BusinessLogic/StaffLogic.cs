@@ -165,9 +165,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 
             var hopArrival = new HopArrival()
             {
-                Code = blHop.Code,
+                Hop = blHop,
                 DateTime = DateTime.Now,
-                Description = blHop.Description
             };
 
             // var visitedHop = blParcel.FutureHops[0];

@@ -47,7 +47,14 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
                 // Need to check if the if InTransport State is correct!
                 .ForMember(blParcel => blParcel.State, opt => opt.MapFrom(x => BlParcel.StateEnum.InTransportEnum))
                 .ReverseMap();
-            CreateMap<BlHopArrival, HopArrival>();
+            CreateMap<HopArrival, BlHopArrival>()
+                .ForMember(blHopArrival => blHopArrival.Hop,
+                    opt => opt.MapFrom(blHopArrival => new Hop()
+                    {
+                        Code = blHopArrival.Code,
+                        Description = blHopArrival.Description
+                    }))
+                .ReverseMap();
             CreateMap<BlParcel, TrackingInformation>();
             CreateMap<BlParcel, NewParcelInfo>();
             CreateMap<Recipient, BlRecipient>().ReverseMap();

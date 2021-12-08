@@ -21,9 +21,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         {
             var validHopArrival = new HopArrival
             {
-                Code = "AAAA11",
+                Hop = new Hop
+                {
+                    Code = "AAAA11",
+                    Description = "Description"
+                },
                 DateTime = new DateTime(2021, 1, 1, 0, 0, 0),
-                Description = "Description"
             };
             IValidator<HopArrival> hopArrivalValidator = new HopArrivalValidator();
             var validationResult = hopArrivalValidator.Validate(validHopArrival);
@@ -35,9 +38,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         {
             var validHopArrival = new HopArrival
             {
-                Code = "123",
+                Hop = new Hop
+                {
+                    Code = "123",
+                    Description = "Description"
+                },
                 DateTime = new DateTime(2021, 1, 1, 0, 0, 0),
-                Description = "Description"
             };
             IValidator<HopArrival> hopArrivalValidator = new HopArrivalValidator();
             var validationResult = hopArrivalValidator.Validate(validHopArrival);
@@ -49,9 +55,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         {
             var validHopArrival = new HopArrival
             {
-                Code = "",
+                Hop = new Hop
+                {
+                    Code = "",
+                    Description = "Description"
+                },
                 DateTime = new DateTime(2021, 1, 1, 0, 0, 0),
-                Description = "Description"
             };
             IValidator<HopArrival> hopArrivalValidator = new HopArrivalValidator();
             var validationResult = hopArrivalValidator.Validate(validHopArrival);
@@ -63,9 +72,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         {
             var validHopArrival = new HopArrival
             {
-                Code = "AAAA11",
+                Hop = new Hop
+                {
+                    Code = "AAAA11",
+                    Description = "#desc!"
+                },
                 DateTime = new DateTime(2021, 1, 1, 0, 0, 0),
-                Description = "#desc!"
             };
             IValidator<HopArrival> hopArrivalValidator = new HopArrivalValidator();
             var validationResult = hopArrivalValidator.Validate(validHopArrival);
@@ -77,9 +89,12 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
         {
             var validHopArrival = new HopArrival
             {
-                Code = "AAAA11",
+                Hop = new Hop
+                {
+                    Code = "AAAA11",
+                    Description = ""
+                },
                 DateTime = new DateTime(2021, 1, 1, 0, 0, 0),
-                Description = ""
             };
             IValidator<HopArrival> hopArrivalValidator = new HopArrivalValidator();
             var validationResult = hopArrivalValidator.Validate(validHopArrival);

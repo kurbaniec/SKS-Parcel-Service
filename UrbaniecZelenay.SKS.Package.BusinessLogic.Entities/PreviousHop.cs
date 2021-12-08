@@ -17,7 +17,5 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         /// </summary>
         [Required]
         public Hop Hop { get; set; }
-        
-        public Hop OriginalHop { get; set; }
     }
 }

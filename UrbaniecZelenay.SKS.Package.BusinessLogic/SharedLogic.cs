@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using DalHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Hop;
 using DalTruck = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Truck;
 using DalTransferwarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Transferwarehouse;
@@ -8,40 +9,22 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {
     public class SharedLogic
     {
-        public static List<DalHopArrival>? PredictFutureHops(DalHop recipientStartHop, DalHop senderStartHop)
+        public static List<HopArrival>? PredictFutureHops(Hop recipientStartHop, Hop senderStartHop)
         {
             var currentRecipientHop = recipientStartHop;
             var currentSenderHop = senderStartHop;
-            var recipientFutureHops = new List<DalHopArrival>();
-            var senderFutureHops = new List<DalHopArrival>();
-            // Note: Misconception, Trucks and Transferwarehouses are on the same level
-            /*// If recipient is a Truck add one previous Hop to the current sender Hop
-            // Why? Hop hierarchy is a balanced tree and trucks are one hierarchy level lower than
-            // Transferwarehouses (which belong to the same level as normal Warehouses which have trucks)
-            if (currentRecipientHop is DalTruck)
-            {
-                recipientFutureHops.Add(new DalHopArrival
-                {
-                    Hop = currentRecipientHop
-                });
-                currentRecipientHop = currentRecipientHop.PreviousHop;
-            }
-
-            senderFutureHops.Add(new DalHopArrival
-            {
-                Hop = currentSenderHop
-            });
-            currentSenderHop = currentSenderHop.PreviousHop;*/
+            var recipientFutureHops = new List<HopArrival>();
+            var senderFutureHops = new List<HopArrival>();
             // Build Future Hops hierarchy
-            while (currentRecipientHop != currentSenderHop &&
+            while (currentRecipientHop?.Code != currentSenderHop?.Code &&
                    currentSenderHop != null && currentRecipientHop != null)
             {
-                recipientFutureHops.Add(new DalHopArrival
+                recipientFutureHops.Add(new HopArrival
                 {
                     Hop = currentRecipientHop
                 });
                 currentRecipientHop = currentRecipientHop.PreviousHop?.Hop;
-                senderFutureHops.Add(new DalHopArrival
+                senderFutureHops.Add(new HopArrival
                 {
                     Hop = currentSenderHop
                 });
@@ -56,7 +39,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 
             // Build one List
             // Note: senderFutureHops will contain afterwards the full Future Hops List
-            senderFutureHops.Add(new DalHopArrival
+            senderFutureHops.Add(new HopArrival
             {
                 Hop = currentSenderHop
             });

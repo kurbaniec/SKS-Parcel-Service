@@ -29,6 +29,8 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             logger.LogInformation($"Create Warehouse {warehouse}");
             try
             {
+                // Link previous hops
+                LinkPreviousHops(warehouse, null, null);
                 // Delete database and rebuild it
                 // See: https://docs.microsoft.com/en-us/ef/core/managing-schemas/ensure-created
                 context.Database.EnsureDeleted();
@@ -48,6 +50,22 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             }
 
             return warehouse;
+        }
+        
+        private static void LinkPreviousHops(Hop currentHop, Hop? parentHop, int? travelTime)
+        {
+            if (parentHop != null)
+                currentHop.PreviousHop = new PreviousHop
+                {
+                    OriginalHop = currentHop,
+                    Hop = parentHop,
+                    TraveltimeMins = travelTime!.Value
+                };
+            if (currentHop is not Warehouse w) return;
+            foreach (var nextHop in w.NextHops)
+            {
+                LinkPreviousHops(nextHop.Hop, currentHop, nextHop.TraveltimeMins);
+            }
         }
 
         public Warehouse? GetAll()
@@ -148,6 +166,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 // See: https://github.com/dotnet/efcore/issues/17212
                 truck = context.Hops
                     .OfType<Truck>()
+                    .AsNoTracking()
                     .Include(t => t.PreviousHop)
                     .ThenInclude(t => t!.Hop)
                     .AsEnumerable()
@@ -175,6 +194,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             {
                 transferwarehouse = context.Hops
                     .OfType<Transferwarehouse>()
+                    .AsNoTracking()
                     .Include(tw => tw.PreviousHop)
                     .ThenInclude(tw => tw!.Hop)
                     .AsEnumerable()
