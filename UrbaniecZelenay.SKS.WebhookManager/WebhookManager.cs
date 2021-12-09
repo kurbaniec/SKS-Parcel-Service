@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.WebhookManager.Interfaces;
 
@@ -32,7 +33,12 @@ namespace UrbaniecZelenay.SKS.WebhookManager
         public Webhook SubscribeParcelWebhook(string trackingId, string url)
         {
             var parcel = parcelRepository.GetByTrackingId(trackingId);
-            // TODO: Check if null
+            if (parcel == null)
+            {
+                logger.LogError($"No Parcel for given trackingId ({trackingId}) found.");
+                throw new DalException($"Error occured while getting Parcel with trackingId ({trackingId}).");
+            }
+            
             var webhook = new Webhook
             {
                 Parcel = parcel,

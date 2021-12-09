@@ -92,6 +92,11 @@ namespace UrbaniecZelenay.SKS.WebhookManager
                 logger.LogError(e, $"Error deleting Webhook with Id ({id}).");
                 throw new DalConnectionException($"Error occured while deleting Webhook with Id ({id}).", e);
             }
+            catch (DbUpdateConcurrencyException e)
+            {
+                logger.LogError(e, $"Error deleting Webhook with Id ({id}).");
+                throw new DalConnectionException($"Error occured while deleting Webhook with Id ({id}).", e);
+            }
         }
     }
 }
