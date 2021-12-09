@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic\UrbaniecZelenay.SKS.Package.BusinessLogic.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.WebhookManager.Interfaces\UrbaniecZelenay.SKS.WebhookManager.Interfaces.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.WebhookManager\UrbaniecZelenay.SKS.WebhookManager.csproj" />
