@@ -77,7 +77,7 @@ namespace UrbaniecZelenay.SKS.WebhookManager.Tests
             var w = webhookRepository.Create(validWebhook);
             
             Assert.NotNull(w);
-            Assert.AreEqual(w.Url, url);
+            Assert.AreEqual(url, w.Url);
         }
         
         [Test]
@@ -122,6 +122,81 @@ namespace UrbaniecZelenay.SKS.WebhookManager.Tests
             var webhookRepository = new WebhookRepository(mockLogger.Object, myDbMoq.Object);
 
             Assert.Throws<DalConnectionException>(() => webhookRepository.Create(validWebhook));
+        }
+        
+        [Test]
+        public void GetAllByTrackingId_ValidTrackingId_WebhooksReturned()
+        {
+            const string trackingId = "000000001";
+            const string url = "https://webhook.site/5a1d1232-ee26-418e-96cb-072a0add7804";
+            var validWebhook = new Webhook
+            {
+                Parcel = new Parcel { TrackingId = trackingId },
+                Url = url,
+                CreatedAt = DateTime.Now
+            };
+            var myDbMoq = new Mock<IParcelLogisticsContext>();
+            myDbMoq.Setup(m => m.Webhooks)
+                .Returns(ParcelLogisticsContextMock.GetQueryableMockDbSet<Webhook>(
+                    new List<Webhook> { validWebhook }
+                ));
+            Mock<DatabaseFacade> dbFacadeMock = new(new Mock<DbContext>().Object);
+            Mock<IDbContextTransaction> dbTransactionMock = new();
+            dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
+            myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
+            var mockLogger = new Mock<ILogger<WebhookRepository>>();
+            var webhookRepository = new WebhookRepository(mockLogger.Object, myDbMoq.Object);
+
+            var w = webhookRepository.GetAllByTrackingId(trackingId);
+            
+            Assert.NotNull(w);
+            Assert.AreEqual(1, w.Count());
+        }
+        
+        [Test]
+        public void GetAllByTrackingId_DbProblemSqlException_ThrowsDalConnectionException()
+        {
+            const string trackingId = "000000001";
+            const string url = "https://webhook.site/5a1d1232-ee26-418e-96cb-072a0add7804";
+            var validWebhook = new Webhook
+            {
+                Parcel = new Parcel { TrackingId = trackingId },
+                Url = url,
+                CreatedAt = DateTime.Now
+            };
+            var myDbMoq = new Mock<IParcelLogisticsContext>();
+            myDbMoq.Setup(m => m.Webhooks).Throws(SqlExceptionCreator.NewSqlException());
+            Mock<DatabaseFacade> dbFacadeMock = new(new Mock<DbContext>().Object);
+            Mock<IDbContextTransaction> dbTransactionMock = new();
+            dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
+            myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
+            var mockLogger = new Mock<ILogger<WebhookRepository>>();
+            var webhookRepository = new WebhookRepository(mockLogger.Object, myDbMoq.Object);
+
+            Assert.Throws<DalConnectionException>(() => webhookRepository.GetAllByTrackingId(trackingId));
+        }
+        
+        [Test]
+        public void GetAllByTrackingId_DbProblemInvalidOperationException_ThrowsDalConnectionException()
+        {
+            const string trackingId = "000000001";
+            const string url = "https://webhook.site/5a1d1232-ee26-418e-96cb-072a0add7804";
+            var validWebhook = new Webhook
+            {
+                Parcel = new Parcel { TrackingId = trackingId },
+                Url = url,
+                CreatedAt = DateTime.Now
+            };
+            var myDbMoq = new Mock<IParcelLogisticsContext>();
+            myDbMoq.Setup(m => m.Webhooks).Throws(new InvalidOperationException());
+            Mock<DatabaseFacade> dbFacadeMock = new(new Mock<DbContext>().Object);
+            Mock<IDbContextTransaction> dbTransactionMock = new();
+            dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
+            myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
+            var mockLogger = new Mock<ILogger<WebhookRepository>>();
+            var webhookRepository = new WebhookRepository(mockLogger.Object, myDbMoq.Object);
+
+            Assert.Throws<DalConnectionException>(() => webhookRepository.GetAllByTrackingId(trackingId));
         }
 
         
