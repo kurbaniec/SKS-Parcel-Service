@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
+using UrbaniecZelenay.SKS.WebhookManager.Entities;
 using UrbaniecZelenay.SKS.WebhookManager.Interfaces;
 
 namespace UrbaniecZelenay.SKS.WebhookManager

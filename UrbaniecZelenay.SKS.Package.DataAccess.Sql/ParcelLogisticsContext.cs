@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
+using UrbaniecZelenay.SKS.WebhookManager.Entities;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 {

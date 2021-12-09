@@ -5,9 +5,8 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
-using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.WebhookManager.Interfaces;
-using DalWebhook = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Webhook;
+using DalWebhook = UrbaniecZelenay.SKS.WebhookManager.Entities.Webhook;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 {

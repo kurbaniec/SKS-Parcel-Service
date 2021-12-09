@@ -14,6 +14,7 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Validators;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.ServiceAgents.Interfaces;
+using UrbaniecZelenay.SKS.WebhookManager.Interfaces;
 using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
 using DalRecipient = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Recipient;
 using DalHopArrival = UrbaniecZelenay.SKS.Package.DataAccess.Entities.HopArrival;
@@ -81,8 +82,16 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                     It.IsAny<float>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>())).Returns(true);
-            IStaffLogic staffLogic = new StaffLogic(mockLogger.Object, mockParcelRepo.Object, mockWarehouseRepo.Object,
-                mapperConfig.CreateMapper(), mockTransferWarehouseAgent.Object);
+            var mockWebhookManager = new Mock<IWebhookManager>();
+            IStaffLogic staffLogic = new StaffLogic(
+                mockParcelRepo.Object,
+                mockWarehouseRepo.Object,
+                mockTransferWarehouseAgent.Object,
+                mockWebhookManager.Object,
+                mapperConfig.CreateMapper(),
+                mockLogger.Object
+            );
+            
             Assert.Throws<BlArgumentException>(() => staffLogic.ReportParcelDelivery(trackingId));
         }
 
@@ -136,9 +145,16 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                     It.IsAny<float>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>())).Returns(true);
-            IStaffLogic staffLogic = new StaffLogic(mockLogger.Object, mockParcelRepo.Object, mockWarehouseRepo.Object,
-                mapperConfig.CreateMapper(), mockTransferWarehouseAgent.Object);
-
+            var mockWebhookManager = new Mock<IWebhookManager>();
+            IStaffLogic staffLogic = new StaffLogic(
+                mockParcelRepo.Object,
+                mockWarehouseRepo.Object,
+                mockTransferWarehouseAgent.Object,
+                mockWebhookManager.Object,
+                mapperConfig.CreateMapper(),
+                mockLogger.Object
+            );
+            
             staffLogic.ReportParcelDelivery(trackingId);
         }
 
@@ -192,8 +208,15 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                     It.IsAny<float>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>())).Returns(true);
-            IStaffLogic staffLogic = new StaffLogic(mockLogger.Object, mockParcelRepo.Object, mockWarehouseRepo.Object,
-                mapperConfig.CreateMapper(), mockTransferWarehouseAgent.Object);
+            var mockWebhookManager = new Mock<IWebhookManager>();
+            IStaffLogic staffLogic = new StaffLogic(
+                mockParcelRepo.Object,
+                mockWarehouseRepo.Object,
+                mockTransferWarehouseAgent.Object,
+                mockWebhookManager.Object,
+                mapperConfig.CreateMapper(),
+                mockLogger.Object
+            );
 
             Assert.Throws<BlArgumentException>(() => staffLogic.ReportParcelHop(trackingId, code));
         }
@@ -248,8 +271,15 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                     It.IsAny<float>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>())).Returns(true);
-            IStaffLogic staffLogic = new StaffLogic(mockLogger.Object, mockParcelRepo.Object, mockWarehouseRepo.Object,
-                mapperConfig.CreateMapper(), mockTransferWarehouseAgent.Object);
+            var mockWebhookManager = new Mock<IWebhookManager>();
+            IStaffLogic staffLogic = new StaffLogic(
+                mockParcelRepo.Object,
+                mockWarehouseRepo.Object,
+                mockTransferWarehouseAgent.Object,
+                mockWebhookManager.Object,
+                mapperConfig.CreateMapper(),
+                mockLogger.Object
+            );
 
             Assert.Throws<BlArgumentException>(() => staffLogic.ReportParcelHop(trackingId, code));
         }
@@ -320,8 +350,15 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                     It.IsAny<float>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<string>())).Returns(true);
-            IStaffLogic staffLogic = new StaffLogic(mockLogger.Object, mockParcelRepo.Object, mockWarehouseRepo.Object,
-                mapperConfig.CreateMapper(), mockTransferWarehouseAgent.Object);
+            var mockWebhookManager = new Mock<IWebhookManager>();
+            IStaffLogic staffLogic = new StaffLogic(
+                mockParcelRepo.Object,
+                mockWarehouseRepo.Object,
+                mockTransferWarehouseAgent.Object,
+                mockWebhookManager.Object,
+                mapperConfig.CreateMapper(),
+                mockLogger.Object
+            );
 
             staffLogic.ReportParcelHop(trackingId, code);
         }

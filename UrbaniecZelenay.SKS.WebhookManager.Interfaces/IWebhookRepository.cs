@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
+using UrbaniecZelenay.SKS.WebhookManager.Entities;
 
 namespace UrbaniecZelenay.SKS.WebhookManager.Interfaces
 {

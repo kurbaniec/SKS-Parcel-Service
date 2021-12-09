@@ -9,6 +9,7 @@ using UrbaniecZelenay.SKS.Package.BusinessLogic.Interfaces;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
 using UrbaniecZelenay.SKS.ServiceAgents.Interfaces;
+using UrbaniecZelenay.SKS.WebhookManager.Interfaces;
 using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
 using DalHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Hop;
 
@@ -19,20 +20,27 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
         private readonly IParcelRepository parcelRepository;
         private readonly IWarehouseRepository warehouseRepository;
         private readonly ITransferWarehouseAgent transferWarehouseAgent;
+        private readonly IWebhookManager webhookManager;
         private readonly IMapper mapper;
         private readonly ILogger<StaffLogic> logger;
 
-        public StaffLogic(ILogger<StaffLogic> logger, IParcelRepository parcelRepository,
-            IWarehouseRepository warehouseRepository, IMapper mapper, ITransferWarehouseAgent transferWarehouseAgent)
+        public StaffLogic(
+            IParcelRepository parcelRepository,
+            IWarehouseRepository warehouseRepository,
+            ITransferWarehouseAgent transferWarehouseAgent,
+            IWebhookManager webhookManager,
+            IMapper mapper,
+            ILogger<StaffLogic> logger
+        )
         {
-            this.logger = logger;
             this.parcelRepository = parcelRepository;
             this.warehouseRepository = warehouseRepository;
-            this.mapper = mapper;
             this.transferWarehouseAgent = transferWarehouseAgent;
+            this.webhookManager = webhookManager;
+            this.mapper = mapper;
+            this.logger = logger;
         }
-
-        // TODO create NotFoundException
+        
         public void ReportParcelDelivery(string? trackingId)
         {
             logger.LogInformation($"Report Parcel Delivery for ID {trackingId}");
@@ -78,8 +86,9 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             try
             {
                 // parcelRepository.Update(dalParcel);
-                parcelRepository.ChangeParcelState(dalParcel.TrackingId!, DalParcel.StateEnum.DeliveredEnum);
-                
+                var parcel = parcelRepository.ChangeParcelState(dalParcel.TrackingId!, DalParcel.StateEnum.DeliveredEnum);
+                webhookManager.NotifyParcelWebhooks(parcel);
+                webhookManager.UnsubscribeAllParcelWebhooks(parcel.TrackingId!);
             }
             catch (DalException e)
             {
@@ -179,12 +188,14 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             {
                 if (blHop is Warehouse)
                 {
-                    parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.InTransportEnum);
+                    var parcel = parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.InTransportEnum);
+                    webhookManager.NotifyParcelWebhooks(parcel);
                     // blParcel.State = Parcel.StateEnum.InTransportEnum;
                 }
                 else if (blHop is Truck)
                 {
-                    parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.InTruckDeliveryEnum);
+                    var parcel = parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.InTruckDeliveryEnum);
+                    webhookManager.NotifyParcelWebhooks(parcel);
                     // blParcel.State = Parcel.StateEnum.InTruckDeliveryEnum;
                 }
                 else if (blHop is Transferwarehouse blTransferwarhouse)
@@ -207,7 +218,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                         throw e;
                     }
 
-                    parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.TransferredEnum);
+                    var parcel = parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.TransferredEnum);
+                    webhookManager.NotifyParcelWebhooks(parcel);
                 }
             }
             catch (DalException e)

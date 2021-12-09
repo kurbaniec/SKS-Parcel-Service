@@ -17,6 +17,7 @@
     <ItemGroup>
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Entities\UrbaniecZelenay.SKS.Package.DataAccess.Entities.csproj" />
       <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.WebhookManager.Entities\UrbaniecZelenay.SKS.WebhookManager.Entities.csproj" />
     </ItemGroup>
 
 </Project>

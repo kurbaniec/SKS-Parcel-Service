@@ -1,9 +1,8 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 
-namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
+namespace UrbaniecZelenay.SKS.WebhookManager.Entities
 {
     [ExcludeFromCodeCoverage]
     public class Webhook
@@ -11,16 +10,14 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
-        [Key]
         public long? Id { get; set; }
-        
+
         public Parcel Parcel { get; set; } = null!;
 
         /// <summary>
         /// Gets or Sets TrackingId
         /// </summary>
-        [NotMapped]
-        public string? TrackingId => Parcel.TrackingId;
+        public string TrackingId => Parcel.TrackingId!;
 
         /// <summary>
         /// Gets or Sets Url

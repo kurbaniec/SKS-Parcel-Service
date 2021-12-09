@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
-using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
 using DalRecipient = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Recipient;
 using DalWarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Warehouse;
@@ -11,7 +10,9 @@ using DalHopArrival = UrbaniecZelenay.SKS.Package.DataAccess.Entities.HopArrival
 using DalTruck = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Truck;
 using DalTransferwarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Transferwarehouse;
 using DalPreviousHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.PreviousHop;
-using DalWebhook = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Webhook;
+using DalWebhook = UrbaniecZelenay.SKS.WebhookManager.Entities.Webhook;
+using DalWebhookMessage = UrbaniecZelenay.SKS.WebhookManager.Entities.WebhookMessage;
+using DalWebhookHop = UrbaniecZelenay.SKS.WebhookManager.Entities.WebhookHop;
 using GeoCoordinate = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.GeoCoordinate;
 using Hop = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Hop;
 using HopArrival = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.HopArrival;
@@ -50,8 +51,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings
             CreateMap<HopArrival, DalHopArrival>().ReverseMap();
             CreateMap<Webhook, DalWebhook>().ReverseMap();
             // Webhooks
-            // TODO: Move to own file/profile?
-            CreateMap<DalParcel, WebhookMessage>();
+            CreateMap<DalHopArrival, DalWebhookHop>();
+            CreateMap<DalParcel, DalWebhookMessage>();
         }
     }
 }

@@ -44,6 +44,24 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
         [Test]
         public async Task SubmitNewParcelToTheLogisticsService()
         {
+            const string body = @"
+            {
+                ""weight"": 2,
+                ""recipient"": {
+                    ""name"": ""Max Mustermann"",
+                    ""street"": ""Am Europlatz 3"",
+                    ""postalCode"": ""1120"",
+                    ""city"": ""Wien"",
+                    ""country"": ""Austria""
+                },
+                ""sender"": {
+                    ""name"": ""Maxine Mustermann"",
+                    ""street"": ""Franklinstrasse 21"",
+                    ""postalCode"": ""1210"",
+                    ""city"": ""Wien"",
+                    ""country"": ""Austria""
+                }
+            }";
             // const string body = @"
             // {
             //     ""weight"": 2,
@@ -62,24 +80,24 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
             //         ""country"": ""Austria""
             //     }
             // }";
-            const string body = @"
-            {
-                ""weight"": 2,
-                ""recipient"": {
-                    ""name"": ""Max Mustermann"",
-                    ""street"": ""Weißenburger Pl. 8"",
-                    ""postalCode"": ""81667"",
-                    ""city"": ""München"",
-                    ""country"": ""Germany""
-                },
-                ""sender"": {
-                    ""name"": ""Maxine Mustermann"",
-                    ""street"": ""Urban-Loritz-Platz 2A"",
-                    ""postalCode"": ""1070"",
-                    ""city"": ""Vienna"",
-                    ""country"": ""Austria""
-                }
-            }";
+            // const string body = @"
+            // {
+            //     ""weight"": 2,
+            //     ""recipient"": {
+            //         ""name"": ""Max Mustermann"",
+            //         ""street"": ""Weißenburger Pl. 8"",
+            //         ""postalCode"": ""81667"",
+            //         ""city"": ""München"",
+            //         ""country"": ""Germany""
+            //     },
+            //     ""sender"": {
+            //         ""name"": ""Maxine Mustermann"",
+            //         ""street"": ""Urban-Loritz-Platz 2A"",
+            //         ""postalCode"": ""1070"",
+            //         ""city"": ""Vienna"",
+            //         ""country"": ""Austria""
+            //     }
+            // }";
             var response = await client.PostAsync($"{ServerUrl}/parcel", new StringContent(
                 body, Encoding.UTF8, "application/json"
             ));

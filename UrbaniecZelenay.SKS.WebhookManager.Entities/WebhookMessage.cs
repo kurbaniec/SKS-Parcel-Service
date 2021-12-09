@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
+namespace UrbaniecZelenay.SKS.WebhookManager.Entities
 {
     [ExcludeFromCodeCoverage]
     public class WebhookMessage
@@ -12,12 +13,16 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// The tracking ID of the parcel. 
         /// </summary>
         /// <value>The tracking ID of the parcel. </value>
+        [JsonProperty("trackingId")]
         public string TrackingId { get; set; } = null!;
 
         /// <summary>
         /// State of the parcel.
         /// </summary>
         /// <value>State of the parcel.</value>
+        // Use String converter
+        // See: https://stackoverflow.com/a/19768223/12347616
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum StateEnum
         {
             /// <summary>
@@ -51,18 +56,21 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Entities
         /// State of the parcel.
         /// </summary>
         /// <value>State of the parcel.</value>
+        [JsonProperty("state")]
         public StateEnum State { get; set; }
 
         /// <summary>
         /// Hops visited in the past.
         /// </summary>
         /// <value>Hops visited in the past.</value>
-        public List<HopArrival> VisitedHops { get; set; } = null!;
+        [JsonProperty("visitedHops")]
+        public List<WebhookHop> VisitedHops { get; set; } = null!;
 
         /// <summary>
         /// Hops coming up in the future - their times are estimations.
         /// </summary>
         /// <value>Hops coming up in the future - their times are estimations.</value>
-        public List<HopArrival> FutureHops { get; set; } = null!;
+        [JsonProperty("futureHops")]
+        public List<WebhookHop> FutureHops { get; set; } = null!;
     }
 }
