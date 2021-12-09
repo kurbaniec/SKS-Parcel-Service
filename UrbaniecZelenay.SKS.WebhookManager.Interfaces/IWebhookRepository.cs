@@ -10,5 +10,7 @@ namespace UrbaniecZelenay.SKS.WebhookManager.Interfaces
         IEnumerable<Webhook> GetAllByTrackingId(string trackingId);
 
         void Delete(long id);
+
+        void DeleteAll(string trackingId);
     }
 }

@@ -90,11 +90,10 @@ namespace UrbaniecZelenay.SKS.WebhookManager
                 var url = $"{webhook.Url}?trackingId={webhook.TrackingId}";
                 try
                 {
-                    Task.Run(() => {
-                        client.PostAsync(url, new StringContent(
-                            webhookJson, Encoding.UTF8, "application/json"
-                        ));
-                    });
+                    var task = Task.Run(() => client.PostAsync(url, new StringContent(
+                        webhookJson, Encoding.UTF8, "application/json"
+                    )));
+                    task.Wait();
                 } 
                 catch (AggregateException ae)
                 {
@@ -113,7 +112,7 @@ namespace UrbaniecZelenay.SKS.WebhookManager
 
         public void UnsubscribeAllParcelWebhooks(string trackingId)
         {
-            throw new NotImplementedException();
+           webhookRepository.DeleteAll(trackingId);
         }
     }
 }

@@ -59,12 +59,14 @@ namespace UrbaniecZelenay.SKS.WebhookManager
             catch (SqlException e)
             {
                 logger.LogError(e, $"Error getting Webhooks for trackingId ({trackingId}).");
-                throw new DalConnectionException($"Error occured while getting Webhooks for trackingId ({trackingId}).", e);
+                throw new DalConnectionException($"Error occured while getting Webhooks for trackingId ({trackingId}).",
+                    e);
             }
             catch (InvalidOperationException e)
             {
                 logger.LogError(e, $"Error getting Webhooks for trackingId ({trackingId}).");
-                throw new DalConnectionException($"Error occured while getting Webhooks for trackingId ({trackingId}).", e);
+                throw new DalConnectionException($"Error occured while getting Webhooks for trackingId ({trackingId}).",
+                    e);
             }
 
             return webhooks;
@@ -96,6 +98,35 @@ namespace UrbaniecZelenay.SKS.WebhookManager
             {
                 logger.LogError(e, $"Error deleting Webhook with Id ({id}).");
                 throw new DalConnectionException($"Error occured while deleting Webhook with Id ({id}).", e);
+            }
+        }
+
+        public void DeleteAll(string trackingId)
+        {
+            logger.LogInformation($"Delete Webhooks for trackingId {trackingId}");
+            try
+            {
+                var webhooks = GetAllByTrackingId(trackingId);
+                context.Webhooks.RemoveRange(webhooks);
+                context.SaveChanges();
+            }
+            catch (SqlException e)
+            {
+                logger.LogError(e, $"Error deleting Webhooks for trackingId ({trackingId}).");
+                throw new DalConnectionException(
+                    $"Error occured while deleting Webhooks for trackingId ({trackingId}).", e);
+            }
+            catch (InvalidOperationException e)
+            {
+                logger.LogError(e, $"Error deleting Webhooks for trackingId ({trackingId}).");
+                throw new DalConnectionException(
+                    $"Error occured while deleting Webhooks for trackingId ({trackingId}).", e);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                logger.LogError(e, $"Error deleting Webhooks for trackingId ({trackingId}).");
+                throw new DalConnectionException(
+                    $"Error occured while deleting Webhooks for trackingId ({trackingId}).", e);
             }
         }
     }
