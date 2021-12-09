@@ -11,4 +11,9 @@
       <ProjectReference Include="..\UrbaniecZelenay.SKS.WebhookManager.Interfaces\UrbaniecZelenay.SKS.WebhookManager.Interfaces.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
 </Project>

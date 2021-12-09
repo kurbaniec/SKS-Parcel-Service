@@ -19,5 +19,9 @@ namespace UrbaniecZelenay.SKS.WebhookManager.Interfaces
         /// Remove an existing webhook subscription.
         /// </summary>
         void UnsubscribeParcelWebhook(long id);
+
+        void NotifyParcelWebhooks(Parcel parcel);
+
+        void UnsubscribeAllParcelWebhooks(string trackingId);
     }
 }

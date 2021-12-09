@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities.Exceptions;
 using UrbaniecZelenay.SKS.Package.DataAccess.Interfaces;
@@ -10,18 +15,38 @@ namespace UrbaniecZelenay.SKS.WebhookManager
 {
     public class WebhookManager : IWebhookManager
     {
+        private readonly HttpClient client;
         private readonly IWebhookRepository webhookRepository;
         private readonly IParcelRepository parcelRepository;
+        private readonly IMapper mapper;
         private readonly ILogger<WebhookManager> logger;
 
         public WebhookManager(
             IWebhookRepository webhookRepository,
             IParcelRepository parcelRepository,
+            IMapper mapper,
             ILogger<WebhookManager> logger
         )
         {
+            this.client = new HttpClient();
             this.webhookRepository = webhookRepository;
             this.parcelRepository = parcelRepository;
+            this.mapper = mapper;
+            this.logger = logger;
+        }
+        
+        public WebhookManager(
+            HttpClient client,
+            IWebhookRepository webhookRepository,
+            IParcelRepository parcelRepository,
+            IMapper mapper,
+            ILogger<WebhookManager> logger
+        )
+        {
+            this.client = client;
+            this.webhookRepository = webhookRepository;
+            this.parcelRepository = parcelRepository;
+            this.mapper = mapper;
             this.logger = logger;
         }
 
@@ -52,6 +77,43 @@ namespace UrbaniecZelenay.SKS.WebhookManager
         public void UnsubscribeParcelWebhook(long id)
         {
             webhookRepository.Delete(id);
+        }
+
+        public void NotifyParcelWebhooks(Parcel parcel)
+        {
+            var webhookMessage = mapper.Map<WebhookMessage>(parcel);
+            var webhookJson = JsonConvert.SerializeObject(webhookMessage);
+            var webhooks = webhookRepository.GetAllByTrackingId(parcel.TrackingId!);
+            client.DefaultRequestHeaders.Referrer = new Uri("https://sks-team-x.azurewebsites.net/");
+            foreach (var webhook in webhooks)
+            {
+                var url = $"{webhook.Url}?trackingId={webhook.TrackingId}";
+                try
+                {
+                    Task.Run(() => {
+                        client.PostAsync(url, new StringContent(
+                            webhookJson, Encoding.UTF8, "application/json"
+                        ));
+                    });
+                } 
+                catch (AggregateException ae)
+                {
+                    foreach (var e in ae.InnerExceptions)
+                    {
+                        if (e is HttpRequestException)
+                        {
+                            logger.LogError(e, $"Error notifying Webhook with URL {url}.");
+                        }
+
+                        logger.LogError(e, "Error unhandled Exception!");
+                    }
+                }
+            }
+        }
+
+        public void UnsubscribeAllParcelWebhooks(string trackingId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

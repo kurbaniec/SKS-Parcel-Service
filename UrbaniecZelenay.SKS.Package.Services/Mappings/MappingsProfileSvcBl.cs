@@ -95,7 +95,6 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
                     opt => opt.MapFrom(x => SerializeTruckRegion(x.Region)));
             CreateMap<GeoCoordinate, BlGeoCoordinate>().ReverseMap();
             // Webhooks
-            CreateMap<WebhookMessage, BlParcel>().ReverseMap();
             CreateMap<WebhookResponse, Webhook>().ForMember(blW => blW.Parcel,
                 opt => opt.MapFrom(x => new BlParcel
                 {

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
-using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
+using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
 using DalParcel = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Parcel;
 using DalRecipient = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Recipient;
 using DalWarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Warehouse;
@@ -12,6 +12,17 @@ using DalTruck = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Truck;
 using DalTransferwarehouse = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Transferwarehouse;
 using DalPreviousHop = UrbaniecZelenay.SKS.Package.DataAccess.Entities.PreviousHop;
 using DalWebhook = UrbaniecZelenay.SKS.Package.DataAccess.Entities.Webhook;
+using GeoCoordinate = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.GeoCoordinate;
+using Hop = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Hop;
+using HopArrival = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.HopArrival;
+using Parcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
+using PreviousHop = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.PreviousHop;
+using Recipient = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Recipient;
+using Transferwarehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Transferwarehouse;
+using Truck = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Truck;
+using Warehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Warehouse;
+using WarehouseNextHops = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.WarehouseNextHops;
+using Webhook = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Webhook;
 
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings
 {
@@ -38,6 +49,9 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Mappings
             CreateMap<PreviousHop, DalPreviousHop>().ReverseMap();
             CreateMap<HopArrival, DalHopArrival>().ReverseMap();
             CreateMap<Webhook, DalWebhook>().ReverseMap();
+            // Webhooks
+            // TODO: Move to own file/profile?
+            CreateMap<DalParcel, WebhookMessage>();
         }
     }
 }
