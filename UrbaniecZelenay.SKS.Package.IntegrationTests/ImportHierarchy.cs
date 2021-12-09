@@ -10,8 +10,8 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
 {
     // Ignore Tests for now
     // See: https://stackoverflow.com/a/1217089/12347616
-    // [TestFixture, Ignore("Integration Tests")]
-    // [ExcludeFromCodeCoverage]
+    [TestFixture, Ignore("Integration Tests")]
+    [ExcludeFromCodeCoverage]
     public class ImportHierarchy
     {
         private const string ServerUrl = "http://localhost:5000";
