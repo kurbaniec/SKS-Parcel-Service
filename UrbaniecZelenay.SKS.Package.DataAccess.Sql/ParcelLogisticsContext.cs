@@ -30,10 +30,11 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
             // See: https://stackoverflow.com/a/55620080/12347616
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development")
             {
-                modelBuilder.HasDatabaseMaxSize("1 GB");
                 modelBuilder.HasServiceTier("Basic");
+                modelBuilder.HasPerformanceLevel("Basic");
+                modelBuilder.HasDatabaseMaxSize("1 GB");
             }
-            
+
             // Map PreviousHop with fluent API because of data annotations limitations
             // -----------------------------------------------------------------------
             // This does not work, results in missing hop codes
@@ -52,12 +53,12 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 .HasForeignKey(h => h.HopCode)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired(false);
-            
+
             modelBuilder.Entity<Hop>()
                 .HasOne(h => h.PreviousHop)
                 .WithOne(h => h!.OriginalHop)
                 .HasForeignKey<PreviousHop>(h => h.OriginalHopCode);
-            
+
             // Disable Unique constraint on generated indexes 
             modelBuilder.Entity<PreviousHop>()
                 .HasIndex(x => x.HopCode)

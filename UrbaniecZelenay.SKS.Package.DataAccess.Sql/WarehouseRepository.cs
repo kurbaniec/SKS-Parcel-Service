@@ -33,8 +33,10 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 LinkPreviousHops(warehouse, null, null);
                 // Delete database and rebuild it
                 // See: https://docs.microsoft.com/en-us/ef/core/managing-schemas/ensure-created
+                context.Database.SetCommandTimeout(600);
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
+                context.Database.SetCommandTimeout(60);
                 context.Warehouses.Add(warehouse);
                 context.SaveChanges();
             }
