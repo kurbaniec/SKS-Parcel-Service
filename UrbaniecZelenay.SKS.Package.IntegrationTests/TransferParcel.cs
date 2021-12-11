@@ -16,9 +16,10 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
     public class TransferParcel
     {
         private readonly string ServerUrl =
-            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development"
-                ? "http://localhost:5000"
-                : "https://sks-team-x-test.azurewebsites.net/";
+            string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SKSURL"))
+                ? "https://sks-team-x-test.azurewebsites.net"
+                : Environment.GetEnvironmentVariable("SKSURL");
+
 
         private readonly HttpClient client = new();
         private string dataset;
