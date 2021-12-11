@@ -4,13 +4,24 @@
         <TargetFramework>net5.0</TargetFramework>
 
         <IsPackable>false</IsPackable>
+
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4"/>
-        <PackageReference Include="NUnit" Version="3.13.1"/>
-        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0"/>
-        <PackageReference Include="coverlet.collector" Version="3.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="Moq" Version="4.16.1" />
+        <PackageReference Include="NUnit" Version="3.13.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+        <PackageReference Include="coverlet.collector" Version="3.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.BusinessLogic\UrbaniecZelenay.SKS.Package.BusinessLogic.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces\UrbaniecZelenay.SKS.Package.DataAccess.Interfaces.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.WebhookManager.Interfaces\UrbaniecZelenay.SKS.WebhookManager.Interfaces.csproj" />
+      <ProjectReference Include="..\UrbaniecZelenay.SKS.WebhookManager\UrbaniecZelenay.SKS.WebhookManager.csproj" />
     </ItemGroup>
 
 </Project>

@@ -8,6 +8,7 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Newtonsoft.Json;
+using UrbaniecZelenay.SKS.Package.BusinessLogic.Entities;
 using UrbaniecZelenay.SKS.Package.Services.DTOs;
 using BlParcel = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Parcel;
 using BlRecipient = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Recipient;
@@ -18,6 +19,15 @@ using BlGeoCoordinate = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.GeoCo
 using BlTruck = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Truck;
 using BlTransferwarehouse = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.Transferwarehouse;
 using BlHopArrival = UrbaniecZelenay.SKS.Package.BusinessLogic.Entities.HopArrival;
+using GeoCoordinate = UrbaniecZelenay.SKS.Package.Services.DTOs.GeoCoordinate;
+using Hop = UrbaniecZelenay.SKS.Package.Services.DTOs.Hop;
+using HopArrival = UrbaniecZelenay.SKS.Package.Services.DTOs.HopArrival;
+using Parcel = UrbaniecZelenay.SKS.Package.Services.DTOs.Parcel;
+using Recipient = UrbaniecZelenay.SKS.Package.Services.DTOs.Recipient;
+using Transferwarehouse = UrbaniecZelenay.SKS.Package.Services.DTOs.Transferwarehouse;
+using Truck = UrbaniecZelenay.SKS.Package.Services.DTOs.Truck;
+using Warehouse = UrbaniecZelenay.SKS.Package.Services.DTOs.Warehouse;
+using WarehouseNextHops = UrbaniecZelenay.SKS.Package.Services.DTOs.WarehouseNextHops;
 
 namespace UrbaniecZelenay.SKS.Package.Services.Mappings
 {
@@ -84,6 +94,14 @@ namespace UrbaniecZelenay.SKS.Package.Services.Mappings
                 .ReverseMap().ForMember(svcTw => svcTw.RegionGeoJson,
                     opt => opt.MapFrom(x => SerializeTruckRegion(x.Region)));
             CreateMap<GeoCoordinate, BlGeoCoordinate>().ReverseMap();
+            // Webhooks
+            CreateMap<WebhookResponse, Webhook>().ForMember(blW => blW.Parcel,
+                opt => opt.MapFrom(x => new BlParcel
+                {
+                    TrackingId = x.TrackingId
+                })).ReverseMap().ForMember(svcW => svcW.TrackingId,
+                opt => opt.MapFrom(x => x.Parcel.TrackingId));
+            
         }
 
         // Deserialize RegionGeoJson to Truck Geometry Multipolygon.

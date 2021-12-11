@@ -30,5 +30,7 @@
     <ProjectReference Include="..\UrbaniecZelenay.SKS.Package.Services.Interfaces\UrbaniecZelenay.SKS.Package.Services.Interfaces.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.ServiceAgents.Interfaces\UrbaniecZelenay.SKS.ServiceAgents.Interfaces.csproj" />
     <ProjectReference Include="..\UrbaniecZelenay.SKS.ServiceAgents\UrbaniecZelenay.SKS.ServiceAgents.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.WebhookManager.Interfaces\UrbaniecZelenay.SKS.WebhookManager.Interfaces.csproj" />
+    <ProjectReference Include="..\UrbaniecZelenay.SKS.WebhookManager\UrbaniecZelenay.SKS.WebhookManager.csproj" />
   </ItemGroup>
 </Project>

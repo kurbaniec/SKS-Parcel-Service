@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using UrbaniecZelenay.SKS.Package.DataAccess.Entities;
+using UrbaniecZelenay.SKS.WebhookManager.Entities;
 
 namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
 {
@@ -21,5 +22,6 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Interfaces
         DbSet<Truck> Trucks { get; set; }
         DbSet<Warehouse> Warehouses { get; set; }
         DbSet<WarehouseNextHops> WarehouseNextHops { get; set; }
+        DbSet<Webhook> Webhooks { get; set; }
     }
 }

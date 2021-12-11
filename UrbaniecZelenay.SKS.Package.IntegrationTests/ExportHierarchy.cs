@@ -11,13 +11,17 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
     // Ignore Tests for now
     // See: https://stackoverflow.com/a/1217089/12347616
     // [TestFixture, Ignore("Integration Tests")]
-    // [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class ExportHierarchy
     {
-        private const string ServerUrl = "http://localhost:5000";
+        private readonly string ServerUrl =
+            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development"
+                ? "http://localhost:5000"
+                : "https://sks-team-x-test.azurewebsites.net/";
+
         private readonly HttpClient client = new();
         private string dataset;
-    
+
         [OneTimeSetUp]
         public void LoadDataSet()
         {
@@ -29,7 +33,7 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
                 $"{projectDirectory}{Path.DirectorySeparatorChar}datasets{Path.DirectorySeparatorChar}light.json";
             dataset = File.ReadAllText(datasetPath);
         }
-    
+
         [SetUp]
         public void ImportWarehouseHierarchy()
         {
@@ -40,15 +44,15 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
                 dataset, Encoding.UTF8, "application/json"
             )).Wait();
         }
-    
+
         [Test]
         public async Task SubmitNewParcelToTheLogisticsService()
         {
             var response = await client.GetAsync($"{ServerUrl}/warehouse");
-            
+
             Assert.IsTrue(response.IsSuccessStatusCode);
             var json = await response.Content.ReadAsStringAsync();
-            
+
             Assert.IsTrue(json.Contains("Truck in Siebenhirten"));
             Assert.IsTrue(json.Contains("W-795293"));
             Assert.IsTrue(json.Contains("Neustift am Walde"));

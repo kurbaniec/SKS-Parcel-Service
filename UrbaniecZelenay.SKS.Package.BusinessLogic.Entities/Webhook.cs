@@ -4,17 +4,19 @@ using System.Diagnostics.CodeAnalysis;
 namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
 {
     [ExcludeFromCodeCoverage]
-    public class WebhookResponse
+    public class Webhook
     {
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         public long? Id { get; set; }
 
+        public Parcel Parcel { get; set; } = null!;
+
         /// <summary>
         /// Gets or Sets TrackingId
         /// </summary>
-        public string TrackingId { get; set; } = null!;
+        public string TrackingId => Parcel.TrackingId!;
 
         /// <summary>
         /// Gets or Sets Url

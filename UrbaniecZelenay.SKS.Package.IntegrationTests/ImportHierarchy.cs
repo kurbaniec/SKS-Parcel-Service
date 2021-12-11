@@ -11,13 +11,17 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
     // Ignore Tests for now
     // See: https://stackoverflow.com/a/1217089/12347616
     // [TestFixture, Ignore("Integration Tests")]
-    // [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class ImportHierarchy
     {
-        private const string ServerUrl = "http://localhost:5000";
+        private readonly string ServerUrl =
+            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development"
+                ? "http://localhost:5000"
+                : "https://sks-team-x-test.azurewebsites.net/";
+
         private readonly HttpClient client = new();
         private string dataset;
-    
+
         [OneTimeSetUp]
         public void LoadDataSet()
         {
@@ -29,14 +33,14 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
                 $"{projectDirectory}{Path.DirectorySeparatorChar}datasets{Path.DirectorySeparatorChar}light.json";
             dataset = File.ReadAllText(datasetPath);
         }
-    
+
         [Test]
         public async Task ImportAHierarchyOfHops()
         {
             var response = await client.PostAsync($"{ServerUrl}/warehouse", new StringContent(
                 dataset, Encoding.UTF8, "application/json"
             ));
-            
+
             Assert.IsTrue(response.IsSuccessStatusCode);
         }
     }
