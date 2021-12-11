@@ -17,6 +17,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
     {
         private readonly IParcelLogisticsContext context;
         private readonly ILogger<WarehouseRepository> logger;
+        public bool IsUnitTest { get; set; } = false;
 
         public WarehouseRepository(ILogger<WarehouseRepository> logger, IParcelLogisticsContext context)
         {
@@ -33,7 +34,17 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 LinkPreviousHops(warehouse, null, null);
                 // Delete database and rebuild it
                 // See: https://docs.microsoft.com/en-us/ef/core/managing-schemas/ensure-created
-                context.Database.EnsureDeleted();
+                // context.Database.EnsureDeleted();
+                if (!IsUnitTest)
+                {
+                    context.Database.ExecuteSqlRaw(@"-- disable all constraints
+                EXEC sp_MSForEachTable ""ALTER TABLE ? NOCHECK CONSTRAINT all""
+                    -- delete data in all tables
+                EXEC sp_MSForEachTable ""DELETE FROM ?""
+                    -- enable all constraints
+                    exec sp_MSForEachTable ""ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all""");
+                }
+
                 context.Database.EnsureCreated();
                 context.Warehouses.Add(warehouse);
                 context.SaveChanges();
@@ -51,7 +62,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
             return warehouse;
         }
-        
+
         private static void LinkPreviousHops(Hop currentHop, Hop? parentHop, int? travelTime)
         {
             if (parentHop != null)
@@ -125,8 +136,7 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
 
             return hop;
         }
-        
-        
+
 
         public Warehouse? GetWarehouseByCode(string code)
         {
