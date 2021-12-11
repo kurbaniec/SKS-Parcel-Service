@@ -91,7 +91,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 mapperConfig.CreateMapper(),
                 mockLogger.Object
             );
-            
+
             Assert.Throws<BlArgumentException>(() => staffLogic.ReportParcelDelivery(trackingId));
         }
 
@@ -121,11 +121,35 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                     City = "Vienna",
                     Country = "Austria"
                 },
-                State = DalParcel.StateEnum.TransferredEnum,
+                State = DalParcel.StateEnum.InTransportEnum,
                 VisitedHops = new List<DalHopArrival>(),
                 FutureHops = new List<DalHopArrival>()
             });
-
+            mockParcelRepo.Setup(m => m.ChangeParcelState(It.IsAny<string>(), It.IsAny<DalParcel.StateEnum>())).Returns(
+                new DalParcel
+                {
+                    TrackingId = "PYJRB4HZ6",
+                    Weight = 1,
+                    Recipient = new DalRecipient
+                    {
+                        Name = "Max Mustermann",
+                        Street = "A Street",
+                        PostalCode = "1200",
+                        City = "Vienna",
+                        Country = "Austria"
+                    },
+                    Sender = new DalRecipient
+                    {
+                        Name = "Max Mustermann",
+                        Street = "A Street",
+                        PostalCode = "1200",
+                        City = "Vienna",
+                        Country = "Austria"
+                    },
+                    State = DalParcel.StateEnum.InTransportEnum,
+                    VisitedHops = new List<DalHopArrival>(),
+                    FutureHops = new List<DalHopArrival>()
+                });
             Mock<IWarehouseRepository> mockWarehouseRepo = new Mock<IWarehouseRepository>();
             mockWarehouseRepo.Setup(m => m.GetHopByCode(It.IsAny<string>())).Returns(new DalHop
             {
@@ -154,7 +178,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Tests
                 mapperConfig.CreateMapper(),
                 mockLogger.Object
             );
-            
+
             staffLogic.ReportParcelDelivery(trackingId);
         }
 
