@@ -38,7 +38,6 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
         [Test]
         public async Task ImportAHierarchyOfHops()
         {
-            string test = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var response = await client.PostAsync($"{ServerUrl}/warehouse", new StringContent(
                 dataset, Encoding.UTF8, "application/json"
             ));
