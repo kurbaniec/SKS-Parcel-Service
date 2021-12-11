@@ -46,7 +46,8 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
             dbFacadeMock.Setup(m => m.BeginTransaction()).Returns(dbTransactionMock.Object);
             myDbMoq.Setup(m => m.Database).Returns(dbFacadeMock.Object);
             var mockLogger = new Mock<ILogger<WarehouseRepository>>();
-            IWarehouseRepository warehouseRepository = new WarehouseRepository(mockLogger.Object, myDbMoq.Object);
+            WarehouseRepository warehouseRepository = new WarehouseRepository(mockLogger.Object, myDbMoq.Object);
+            warehouseRepository.IsUnitTest = true;
             Warehouse? w = warehouseRepository.Create(validWarehouse);
             Assert.NotNull(w);
             Assert.AreEqual(w.Code, code);
@@ -80,7 +81,9 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Tests
             var mockLogger = new Mock<ILogger<WarehouseRepository>>();
 
 
-            IWarehouseRepository warehouseRepository = new WarehouseRepository(mockLogger.Object, myDbMoq.Object);
+            WarehouseRepository warehouseRepository = new WarehouseRepository(mockLogger.Object, myDbMoq.Object);
+            warehouseRepository.IsUnitTest = true;
+
             //Assert.Throws<DalDuplicateEntryException>(() => warehouseRepository.Create(validWarehouse));
             var w = warehouseRepository.Create(validWarehouse);
             Assert.NotNull(w);
