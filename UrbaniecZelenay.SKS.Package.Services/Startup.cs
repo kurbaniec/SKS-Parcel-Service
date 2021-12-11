@@ -121,7 +121,7 @@ namespace UrbaniecZelenay.SKS.Package.Services
                 // Add Spatial Data support
                 // See: https://docs.microsoft.com/en-us/ef/core/modeling/spatial
                 options.UseSqlServer(Configuration.GetConnectionString("ParcelLogisticsContext"), dbOpt => 
-                    dbOpt.UseNetTopologySuite()));
+                    dbOpt.UseNetTopologySuite().CommandTimeout(300)));
             // Register the service and implementation for the database context
             // See: https://www.jerriepelser.com/blog/resolve-dbcontext-as-interface-in-aspnet5-ioc-container/
             services.AddScoped<IParcelLogisticsContext>(provider => provider.GetService<ParcelLogisticsContext>()!);
