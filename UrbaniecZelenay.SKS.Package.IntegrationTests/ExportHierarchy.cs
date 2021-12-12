@@ -10,7 +10,7 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
 {
     // Ignore Tests for now
     // See: https://stackoverflow.com/a/1217089/12347616
-    // [TestFixture, Ignore("Integration Tests")]
+    [TestFixture, Ignore("Integration Tests")]
     [ExcludeFromCodeCoverage]
     public class ExportHierarchy
     {
