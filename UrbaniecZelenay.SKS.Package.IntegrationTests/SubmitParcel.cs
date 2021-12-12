@@ -42,9 +42,16 @@ namespace UrbaniecZelenay.SKS.Package.IntegrationTests
             // Add dataset
             // Send JSON payload
             // See: https://stackoverflow.com/a/8199814/12347616
-            client.PostAsync($"{ServerUrl}/warehouse", new StringContent(
+            // client.PostAsync($"{ServerUrl}/warehouse", new StringContent(
+                // dataset, Encoding.UTF8, "application/json"
+            // )).Wait();
+            var task = Task.Run(() => client.PostAsync($"{ServerUrl}/warehouse", new StringContent(
                 dataset, Encoding.UTF8, "application/json"
-            )).Wait();
+            )));
+            task.Wait();
+            var response = task.Result;
+            Assert.IsTrue(response.IsSuccessStatusCode);
+
         }
 
         [Test]
