@@ -1,46 +1,13 @@
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  MenuItem,
-  Toolbar,
-  Tooltip,
-  Typography
-} from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
-import { Menu } from '@mui/icons-material';
 import { Home } from './home/Home';
 import { NavBar } from './navbar/NavBar';
-
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import { Submit } from './submit/Submit';
+import { Track } from './track/Track';
+import { Report } from './report/Report';
 
 function App() {
-  const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   // Using Routes
   // See: https://stackoverflow.com/a/69849271/12347616
   // And: https://github.com/howtographql/howtographql/issues/1387
@@ -66,6 +33,9 @@ function App() {
         <NavBar />
         <Routes>
           <Route exact path={'/'} element={<Home />} />
+          <Route path={'/submit'} element={<Submit />} />
+          <Route path={'/track'} element={<Track />} />
+          <Route path={'/report'} element={<Report />} />
         </Routes>
       </BrowserRouter>
     </StyledEngineProvider>
