@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { stringOrNumber } from '../utils/stringOrNumber';
 
 const initialFormValues = {
-  trackingId: ''
+  trackingId: '',
+  code: ''
 };
 
 /**
@@ -16,7 +16,8 @@ export const useFormControls = () => {
   // "errors" is used to check the form for errors
   const [errors, setErrors] = useState({});
   const [dirty, setDirty] = useState(false);
-  const regex = new RegExp('^[A-Z0-9]{9}$');
+  const trackingIdRegex = new RegExp('^[A-Z0-9]{9}$');
+  const codeRegex = new RegExp('^[A-Z]{4}\\d{1,4}$');
 
   const validate = (fieldValues = values) => {
     // this function will check if the form values are valid
@@ -25,8 +26,14 @@ export const useFormControls = () => {
     if ('trackingId' in fieldValues) {
       temp.trackingId = fieldValues.trackingId ? '' : 'This field is required';
       if (fieldValues.trackingId) {
-        if (!regex.test(fieldValues.trackingId))
+        if (!trackingIdRegex.test(fieldValues.trackingId))
           temp.trackingId = 'Tracking ID must match "^[A-Z0-9]{9}$"';
+      }
+    }
+    if ('code' in fieldValues) {
+      temp.code = fieldValues.code ? '' : 'This field is required';
+      if (fieldValues.code) {
+        if (!codeRegex.test(fieldValues.code)) temp.code = 'Code must match "^[A-Z]{4}\\d{1,4}$"';
       }
     }
 
@@ -54,28 +61,10 @@ export const useFormControls = () => {
       setDirty(true);
     } else if (formIsValid()) {
       submitFunc();
-      //await postContactForm(values);
-      //alert("You've posted your form!")
     }
   };
 
   const formIsValid = (fieldValues = values) => {
-    // this function will check if the form values and return a boolean value
-    // const test =
-    //   fieldValues.weight &&
-    //   fieldValues.recipientName &&
-    //   fieldValues.recipientStreet &&
-    //   fieldValues.recipientPostalCode &&
-    //   fieldValues.recipientCity &&
-    //   fieldValues.recipientCountry &&
-    //   fieldValues.senderName &&
-    //   fieldValues.senderStreet &&
-    //   fieldValues.senderPostalCode &&
-    //   fieldValues.senderCity &&
-    //   fieldValues.senderCountry &&
-    //   Object.values(errors).every((x) => x === '');
-    // return test;
-
     return (
       Object.values(errors).length === Object.values(initialFormValues).length &&
       Object.values(errors).every((x) => x === '')

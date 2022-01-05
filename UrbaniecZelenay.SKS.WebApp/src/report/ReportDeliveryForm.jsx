@@ -2,17 +2,7 @@ import { useState } from 'react';
 import { stringOrNumber } from '../utils/stringOrNumber';
 
 const initialFormValues = {
-  weight: 0,
-  recipientName: '',
-  recipientStreet: '',
-  recipientPostalCode: '',
-  recipientCity: '',
-  recipientCountry: '',
-  senderName: '',
-  senderStreet: '',
-  senderPostalCode: '',
-  senderCity: '',
-  senderCountry: ''
+  trackingId: ''
 };
 
 /**
@@ -26,47 +16,19 @@ export const useFormControls = () => {
   // "errors" is used to check the form for errors
   const [errors, setErrors] = useState({});
   const [dirty, setDirty] = useState(false);
+  const trackingIdRegex = new RegExp('^[A-Z0-9]{9}$');
 
   const validate = (fieldValues = values) => {
     // this function will check if the form values are valid
     let temp = { ...errors };
 
-    if ('weight' in fieldValues) {
-      temp.weight = fieldValues.weight ? '' : 'This field is required';
-      if (fieldValues.weight) {
-        if (fieldValues.weight <= 0) temp.weight = 'Weight can not be zero or less';
+    if ('trackingId' in fieldValues) {
+      temp.trackingId = fieldValues.trackingId ? '' : 'This field is required';
+      if (fieldValues.trackingId) {
+        if (!trackingIdRegex.test(fieldValues.trackingId))
+          temp.trackingId = 'Tracking ID must match "^[A-Z0-9]{9}$"';
       }
     }
-    if ('recipientName' in fieldValues)
-      temp.recipientName = fieldValues.recipientName ? '' : 'This field is required';
-    if ('recipientStreet' in fieldValues)
-      temp.recipientStreet = fieldValues.recipientStreet ? '' : 'This field is required';
-    if ('recipientPostalCode' in fieldValues) {
-      temp.recipientPostalCode = fieldValues.recipientPostalCode ? '' : 'This field is required';
-      if (fieldValues.recipientPostalCode) {
-        if (fieldValues.recipientPostalCode <= 0)
-          temp.recipientPostalCode = 'Postal Code can not be zero or less';
-      }
-    }
-    if ('recipientCity' in fieldValues)
-      temp.recipientCity = fieldValues.recipientCity ? '' : 'This field is required';
-    if ('recipientCountry' in fieldValues)
-      temp.recipientCountry = fieldValues.recipientCountry ? '' : 'This field is required';
-    if ('senderName' in fieldValues)
-      temp.senderName = fieldValues.senderName ? '' : 'This field is required';
-    if ('senderStreet' in fieldValues)
-      temp.senderStreet = fieldValues.senderStreet ? '' : 'This field is required';
-    if ('senderPostalCode' in fieldValues) {
-      temp.senderPostalCode = fieldValues.senderPostalCode ? '' : 'This field is required';
-      if (fieldValues.senderPostalCode) {
-        if (fieldValues.senderPostalCode <= 0)
-          temp.senderPostalCode = 'Postal Code can not be zero or less';
-      }
-    }
-    if ('senderCity' in fieldValues)
-      temp.senderCity = fieldValues.senderCity ? '' : 'This field is required';
-    if ('senderCountry' in fieldValues)
-      temp.senderCountry = fieldValues.senderCountry ? '' : 'This field is required';
 
     setErrors({
       ...temp
@@ -76,8 +38,7 @@ export const useFormControls = () => {
   const handleInputValue = (e) => {
     // this function will be triggered by the text field's onBlur and onChange events
     if (!dirty) setDirty(true);
-    let { name, value } = e.target;
-    value = stringOrNumber(value);
+    const { name, value } = e.target;
     setValues({
       ...values,
       [name]: value
