@@ -1,16 +1,19 @@
 import { Component } from 'react';
 import { useFormControls } from './SubmitForm';
-import { Container, Grid, TextField } from '@mui/material';
+import { Alert, AlertTitle, Container, Grid, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
+import axios from 'axios';
+import { stringOrNumber } from '../utils/stringOrNumber';
 
 class Submit extends Component {
   constructor(props) {
     super(props);
-    // const { handleInputValue, handleFormSubmit, formIsValid, errors } = this.props.validator;
-    // this.handleInputValue = handleInputValue;
-    // this.handleFormSubmit = handleFormSubmit;
-    // this.formIsValid = formIsValid;
-    // this.errors = errors;
+
+    this.state = {
+      response: false,
+      ok: false,
+      data: undefined
+    };
 
     this.inputFieldValues = [
       {
@@ -89,8 +92,51 @@ class Submit extends Component {
     ];
   }
 
-  submitForm() {
-    console.log('Hey', this.inputFieldValues);
+  onChange(event, inputValue, formCallback) {
+    formCallback(event);
+    const { value } = event.target;
+    inputValue.value = stringOrNumber(value);
+  }
+
+  async submitForm() {
+    this.setState({
+      response: false
+    });
+    const data = {
+      weight: this.inputFieldValues[0].value,
+      recipient: {
+        name: this.inputFieldValues[1].value,
+        street: this.inputFieldValues[2].value,
+        postalCode: this.inputFieldValues[3].value,
+        city: this.inputFieldValues[4].value,
+        country: this.inputFieldValues[5].value
+      },
+      sender: {
+        name: this.inputFieldValues[6].value,
+        street: this.inputFieldValues[7].value,
+        postalCode: this.inputFieldValues[8].value,
+        city: this.inputFieldValues[9].value,
+        country: this.inputFieldValues[10].value
+      }
+    };
+    try {
+      let response = await axios.post(`${this.props.baseUrl}/parcel`, data);
+      this.setState({
+        response: true,
+        ok: true,
+        data: response.data
+      });
+    } catch (error) {
+      this.setState({
+        response: true,
+        ok: false,
+        data: error.response.data
+      });
+      // console.error(error);
+      // console.error(error.response.data);
+    }
+
+    //console.log('Hey', this.inputFieldValues);
   }
 
   renderField(inputFieldValue, handleInputValue, errors) {
@@ -98,8 +144,8 @@ class Submit extends Component {
       <Grid item xs={12}>
         <TextField
           type={inputFieldValue.type ?? 'text'}
-          onChange={handleInputValue}
-          onBlur={handleInputValue}
+          onChange={(e) => this.onChange(e, inputFieldValue, handleInputValue)}
+          onBlur={(e) => this.onChange(e, inputFieldValue, handleInputValue)}
           name={inputFieldValue.name}
           label={inputFieldValue.label}
           multiline={inputFieldValue.multiline ?? false}
@@ -145,6 +191,35 @@ class Submit extends Component {
       </Grid>
     );
 
+    let response;
+    if (this.state.response) {
+      if (this.state.ok) {
+        response = (
+          <Grid container item xs={12} spacing={2}>
+            <Grid item xs={12}>
+              <Alert severity="info">
+                <AlertTitle>Submit was successful</AlertTitle>
+                Tracking ID: <strong>{this.state.data.trackingId}</strong>
+              </Alert>
+            </Grid>
+          </Grid>
+        );
+      } else {
+        response = (
+          <Grid container item xs={12} spacing={2}>
+            <Grid item xs={12}>
+              <Alert severity="error">
+                <AlertTitle>Encountered Error</AlertTitle>
+                {this.state.data.errorMessage}
+              </Alert>
+            </Grid>
+          </Grid>
+        );
+      }
+    } else {
+      response = <div />;
+    }
+
     /// {this.inputFieldValues.map((inputFieldValue, index) => {
     //                   return (
     //                     <Grid item xs={12} md={inputFieldValue.name === 'weight' ? 12 : 6} key={index}>
@@ -173,7 +248,7 @@ class Submit extends Component {
       <Container>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <h1>Submit</h1>
+            <h1>Submit Parcel</h1>
           </Grid>
           <Grid item xs={12}>
             <form
@@ -185,13 +260,14 @@ class Submit extends Component {
                 {recipient}
                 {sender}
                 <Grid item xs={12}>
-                  <Button type="submit" disabled={!formIsValid()}>
-                    Send Message
+                  <Button type="submit" variant={'contained'} disabled={!formIsValid()}>
+                    SUBMIT
                   </Button>
                 </Grid>
               </Grid>
             </form>
           </Grid>
+          {response}
         </Grid>
       </Container>
     );

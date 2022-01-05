@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { stringOrNumber } from '../utils/stringOrNumber';
 
 const initialFormValues = {
   weight: 0,
@@ -75,7 +76,8 @@ export const useFormControls = () => {
   const handleInputValue = (e) => {
     // this function will be triggered by the text field's onBlur and onChange events
     if (!dirty) dirty = true;
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    value = stringOrNumber(value);
     setValues({
       ...values,
       [name]: value

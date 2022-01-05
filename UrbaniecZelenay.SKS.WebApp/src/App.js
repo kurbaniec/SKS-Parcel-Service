@@ -11,6 +11,14 @@ function App() {
   // Using Routes
   // See: https://stackoverflow.com/a/69849271/12347616
   // And: https://github.com/howtographql/howtographql/issues/1387
+  // ------------
+  // Get Base-URL
+  let baseUrl;
+  if (process.env.NODE_ENV === 'development') {
+    baseUrl = '';
+  } else {
+    baseUrl = '';
+  }
   return (
     // <div className="App">
     //   <header className="App-header">
@@ -33,9 +41,9 @@ function App() {
         <NavBar />
         <Routes>
           <Route exact path={'/'} element={<Home />} />
-          <Route path={'/submit'} element={<Submit />} />
-          <Route path={'/track'} element={<Track />} />
-          <Route path={'/report'} element={<Report />} />
+          <Route path={'/submit'} element={<Submit baseUrl={baseUrl} />} />
+          <Route path={'/track'} element={<Track baseUrl={baseUrl} />} />
+          <Route path={'/report'} element={<Report baseUrl={baseUrl} />} />
         </Routes>
       </BrowserRouter>
     </StyledEngineProvider>

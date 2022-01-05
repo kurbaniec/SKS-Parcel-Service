@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 import { Link } from '@mui/material';
+import { LocalShippingOutlined } from '@mui/icons-material';
 
 const pages = ['Home', 'Submit', 'Track', 'Report'];
 const urls = new Map([
@@ -60,7 +61,7 @@ export const NavBar = () => {
               handleOnClick(event, urls.get('Home'));
             }}
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}>
-            LOGO
+            <LocalShippingOutlined />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
