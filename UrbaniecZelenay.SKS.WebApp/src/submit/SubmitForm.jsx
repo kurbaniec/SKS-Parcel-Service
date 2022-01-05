@@ -36,6 +36,36 @@ export const useFormControls = () => {
         if (fieldValues.weight <= 0) temp.weight = 'Weight can not be zero or less';
       }
     }
+    if ('recipientName' in fieldValues)
+      temp.recipientName = fieldValues.recipientName ? '' : 'This field is required';
+    if ('recipientStreet' in fieldValues)
+      temp.recipientStreet = fieldValues.recipientStreet ? '' : 'This field is required';
+    if ('recipientPostalCode' in fieldValues) {
+      temp.recipientPostalCode = fieldValues.recipientPostalCode ? '' : 'This field is required';
+      if (fieldValues.recipientPostalCode) {
+        if (fieldValues.recipientPostalCode <= 0)
+          temp.recipientPostalCode = 'Postal Code can not be zero or less';
+      }
+    }
+    if ('recipientCity' in fieldValues)
+      temp.recipientCity = fieldValues.recipientCity ? '' : 'This field is required';
+    if ('recipientCountry' in fieldValues)
+      temp.recipientCountry = fieldValues.recipientCountry ? '' : 'This field is required';
+    if ('senderName' in fieldValues)
+      temp.senderName = fieldValues.senderName ? '' : 'This field is required';
+    if ('senderStreet' in fieldValues)
+      temp.senderStreet = fieldValues.senderStreet ? '' : 'This field is required';
+    if ('senderPostalCode' in fieldValues) {
+      temp.senderPostalCode = fieldValues.senderPostalCode ? '' : 'This field is required';
+      if (fieldValues.senderPostalCode) {
+        if (fieldValues.senderPostalCode <= 0)
+          temp.senderPostalCode = 'Postal Code can not be zero or less';
+      }
+    }
+    if ('senderCity' in fieldValues)
+      temp.senderCity = fieldValues.senderCity ? '' : 'This field is required';
+    if ('senderCountry' in fieldValues)
+      temp.senderCountry = fieldValues.senderCountry ? '' : 'This field is required';
 
     setErrors({
       ...temp
