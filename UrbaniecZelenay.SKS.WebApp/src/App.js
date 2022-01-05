@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { Home } from './home/Home';
 import { NavBar } from './navbar/NavBar';
-import { Submit } from './submit/Submit';
+import Submit from './submit/Submit';
 import { Track } from './track/Track';
 import { Report } from './report/Report';
 
