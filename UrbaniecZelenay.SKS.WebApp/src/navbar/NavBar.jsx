@@ -41,7 +41,6 @@ export const NavBar = () => {
   };
 
   const handleOpenNavMenu = (event) => {
-    console.log(event);
     setAnchorElNav(event.currentTarget);
   };
 
@@ -110,7 +109,7 @@ export const NavBar = () => {
               handleOnClick(event, urls.get('Home'));
             }}
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            LOGO
+            <LocalShippingOutlined />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
