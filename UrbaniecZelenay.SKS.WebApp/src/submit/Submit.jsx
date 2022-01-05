@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { useFormControls } from './SubmitForm';
-import { TextField } from '@mui/material';
+import { Container, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 
 class Submit extends Component {
@@ -27,13 +27,20 @@ class Submit extends Component {
     ];
   }
 
+  submitForm() {
+    console.log('Hey', this.inputFieldValues);
+  }
+
   render() {
     const { handleInputValue, handleFormSubmit, formIsValid, errors } = this.props.validator;
 
     return (
-      <div>
+      <Container>
         <h1>Submit</h1>
-        <form onSubmit={handleFormSubmit}>
+        <form
+          onSubmit={(e) => {
+            handleFormSubmit(e, this.submitForm.bind(this));
+          }}>
           {this.inputFieldValues.map((inputFieldValue, index) => {
             return (
               <TextField
@@ -60,7 +67,7 @@ class Submit extends Component {
             Send Message
           </Button>
         </form>
-      </div>
+      </Container>
     );
   }
 }
