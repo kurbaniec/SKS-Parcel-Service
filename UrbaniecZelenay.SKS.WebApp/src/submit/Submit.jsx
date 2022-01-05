@@ -6,21 +6,57 @@ import Button from '@mui/material/Button';
 class Submit extends Component {
   constructor(props) {
     super(props);
-    const { handleInputValue, handleFormSubmit, formIsValid, errors } = this.props.validator;
-    this.handleInputValue = handleInputValue;
-    this.handleFormSubmit = handleFormSubmit;
-    this.formIsValid = formIsValid;
-    this.errors = errors;
+    // const { handleInputValue, handleFormSubmit, formIsValid, errors } = this.props.validator;
+    // this.handleInputValue = handleInputValue;
+    // this.handleFormSubmit = handleFormSubmit;
+    // this.formIsValid = formIsValid;
+    // this.errors = errors;
+
+    this.inputFieldValues = [
+      {
+        name: 'weight',
+        label: 'Weight (kg)',
+        id: 'weight',
+        type: 'number',
+        props: {
+          inputProps: {
+            min: 0
+          }
+        }
+      }
+    ];
   }
 
   render() {
-    const baum = this.formIsValid();
+    const { handleInputValue, handleFormSubmit, formIsValid, errors } = this.props.validator;
+
     return (
       <div>
         <h1>Submit</h1>
-        <form onSubmit={this.handleFormSubmit}>
-          <TextField></TextField>
-          <Button type="submit" disabled={!this.formIsValid()}>
+        <form onSubmit={handleFormSubmit}>
+          {this.inputFieldValues.map((inputFieldValue, index) => {
+            return (
+              <TextField
+                key={index}
+                type={inputFieldValue.type ?? 'text'}
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                name={inputFieldValue.name}
+                label={inputFieldValue.label}
+                multiline={inputFieldValue.multiline ?? false}
+                fullWidth
+                rows={inputFieldValue.rows ?? 1}
+                autoComplete="none"
+                autoCorrect={'true'}
+                InputProps={inputFieldValue.props ?? {}}
+                {...(errors[inputFieldValue.name] && {
+                  error: true,
+                  helperText: errors[inputFieldValue.name]
+                })}
+              />
+            );
+          })}
+          <Button type="submit" disabled={!formIsValid()}>
             Send Message
           </Button>
         </form>
