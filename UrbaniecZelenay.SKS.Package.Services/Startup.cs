@@ -15,6 +15,7 @@ using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -137,6 +138,11 @@ namespace UrbaniecZelenay.SKS.Package.Services
             services.AddTransient<IParcelWebhookLogic, ParcelWebhookLogic>();
             services.AddScoped<IWebhookManager, WebhookManager.WebhookManager>();
             services.AddScoped<IWebhookRepository, WebhookRepository>();
+            
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "../UrbaniecZelenay.SKS.WebApp/build";;
+            });
         }
 
         /// <summary>
@@ -156,6 +162,10 @@ namespace UrbaniecZelenay.SKS.Package.Services
 
             //TODO: Uncomment this if you need wwwroot folder
             // app.UseStaticFiles();
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
 
             app.UseAuthorization();
 
@@ -185,6 +195,15 @@ namespace UrbaniecZelenay.SKS.Package.Services
 
                 app.UseHsts();
             }
+            
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "../UrbaniecZelenay.SKS.WebApp";
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
+            });
         }
     }
 }

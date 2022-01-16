@@ -10,7 +10,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Validators
             RuleFor(p => p.TrackingId)
                 .Matches(@"^[A-Z0-9]{9}$")
                 .When(p => p != null);
-            RuleFor(p => p.Weight).GreaterThanOrEqualTo(0);
+            RuleFor(p => p.Weight).GreaterThan(0);
             RuleFor(p => p.Recipient).NotNull();
             RuleFor(p => p.Sender).NotNull();
             RuleFor(p => p.FutureHops).NotNull();

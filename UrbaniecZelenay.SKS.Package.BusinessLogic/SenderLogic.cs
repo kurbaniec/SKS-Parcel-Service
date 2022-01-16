@@ -78,7 +78,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             if (senderGeoLocation == null)
             {
                 BlDataNotFoundException e =
-                    new BlDataNotFoundException($"Cannot find GeoLocation for Sender with Address {recipient}");
+                    new BlDataNotFoundException($"Cannot find GeoLocation for Sender with Address {sender}");
                 logger.LogWarning(e, "Cannot find GeoLocation");
                 throw e;
             }

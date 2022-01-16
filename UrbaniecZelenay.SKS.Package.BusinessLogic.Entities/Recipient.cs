@@ -43,5 +43,10 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic.Entities
         public string Country { get; set; }
         
         public Point? GeoLocation { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Name)}: {Name}, {nameof(Street)}: {Street}, {nameof(PostalCode)}: {PostalCode}, {nameof(City)}: {City}, {nameof(Country)}: {Country}";
+        }
     }
 }
