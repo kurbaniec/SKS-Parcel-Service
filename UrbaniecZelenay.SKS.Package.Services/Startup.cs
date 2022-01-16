@@ -139,11 +139,14 @@ namespace UrbaniecZelenay.SKS.Package.Services
             services.AddTransient<IParcelWebhookLogic, ParcelWebhookLogic>();
             services.AddScoped<IWebhookManager, WebhookManager.WebhookManager>();
             services.AddScoped<IWebhookRepository, WebhookRepository>();
-            
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "../UrbaniecZelenay.SKS.WebApp/build";;
-            });
+                configuration.RootPath = "./wwwroot";;
+            }); 
+            // services.AddSpaStaticFiles(configuration =>
+            // {
+            //     configuration.RootPath = "../UrbaniecZelenay.SKS.WebApp/build";;
+            // });
         }
 
         /// <summary>
@@ -165,6 +168,7 @@ namespace UrbaniecZelenay.SKS.Package.Services
             // app.UseStaticFiles();
             if (!env.IsDevelopment())
             {
+                app.UseDefaultFiles();
                 app.UseSpaStaticFiles();
             }
 
@@ -196,15 +200,15 @@ namespace UrbaniecZelenay.SKS.Package.Services
 
                 app.UseHsts();
             }
-            app.UseSpa(spa =>
-            {
-                // spa.Options.SourcePath = "../UrbaniecZelenay.SKS.WebApp";
-                spa.Options.SourcePath = System.IO.Path.Join(env.ContentRootPath, "../UrbaniecZelenay.SKS.WebApp/build"); //"ClientApp"); 
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+            // app.UseSpa(spa =>
+            // {
+            //     spa.Options.SourcePath = "../UrbaniecZelenay.SKS.WebApp";
+            //     // spa.Options.SourcePath = System.IO.Path.Join(env.ContentRootPath, "../UrbaniecZelenay.SKS.WebApp/build"); //"ClientApp"); 
+            //     if (env.IsDevelopment())
+            //     {
+            //         spa.UseReactDevelopmentServer(npmScript: "start");
+            //     }
+            // });
         }
     }
 }
