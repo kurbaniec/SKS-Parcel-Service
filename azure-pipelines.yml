@@ -25,6 +25,14 @@ steps:
 - script: npm --prefix UrbaniecZelenay.SKS.WebApp/ run build
   displayName: 'Build React app'
 
+- task: CopyFiles@2
+  displayName: 'copy React app to wwwroot'
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/UrbaniecZelenay.SKS.WebApp/build/'
+    Contents: '**'
+    TargetFolder: '$(System.DefaultWorkingDirectory)/UrbaniecZelenay.SKS.Package.Services/wwwroot'
+    CleanTargetFolder: true
+
 - task: FileTransform@1
   inputs:
     folderPath: '$(System.DefaultWorkingDirectory)/UrbaniecZelenay.SKS.Package.Services'
