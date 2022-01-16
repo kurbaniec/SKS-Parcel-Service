@@ -13,6 +13,18 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+
+- task: NodeTool@0
+  displayName: 'Install Node.js'
+  inputs:
+    versionSpec: '12.x'
+
+- script: npm --prefix UrbaniecZelenay.SKS.WebApp/ install
+  displayName: 'Install npm packages for React'
+
+- script: npm --prefix UrbaniecZelenay.SKS.WebApp/ run build
+  displayName: 'Build React app'
+
 - task: FileTransform@1
   inputs:
     folderPath: '$(System.DefaultWorkingDirectory)/UrbaniecZelenay.SKS.Package.Services'
