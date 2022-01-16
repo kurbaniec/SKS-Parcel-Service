@@ -37,13 +37,31 @@ namespace UrbaniecZelenay.SKS.Package.DataAccess.Sql
                 // context.Database.EnsureDeleted();
                 if (!IsUnitTest)
                 {
-                    context.Database.ExecuteSqlRaw(@"DELETE FROM WarehouseNextHops;
+                    context.Database.ExecuteSqlRaw(@"
+ALTER TABLE WarehouseNextHops NOCHECK CONSTRAINT ALL;
+ALTER TABLE PreviousHops NOCHECK CONSTRAINT ALL;
+ALTER TABLE HopArrivals NOCHECK CONSTRAINT ALL;
+ALTER TABLE Recipients NOCHECK CONSTRAINT ALL;
+ALTER TABLE Webhooks NOCHECK CONSTRAINT ALL;
+ALTER TABLE Hops NOCHECK CONSTRAINT ALL;
+ALTER TABLE Parcels NOCHECK CONSTRAINT ALL;
+
+DELETE FROM WarehouseNextHops;
 DELETE FROM PreviousHops;
 DELETE FROM HopArrivals;
 DELETE FROM Recipients;
 DELETE FROM Webhooks;
 DELETE FROM Hops;
-DELETE FROM Parcels;");
+DELETE FROM Parcels;
+
+ALTER TABLE WarehouseNextHops WITH CHECK CHECK CONSTRAINT ALL;
+ALTER TABLE PreviousHops WITH CHECK CHECK CONSTRAINT ALL;
+ALTER TABLE HopArrivals WITH CHECK CHECK CONSTRAINT ALL;
+ALTER TABLE Recipients WITH CHECK CHECK CONSTRAINT ALL;
+ALTER TABLE Webhooks WITH CHECK CHECK CONSTRAINT ALL;
+ALTER TABLE Hops WITH CHECK CHECK CONSTRAINT ALL;
+ALTER TABLE Parcels WITH CHECK CHECK CONSTRAINT ALL;
+");
                 }
 
                 context.Database.EnsureCreated();

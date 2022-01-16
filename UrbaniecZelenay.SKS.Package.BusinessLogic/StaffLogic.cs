@@ -163,7 +163,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
 
             var blParcel = mapper.Map<Parcel>(dalParcel);
             var blHop = mapper.Map<Hop>(dalHop);
-            if (blParcel.FutureHops.Count > 0 && blHop.Code != blParcel.FutureHops[0].Code)
+            if (blParcel.FutureHops.Count == 0 || blHop.Code != blParcel.FutureHops[0].Code)
             {
                 BlDataNotFoundException e =
                     new BlDataNotFoundException(
@@ -189,13 +189,13 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                 if (blHop is Warehouse)
                 {
                     var parcel = parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.InTransportEnum);
-                    webhookManager.NotifyParcelWebhooks(parcel);
+                    // webhookManager.NotifyParcelWebhooks(parcel);
                     // blParcel.State = Parcel.StateEnum.InTransportEnum;
                 }
                 else if (blHop is Truck)
                 {
                     var parcel = parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.InTruckDeliveryEnum);
-                    webhookManager.NotifyParcelWebhooks(parcel);
+                    // webhookManager.NotifyParcelWebhooks(parcel);
                     // blParcel.State = Parcel.StateEnum.InTruckDeliveryEnum;
                 }
                 else if (blHop is Transferwarehouse blTransferwarhouse)
@@ -219,7 +219,7 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
                     }
 
                     var parcel = parcelRepository.ChangeParcelState(blParcel.TrackingId!, DalParcel.StateEnum.TransferredEnum);
-                    webhookManager.NotifyParcelWebhooks(parcel);
+                    // webhookManager.NotifyParcelWebhooks(parcel);
                 }
             }
             catch (DalException e)
@@ -234,8 +234,8 @@ namespace UrbaniecZelenay.SKS.Package.BusinessLogic
             logger.LogDebug($"Mapping Bl/Dal {blParcel} => {dalParcel}");
             try
             {
-                parcelRepository.AddFutureHopToVisited(blParcel.TrackingId!, DateTime.UtcNow);
-
+                var parcel = parcelRepository.AddFutureHopToVisited(blParcel.TrackingId!, DateTime.UtcNow);
+                webhookManager.NotifyParcelWebhooks(parcel);
                 // parcelRepository.Update(dalParcel);
             }
             catch (DalException e)

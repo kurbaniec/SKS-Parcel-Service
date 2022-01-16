@@ -138,6 +138,11 @@ namespace UrbaniecZelenay.SKS.Package.Services
             services.AddTransient<IParcelWebhookLogic, ParcelWebhookLogic>();
             services.AddScoped<IWebhookManager, WebhookManager.WebhookManager>();
             services.AddScoped<IWebhookRepository, WebhookRepository>();
+            
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "../UrbaniecZelenay.SKS.WebApp/build";;
+            });
         }
 
         /// <summary>
