@@ -198,7 +198,7 @@ namespace UrbaniecZelenay.SKS.Package.Services
             
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "../UrbaniecZelenay.SKS.WebApp";
+                // spa.Options.SourcePath = "../UrbaniecZelenay.SKS.WebApp";
                 if (env.IsDevelopment())
                 {
                     spa.UseReactDevelopmentServer(npmScript: "start");
