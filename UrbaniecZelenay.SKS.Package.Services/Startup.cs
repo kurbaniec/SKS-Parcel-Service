@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -195,10 +196,10 @@ namespace UrbaniecZelenay.SKS.Package.Services
 
                 app.UseHsts();
             }
-            
             app.UseSpa(spa =>
             {
                 // spa.Options.SourcePath = "../UrbaniecZelenay.SKS.WebApp";
+                spa.Options.SourcePath = System.IO.Path.Join(env.ContentRootPath, "../UrbaniecZelenay.SKS.WebApp/build"); //"ClientApp"); 
                 if (env.IsDevelopment())
                 {
                     spa.UseReactDevelopmentServer(npmScript: "start");
